@@ -2,7 +2,9 @@ import mongoose from 'mongoose';
 
 const instance = new mongoose.Schema(
   {
-    username: String,
+    from: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    question: String,
+    answer: String,
   },
   {
     timestamps: true,
@@ -16,6 +18,6 @@ const instance = new mongoose.Schema(
 
 // NOTE! use a singular model name, mongoose automatically creates a collection like so:
 // model: 'User' === collection: 'users'
-const modelName = 'User';
+const modelName = 'Quest';
 
 export default mongoose.model(modelName, instance);

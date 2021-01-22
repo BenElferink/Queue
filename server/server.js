@@ -3,9 +3,7 @@ import express from 'express'; // Backend App (server)
 import cors from 'cors'; // HTTP headers (enable requests)
 import morgan from 'morgan'; // Logs incoming requests
 import dotenv from 'dotenv'; // Secures variables
-// import usersRoutes from './api/routes/usersRoutes.js';
-// ^ ^ ^ un-comment this to use imported route(s)
-// doing this will link the following files:   server.js -> usersRoutes.js -> usersControllers.js -> User.js
+import sessionRoutes from './api/routes/sessionRoutes.js';
 
 // initialize app
 const app = express();
@@ -19,7 +17,7 @@ dotenv.config(); // protected variables
 
 // configure db:
 // for "atlas" edit CONNECTION_URL in -> .env file || for "community server" edit <dbname>
-const CONNECTION_URL = process.env.CONNECTION_URL || 'mongodb://localhost:27017/<dbname>';
+const CONNECTION_URL = process.env.CONNECTION_URL || 'mongodb://localhost:27017/QueueDB';
 const DEPRECATED_FIX = { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true };
 
 // connect to db
@@ -31,9 +29,8 @@ mongoose.connection.on('disconnected', () => console.log('❌ MongoDB disconnect
 mongoose.connection.on('error', (error) => console.log('❌ MongoDB connection error', error)); // listen for errors during the session
 
 // routes
-app.get('/', (request, response, next) => response.status(200).json('Hello World - Express.js'));
-// app.use('/api/v1/users', usersRoutes);
-// ^ ^ ^ un-comment this to use imported route(s)
+app.get('/', (request, response, next) => response.status(200).json('Queue'));
+app.use('/session', sessionRoutes);
 
 // server is listening for requests
 const PORT = process.env.PORT || 8080;
