@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 
 const instance = new mongoose.Schema(
   {
-    roomUrl: String,
     host: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     queue: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Quest' }],
