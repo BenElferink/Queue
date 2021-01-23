@@ -6,8 +6,8 @@ const SECRET = process.env.JWT_SECRET || 'secret';
 // "secret key" generator   --->   https://www.allkeysgenerator.com/Random/Security-Encryption-Key-Generator.aspx
 // Reminder: make sure to set up a secret key in .env (the presented 'secret' is not production valid)
 
-export const generateToken = (id) => {
-  return jwt.sign({ id }, new Buffer.from(SECRET, 'base64'), { expiresIn: '12h' });
+export const generateToken = (data) => {
+  return jwt.sign(data, new Buffer.from(SECRET, 'base64'), { expiresIn: '12h' });
 };
 
 export const authenticateToken = (request, response, next) => {

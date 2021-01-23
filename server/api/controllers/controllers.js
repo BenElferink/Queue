@@ -1,0 +1,72 @@
+import Session from '../models/Session.js';
+import User from '../models/User.js';
+import Quest from '../models/Quest.js';
+import { generateToken } from '../middleware/jsonWebToken.js';
+// more about response status codes   --->   https://restapitutorial.com/httpstatuscodes.html
+
+export const newSession = async (request, response, next) => {
+  try {
+    // create host, and save it
+    const newHost = new User({ username: request.body.username });
+    await newHost.save();
+
+    // create session, and save it
+    const newSession = new Session({
+      host: newHost._id,
+    });
+    await newSession.save();
+
+    // create host token, and populate session
+    const hostToken = generateToken({ session: newSession._id, id: newHost._id, role: 'host' });
+    const populatedSession = await Session.populate(newSession, {
+      path: 'host users queue history',
+    });
+
+    response
+      .status(201)
+      .json({ message: 'Session created', yourToken: hostToken, session: populatedSession });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json(error);
+  }
+};
+
+export const getSession = async (request, response, next) => {
+  try {
+    // find the session, filter data for public view
+    const foundSession = await Session.findOne({ _id: request.params.id })
+      .select('_id host')
+      .populate('host');
+
+    response.status(200).json({ message: 'Session found', session: foundSession });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json(error);
+  }
+};
+
+export const newUser = async (request, response, next) => {
+  try {
+    // create host, and save it
+    const newUser = new User({ username: request.body.username });
+    await newUser.save();
+
+    // find the session, and add the new user to it
+    const foundSession = await Session.findOne({ _id: request.params.id });
+    foundSession.users.push(newUser._id);
+    await foundSession.save();
+
+    // create user token, and populate session
+    const userToken = generateToken({ session: foundSession._id, id: newUser._id, role: 'user' });
+    const populatedSession = await Session.populate(foundSession, {
+      path: 'host users queue history',
+    });
+
+    response
+      .status(201)
+      .json({ message: 'Welcome to the session', yourToken: userToken, session: populatedSession });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json(error);
+  }
+};
