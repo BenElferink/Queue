@@ -1,5 +1,5 @@
 import express from 'express';
-import { newSession, getSession } from './../controllers/sessionControllers.js';
+import { newSession, getSession, newUser } from '../controllers/controllers.js';
 
 // initialize router
 const router = express.Router();
@@ -11,12 +11,8 @@ const router = express.Router();
   3rd param = request & response function (controller)
 */
 
-// current method: POST
-// current path: http://localhost:8080/session/new
-router.post('/new', newSession);
-
-// current method: GET
-// current path: http://localhost:8080/session/new
-router.get('/:id', getSession);
+router.post('/session/new', newSession);
+router.get('/session/:id', getSession);
+router.post('/session/:id/login', newUser);
 
 export default router;
