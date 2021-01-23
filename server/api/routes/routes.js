@@ -1,5 +1,6 @@
 import express from 'express';
-import { newSession, getSession, newUser } from '../controllers/controllers.js';
+import { authenticateToken } from './../middleware/jsonWebToken.js';
+import { newSession, requestSession, deleteSession, newUser } from '../controllers/controllers.js';
 
 // initialize router
 const router = express.Router();
@@ -12,7 +13,8 @@ const router = express.Router();
 */
 
 router.post('/session/new', newSession);
-router.get('/session/:id', getSession);
+router.get('/session/:id', requestSession);
+router.delete('/session/:id', authenticateToken, deleteSession);
 router.post('/session/:id/login', newUser);
 
 export default router;

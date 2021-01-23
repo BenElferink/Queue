@@ -13,6 +13,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.8",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "pusher": "^4.0.2"
   }
 }

@@ -4,20 +4,20 @@ import cors from 'cors'; // HTTP headers (enable requests)
 import morgan from 'morgan'; // Logs incoming requests
 import dotenv from 'dotenv'; // Secures variables
 import routes from './api/routes/routes.js';
+import pusherHandler from './api/middleware/pusher.js';
 
 // initialize app
 const app = express();
 
 // middlewares
-app.use(express.json({ limit: '10mb', extended: false })); // body parser
-app.use(express.urlencoded({ limit: '10mb', extended: false })); // url parser
-app.use(cors({ origin: 'http://localhost:3000' })); // enables http requests on react development server
+app.use(express.json({ limit: '1mb', extended: false })); // body parser
+app.use(express.urlencoded({ limit: '1mb', extended: false })); // url parser
+app.use(cors());
 app.use(morgan('common')); // logs requests
-dotenv.config(); // protected variables
+dotenv.config();
 
 // configure db:
-// for "atlas" edit CONNECTION_URL in -> .env file || for "community server" edit <dbname>
-const CONNECTION_URL = process.env.CONNECTION_URL || 'mongodb://localhost:27017/QueueDB';
+const CONNECTION_URL = process.env.CONNECTION_URL;
 const DEPRECATED_FIX = { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true };
 
 // connect to db
@@ -27,6 +27,9 @@ mongoose
 mongoose.connection.on('connected', () => console.log('✅ MongoDB connected')); // connected
 mongoose.connection.on('disconnected', () => console.log('❌ MongoDB disconnected')); // disconnected
 mongoose.connection.on('error', (error) => console.log('❌ MongoDB connection error', error)); // listen for errors during the session
+
+// pusher
+mongoose.connection.once('open', pusherHandler);
 
 // routes
 app.get('/', (request, response, next) => response.status(200).json('Queue'));
