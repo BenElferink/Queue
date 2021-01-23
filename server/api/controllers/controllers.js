@@ -31,6 +31,33 @@ export const newSession = async (request, response, next) => {
   }
 };
 
+export const newUser = async (request, response, next) => {
+  try {
+    // create host, and save it
+    const newUser = new User({ username: request.body.username });
+    await newUser.save();
+
+    // find the session, and add the new user to it
+    const foundSession = await Session.findOne({ _id: request.params.id });
+    if (!foundSession) return response.status(404).json({ message: 'Session not found' });
+    foundSession.users.push(newUser._id);
+    await foundSession.save();
+
+    // create user token, and populate session
+    const userToken = generateToken({ session: foundSession._id, id: newUser._id, role: 'user' });
+    const populatedSession = await Session.populate(foundSession, {
+      path: 'host users queue history',
+    });
+
+    response
+      .status(201)
+      .json({ message: 'Welcome to the session', yourToken: userToken, session: populatedSession });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json(error);
+  }
+};
+
 export const requestSession = async (request, response, next) => {
   try {
     // find the session, filter data for public view
@@ -68,27 +95,20 @@ export const deleteSession = async (request, response, next) => {
   }
 };
 
-export const newUser = async (request, response, next) => {
+export const addToQueue = async (request, response, next) => {
   try {
-    // create host, and save it
-    const newUser = new User({ username: request.body.username });
-    await newUser.save();
+    // create new quest, and save it
+    // find session, and add quest to it
+  } catch (error) {
+    console.log(error);
+    response.status(500).json(error);
+  }
+};
 
-    // find the session, and add the new user to it
-    const foundSession = await Session.findOne({ _id: request.params.id });
-    if (!foundSession) return response.status(404).json({ message: 'Session not found' });
-    foundSession.users.push(newUser._id);
-    await foundSession.save();
-
-    // create user token, and populate session
-    const userToken = generateToken({ session: foundSession._id, id: newUser._id, role: 'user' });
-    const populatedSession = await Session.populate(foundSession, {
-      path: 'host users queue history',
-    });
-
-    response
-      .status(201)
-      .json({ message: 'Welcome to the session', yourToken: userToken, session: populatedSession });
+export const moveToHistory = async (request, response, next) => {
+  try {
+    // find session
+    // locate quest in queue and move to history
   } catch (error) {
     console.log(error);
     response.status(500).json(error);
