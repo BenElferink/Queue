@@ -31,7 +31,7 @@ export const newSession = async (request, response, next) => {
   }
 };
 
-export const getSession = async (request, response, next) => {
+export const requestSession = async (request, response, next) => {
   try {
     // find the session, filter data for public view
     const foundSession = await Session.findOne({ _id: request.params.id })
@@ -40,6 +40,28 @@ export const getSession = async (request, response, next) => {
     if (!foundSession) return response.status(404).json({ message: 'Session not found' });
 
     response.status(200).json({ message: 'Session found', session: foundSession });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json(error);
+  }
+};
+
+export const deleteSession = async (request, response, next) => {
+  try {
+    // verify request is from host
+    if (request.role !== 'host')
+      return response.status(401).json({ message: 'Unauthorized to delete session' });
+
+    // find session, then target all it's contents and delete them from DB
+    const foundSession = await Session.findOne({ _id: request.params.id });
+    if (!foundSession) return response.status(404).json({ message: 'Session not found' });
+    foundSession.history.map(async (quest) => await Quest.deleteOne({ _id: quest }));
+    foundSession.queue.map(async (quest) => await Quest.deleteOne({ _id: quest }));
+    foundSession.users.map(async (user) => await User.deleteOne({ _id: user }));
+    await User.deleteOne({ _id: foundSession.host });
+    await Session.deleteOne({ _id: request.params.id });
+
+    response.status(200).json({ message: 'Session deleted' });
   } catch (error) {
     console.log(error);
     response.status(500).json(error);
