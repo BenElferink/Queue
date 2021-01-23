@@ -3,7 +3,7 @@ import express from 'express'; // Backend App (server)
 import cors from 'cors'; // HTTP headers (enable requests)
 import morgan from 'morgan'; // Logs incoming requests
 import dotenv from 'dotenv'; // Secures variables
-import sessionRoutes from './api/routes/sessionRoutes.js';
+import routes from './api/routes/routes.js';
 
 // initialize app
 const app = express();
@@ -30,7 +30,7 @@ mongoose.connection.on('error', (error) => console.log('❌ MongoDB connection e
 
 // routes
 app.get('/', (request, response, next) => response.status(200).json('Queue'));
-app.use('/session', sessionRoutes);
+app.use('/', routes);
 
 // server is listening for requests
 const PORT = process.env.PORT || 8080;
