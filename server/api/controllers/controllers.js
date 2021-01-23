@@ -37,6 +37,7 @@ export const getSession = async (request, response, next) => {
     const foundSession = await Session.findOne({ _id: request.params.id })
       .select('_id host')
       .populate('host');
+    if (!foundSession) return response.status(404).json({ message: 'Session not found' });
 
     response.status(200).json({ message: 'Session found', session: foundSession });
   } catch (error) {
@@ -53,6 +54,7 @@ export const newUser = async (request, response, next) => {
 
     // find the session, and add the new user to it
     const foundSession = await Session.findOne({ _id: request.params.id });
+    if (!foundSession) return response.status(404).json({ message: 'Session not found' });
     foundSession.users.push(newUser._id);
     await foundSession.save();
 
