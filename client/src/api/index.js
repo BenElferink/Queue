@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// api base-url (that you created on server side)
-const url = 'http://localhost:8080';
+const url = 'http://localhost:8080/api/v1/session';
 const headers = () => {
   const token = localStorage.getItem('token');
   return {
@@ -14,7 +13,7 @@ const headers = () => {
 
 export const newSession = async (body) => {
   try {
-    const response = await axios.post(`${url}/session/new`, body);
+    const response = await axios.post(`${url}/new`, body);
     console.log(response.status, response.statusText);
     localStorage.setItem('token', response.data.yourToken);
     return response.data.session;
@@ -24,29 +23,58 @@ export const newSession = async (body) => {
   }
 };
 
-// const deleteSession = async (id) => {
-//   try {
-//     const response = await axios.delete(`${url}/session/${id}`, headers());
-//     console.log(response.status, response.statusText);
-//     return true
-//   } catch (error) {
-//     console.log(error.message);
-//     return false
-//   }
-// }
+export const requestSession = async (sessionId) => {
+  try {
+    const response = await axios.get(`${url}/${sessionId}`);
+    console.log(response.status, response.statusText);
+    return response.data.session;
+  } catch (error) {
+    console.log(error.message);
+    return false;
+  }
+};
 
-// const moveToHistory = async (id, qid) => {
-//   try {
-//     const response = await axios.delete(`${url}/session/${id}/quest/${qid}`, headers());
-//     console.log(response.status, response.statusText);
-//     return true
-//   } catch (error) {
-//     console.log(error.message);
-//     return false
-//   }
-// }
+export const newUser = async (sessionId, body) => {
+  try {
+    const response = await axios.post(`${url}/${sessionId}/login`, body);
+    console.log(response.status, response.statusText);
+    localStorage.setItem('token', response.data.yourToken);
+    return response.data.session;
+  } catch (error) {
+    console.log(error.message);
+    return false;
+  }
+};
 
-// // user routes
-// axios.get('/session/:id', requestSession);
-// axios.post('/session/:id/login', newUser);
-// axios.post('/session/:id/quest', authenticateToken, addToQueue);
+export const askQuestion = async (body) => {
+  try {
+    const response = await axios.post(`${url}/quest`, body, headers());
+    console.log(response.status, response.statusText);
+    return true;
+  } catch (error) {
+    console.log(error.message);
+    return false;
+  }
+};
+
+export const answerQuestion = async (questId, body) => {
+  try {
+    const response = await axios.put(`${url}/quest/${questId}`, body, headers());
+    console.log(response.status, response.statusText);
+    return true;
+  } catch (error) {
+    console.log(error.message);
+    return false;
+  }
+};
+
+export const deleteSession = async () => {
+  try {
+    const response = await axios.put(url, headers());
+    console.log(response.status, response.statusText);
+    return true;
+  } catch (error) {
+    console.log(error.message);
+    return false;
+  }
+};

@@ -33,7 +33,7 @@ mongoose.connection.once('open', pusherHandler);
 
 // routes
 app.get('/', (request, response, next) => response.status(200).json('Queue'));
-app.use('/', routes);
+app.use('/api/v1', routes);
 
 // server is listening for requests
 const PORT = process.env.PORT || 8080;
