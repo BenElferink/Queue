@@ -1,11 +1,8 @@
-<<<<<<< Updated upstream
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Pusher from 'pusher-js';
-=======
 import Home from './Components/Home/Home';
 import Navbar from './Components/Navbar/Navbar';
->>>>>>> Stashed changes
 
 function App() {
   const sessionId = null;
@@ -47,7 +44,6 @@ function App() {
   // 3) Role: user/host
 
   return (
-<<<<<<< Updated upstream
     <div className='App'>
       <Router>
         <Navbar/>
@@ -79,8 +75,7 @@ function App() {
           </Route>
         </Switch>
       </Router>
-=======
->>>>>>> Stashed changes
+
     </div>
   );
 }
