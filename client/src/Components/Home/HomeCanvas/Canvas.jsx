@@ -1,19 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './Canvas.css';
 import Button from '@material-ui/core/Button';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import { newSession } from './../../../api';
 
 function Canvas() {
   const [hostNameInput, setHostNameInput] = useState('');
-  const [disableHostButton, setDisableHostButton] = useState(true);
 
-  useEffect(() => {
-    if (hostNameInput !== '') {
-      setDisableHostButton(false);
-    } else {
-      setDisableHostButton(true);
-    }
-  }, [hostNameInput]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const response = await newSession({ username: hostNameInput });
+    console.log(response);
+  };
 
   return (
     <div className='canvas'>
@@ -28,7 +26,7 @@ function Canvas() {
             <u>Disclaimer:</u> We do not collect any data!
           </span>
         </p>
-        <div className='canvas__InputField'>
+        <form className='canvas__InputField' onSubmit={handleSubmit}>
           <input
             type='text'
             value={hostNameInput}
@@ -39,10 +37,11 @@ function Canvas() {
             variant='contained'
             startIcon={<AddCircleIcon />}
             color='primary'
-            disabled={disableHostButton}>
+            type='submit'
+            disabled={hostNameInput === ''}>
             Host
           </Button>
-        </div>
+        </form>
       </div>
     </div>
   );
