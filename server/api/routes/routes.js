@@ -2,11 +2,11 @@ import express from 'express';
 import { authenticateToken } from './../middleware/jsonWebToken.js';
 import {
   newSession,
-  newUser,
   requestSession,
+  newUser,
+  askQuestion,
+  answerQuestion,
   deleteSession,
-  addToQueue,
-  moveToHistory,
 } from '../controllers/controllers.js';
 
 // initialize router
@@ -19,14 +19,11 @@ const router = express.Router();
   3rd param = request & response function (controller)
 */
 
-// host routes
 router.post('/session/new', newSession);
-router.delete('/session/:id', authenticateToken, deleteSession);
-router.put('/session/:id/quest/:qid', authenticateToken, moveToHistory);
-
-// user routes
 router.get('/session/:id', requestSession);
 router.post('/session/:id/login', newUser);
-router.post('/session/:id/quest', authenticateToken, addToQueue);
+router.post('/session/quest', authenticateToken, askQuestion);
+router.put('/session/quest/:id', authenticateToken, answerQuestion);
+router.delete('/session', authenticateToken, deleteSession);
 
 export default router;
