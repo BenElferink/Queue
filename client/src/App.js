@@ -1,42 +1,35 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Pusher from 'pusher-js';
 import Home from './Components/Home/Home';
 import Navbar from './Components/Navbar/Navbar';
 
 function App() {
-  const sessionId = null;
+  // Enable pusher logging - don't include this in production
+  Pusher.logToConsole = true;
 
-  // this needs tweaking once session ID is received from backend
+  const [session, setSession] = useState({});
+
   useEffect(() => {
-    if (sessionId !== null) {
-      // Enable pusher logging - don't include this in production
-      Pusher.logToConsole = true;
+    // pusher config
+    const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
+      cluster: process.env.REACT_APP_CLUSTER,
+    });
 
-      // Pusher config
-      const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
-        cluster: process.env.REACT_APP_CLUSTER,
-      });
+    // channel subscription
+    const channel = pusher.subscribe(`session-${session._id}`);
 
-      // pusher channel (we need the session ID)
-      const channel = pusher.subscribe(`session-${sessionId}`);
+    // event binding
+    channel.bind('update-session', function (data) {
+      setSession(data);
+    });
 
-      // handle changes on session
-      channel.bind('sync', function (data) {
-        alert(JSON.stringify(data));
-      });
-
-      // handle delete of session
-      channel.bind('delete', function (data) {
-        alert(JSON.stringify(data));
-      });
-
-      return () => {
-        pusher.unsubscribe();
-        pusher.unbind_all();
-      };
-    }
-  }, []);
+    // cleanup
+    return () => {
+      pusher.unsubscribe();
+      pusher.unbind_all();
+    };
+  }, [session]);
 
   // ALL TOKENS WILL HAVE THE FOLLOWING DATA INSIDE:
   // 1) Session ID
@@ -44,9 +37,9 @@ function App() {
   // 3) Role: user/host
 
   return (
-    <div className='app' id="home">
+    <div className='app' id='home'>
       <Router>
-        <Navbar/>
+        <Navbar />
         <Switch>
           <Route exact path='/'>
             {/* 
@@ -56,7 +49,7 @@ function App() {
               1. host token
               2. first-time-session-data
             */}
-            <Home/>
+            <Home />
           </Route>
           <Route exact path='/session/:id'>
             {/* 
@@ -75,7 +68,6 @@ function App() {
           </Route>
         </Switch>
       </Router>
-
     </div>
   );
 }

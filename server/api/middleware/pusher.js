@@ -26,7 +26,7 @@ export default () => {
     console.log(change);
     const sessionId = change.documentKey._id;
     let channelName = `session-${sessionId}`;
-    let eventName = false;
+    let eventName = 'update-session';
     let data = false;
 
     switch (change.operationType) {
@@ -34,8 +34,6 @@ export default () => {
         const foundSession = await Session.findOne({ _id: sessionId })
           .populate('host users queue history')
           .catch((error) => console.log(error));
-
-        eventName = 'update-session';
         data = {
           message: 'Session updated',
           session: foundSession,
@@ -43,7 +41,6 @@ export default () => {
         break;
 
       case 'delete':
-        eventName = 'delete-session';
         data = {
           message: 'Session deleted',
           session: {},
@@ -53,7 +50,7 @@ export default () => {
         break;
     }
 
-    if (eventName && data) {
+    if (data) {
       console.log(channelName, eventName, data);
       pusher.trigger(channelName, eventName, data);
     }
