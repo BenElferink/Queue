@@ -76,7 +76,7 @@ export const requestSession = async (request, response, next) => {
 export const deleteSession = async (request, response, next) => {
   try {
     // verify request is from host
-    if (request.role !== 'host')
+    if (request.role !== 'host' || request.sessionId !== request.params.id)
       return response.status(401).json({ message: 'Unauthorized to delete session' });
 
     // find session, then target all it's contents and delete them from DB
