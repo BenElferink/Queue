@@ -21,7 +21,13 @@ function Canvas() {
         <h1>
           Want to start a <span>Session</span>?
         </h1>
-        <p>You are just one click away, Enter your Name and Boom!! It's already created.</p>
+        <p>
+          You are just one click away! Enter your name! (it's that easy)
+          <br />
+          <span>
+            <u>Disclaimer:</u> We do not collect any data!
+          </span>
+        </p>
         <div className='canvas__InputField'>
           <input
             type='text'
