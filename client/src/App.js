@@ -44,7 +44,7 @@ function App() {
   // 3) Role: user/host
 
   return (
-    <div className='App'>
+    <div className='app'>
       <Router>
         <Navbar/>
         <Switch>
@@ -56,8 +56,8 @@ function App() {
               1. host token
               2. first-time-session-data
             */}
+            <Home/>
           </Route>
-          <Home/>
           <Route exact path='/session/:id'>
             {/* 
               this is the page for user-join-session
