@@ -1,0 +1,32 @@
+.contact {
+  background-color: rgba(18, 16, 19, 1) !important;
+  margin-top: 60px;
+  padding: 80px 100px 40px 100px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.contact__quote > h4 {
+  color: white;
+  font-size: 20px;
+  font-style: italic;
+}
+
+.contact__quote > h6 {
+  color: gray;
+  font-size: 15px;
+}
+
+.contact__email {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.contain__chip {
+  text-decoration: none !important;
+  margin: 10px 15px;
+}

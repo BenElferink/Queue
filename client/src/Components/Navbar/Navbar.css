@@ -3,11 +3,12 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 10px 35px;
+  padding: 10px 0px;
   padding-left: 40px;
   background: rgba(32, 185, 159, 1);
   align-items: center;
   z-index: 999 !important;
+  overflow-x: hidden;
 }
 
 .navbar.active {
@@ -34,4 +35,11 @@
   object-fit: contain;
   margin-bottom: -5px;
   position: relative;
+}
+
+.navbar__right {
+  background-color: whitesmoke;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  padding: 3px 10px;
 }

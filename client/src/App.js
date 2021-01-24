@@ -44,7 +44,7 @@ function App() {
   // 3) Role: user/host
 
   return (
-    <div className='app'>
+    <div className='app' id="home">
       <Router>
         <Navbar/>
         <Switch>
