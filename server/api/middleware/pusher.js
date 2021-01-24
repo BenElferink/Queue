@@ -24,35 +24,38 @@ export default () => {
 
   changeStream.on('change', async (change) => {
     console.log(change);
+    const sessionId = change.documentKey._id;
+    let channelName = `session-${sessionId}`;
+    let eventName = false;
+    let data = false;
 
-    // updated session data
-    if (change.operationType === 'update') {
-      try {
-        // find and populate session
-        const sessionId = change.documentKey._id;
-        const foundSession = await Session.findOne({ _id: sessionId }).populate(
-          'host users queue history',
-        );
+    switch (change.operationType) {
+      case 'update':
+        const foundSession = await Session.findOne({ _id: sessionId })
+          .populate('host users queue history')
+          .catch((error) => console.log(error));
 
-        // trigger pusher:
-        // channel name is 'session-ID'
-        // event is 'sync'
-        pusher.trigger(`session-${sessionId}`, 'sync', {
-          message: 'Session data updated',
+        eventName = 'update-session';
+        data = {
+          message: 'Session updated',
           session: foundSession,
-        });
-      } catch (error) {
-        console.log(error);
-      }
+        };
+        break;
 
-      // deleted session
-    } else if (change.operationType === 'delete') {
-      // trigger pusher:
-      // channel name is 'session-ID'
-      // event is 'delete'
-      pusher.trigger(`session-${change.documentKey._id}`, 'delete', {
-        message: 'Session deleted',
-      });
+      case 'delete':
+        eventName = 'delete-session';
+        data = {
+          message: 'Session deleted',
+          session: {},
+        };
+
+      default:
+        break;
+    }
+
+    if (eventName && data) {
+      console.log(channelName, eventName, data);
+      pusher.trigger(channelName, eventName, data);
     }
   });
 };
