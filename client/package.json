@@ -10,12 +10,23 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.2",
+    "@material-ui/icons": "^4.11.2",
     "axios": "^0.21.1",
+<<<<<<< Updated upstream
     "pusher-js": "^7.0.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.1"
+=======
+    "bootstrap": "^4.6.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^4.0.1",
+    "react-scroll-shadow": "^2.0.2"
+>>>>>>> Stashed changes
   },
   "eslintConfig": {
     "extends": [

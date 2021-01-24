@@ -1,7 +1,11 @@
+<<<<<<< Updated upstream
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Pusher from 'pusher-js';
-import './styles/App.css';
+=======
+import Home from './Components/Home/Home';
+import Navbar from './Components/Navbar/Navbar';
+>>>>>>> Stashed changes
 
 function App() {
   const sessionId = null;
@@ -43,8 +47,10 @@ function App() {
   // 3) Role: user/host
 
   return (
+<<<<<<< Updated upstream
     <div className='App'>
       <Router>
+        <Navbar/>
         <Switch>
           <Route exact path='/'>
             {/* 
@@ -55,6 +61,7 @@ function App() {
               2. first-time-session-data
             */}
           </Route>
+          <Home/>
           <Route exact path='/session/:id'>
             {/* 
               this is the page for user-join-session
@@ -72,6 +79,8 @@ function App() {
           </Route>
         </Switch>
       </Router>
+=======
+>>>>>>> Stashed changes
     </div>
   );
 }

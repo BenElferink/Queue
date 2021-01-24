@@ -1,0 +1,100 @@
+.canvas {
+  width: 100%;
+  height: 90vh;
+  background: rgb(32, 185, 159);
+}
+
+.canvas__text {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  flex-direction: column;
+  top: 40%;
+}
+
+.canvas__text > h1 {
+  font-weight: 500;
+  font-size: 40px;
+  text-align: center;
+}
+
+.canvas__text > h1 > span {
+  color: white;
+  font-weight: 600;
+}
+
+.canvas__text > p {
+  color: white;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.canvas__InputField {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+}
+.canvas__InputField > input {
+  outline: none;
+  border: 1px lightgray solid;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  height: 40px;
+  width: 30%;
+  padding: 10px;
+  caret-color: gray;
+  background-color: lightgray !important;
+  transition: background-color 0.24s ease-in-out;
+}
+
+.canvas__InputField > input:focus {
+  background-color: white !important;
+  border: 2px rgba(18, 16, 19, 0.8) solid;
+  border-right-width: 0;
+  transition: border background-color 0.24s ease-in-out;
+  transition: border 0.1s ease-in-out;
+}
+
+.canvas__InputField > .MuiButton-root {
+  background-color: rgba(18, 16, 19, 0.8) !important;
+  height: 40px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  color: white !important;
+}
+
+@media (max-width: 820px) {
+  .canvas__InputField > input {
+    width: 50%;
+  }
+}
+
+@media (max-width: 500px) {
+  .canvas__InputField > input {
+    width: 60%;
+  }
+
+  .canvas__InputField > .MuiButton-root {
+    background-color: rgba(18, 16, 19, 0.8) !important;
+    width: 80px !important;
+  }
+}
+
+@media (max-width: 668px) {
+  .canvas__text {
+    top: 30%;
+    padding: 10px 40px;
+  }
+}
+
+.canvas__InputField > input:valid {
+  background-color: white !important;
+  border: 2px rgba(18, 16, 19, 0.8) solid;
+  border-right-width: 0;
+  transition: background-color 0.24s ease-in-out;
+  transition: border 0.1s ease-in-out;
+}

@@ -1,0 +1,22 @@
+.features {
+  display: flex;
+  padding-top: 100px;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.features > h1 {
+  font-size: 35px;
+  font-weight: 600;
+}
+
+.features__list {
+  margin-top: 40px;
+}
+
+.features__list > .row > .col-md-4,
+.features__list > .row > .col-md-6 {
+  text-align: center;
+  padding: 30px;
+}
