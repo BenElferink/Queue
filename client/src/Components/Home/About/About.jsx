@@ -2,7 +2,7 @@ import styles from './About.module.css';
 
 export default function About() {
   return (
-    <div className={styles.about} id='aboutQueue'>
+    <div className={styles.component} id='aboutQueue'>
       <h1>What is Queue?</h1>
       <p>
         In the modern scenario of teaching and education, due to the pandemic, teachers and mentors

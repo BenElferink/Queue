@@ -1,19 +1,18 @@
+import { Fragment } from 'react';
 import StartSession from './StartSession/StartSession';
 import About from './About/About';
-import HomeFeatures from './HomeFeatures/HomeFeatures';
+import Features from './Features/Features';
 import Donate from './Donate/Donate';
 import Footer from './ContactFooter/Footer';
 
-function Home() {
+export default function Home() {
   return (
-    <div>
+    <Fragment>
       <StartSession />
       <About />
-      <HomeFeatures />
+      <Features />
       <Donate />
       <Footer />
-    </div>
+    </Fragment>
   );
 }
-
-export default Home;
