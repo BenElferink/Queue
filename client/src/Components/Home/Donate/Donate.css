@@ -8,6 +8,9 @@
   border-radius: 15px;
   padding: 30px;
   max-width: 750px;
+  box-shadow: -4px 3px 33px -20px rgba(0, 0, 0, 0.6);
+  -webkit-box-shadow: -4px 3px 33px -20px rgba(0, 0, 0, 0.6);
+  -moz-box-shadow: -4px 3px 33px -20px rgba(0, 0, 0, 0.6);
 }
 
 @media (max-width: 800px) {
@@ -22,6 +25,8 @@
 .donate__heading > h1 {
   color: white;
   font-size: 35px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid whitesmoke;
 }
 
 .donate__heading > h1 > span {

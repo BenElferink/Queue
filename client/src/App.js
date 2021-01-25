@@ -10,26 +10,26 @@ function App() {
 
   const [session, setSession] = useState({});
 
-  // useEffect(() => {
-  //   // pusher config
-  //   const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
-  //     cluster: process.env.REACT_APP_CLUSTER,
-  //   });
+  useEffect(() => {
+    // pusher config
+    const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
+      cluster: process.env.REACT_APP_CLUSTER,
+    });
 
-  //   // channel subscription
-  //   const channel = pusher.subscribe(`session-${session._id}`);
+    // channel subscription
+    const channel = pusher.subscribe(`session-${session._id}`);
 
-  //   // event binding
-  //   channel.bind('update-session', function (data) {
-  //     setSession(data);
-  //   });
+    // event binding
+    channel.bind('update-session', function (data) {
+      setSession(data);
+    });
 
-  //   // cleanup
-  //   return () => {
-  //     pusher.unsubscribe();
-  //     pusher.unbind_all();
-  //   };
-  // }, [session]);
+    // cleanup
+    return () => {
+      pusher.unsubscribe();
+      pusher.unbind_all();
+    };
+  }, [session]);
 
   // ALL TOKENS WILL HAVE THE FOLLOWING DATA INSIDE:
   // 1) Session ID
