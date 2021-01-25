@@ -1,20 +1,21 @@
-import React from 'react'
-import { NavHashLink  } from 'react-router-hash-link';
-import { IconButton, Tooltip } from '@material-ui/core';
+import { NavHashLink } from 'react-router-hash-link';
+import styles from './Navbar.module.css';
+import { Slide, IconButton, Tooltip } from '@material-ui/core';
 
-
-function NavbarIcon({link,title,icon}) {
-    return (
-        <div>
-            <NavHashLink smooth to={link}>
-                <Tooltip position="bottom-end" title={title}>
-                    <IconButton>
-                        {icon}
-                    </IconButton> 
-                </Tooltip>
-            </NavHashLink>
-        </div>
-    )
+export function IconWrapper({ children }) {
+  return (
+    <Slide in={true} direction={'left'} timeout={500}>
+      <div className={styles.icons}>{children}</div>
+    </Slide>
+  );
 }
 
-export default NavbarIcon
+export function Icon({ link, title, icon }) {
+  return (
+    <NavHashLink smooth to={link}>
+      <Tooltip position='bottom' title={title}>
+        <IconButton>{icon}</IconButton>
+      </Tooltip>
+    </NavHashLink>
+  );
+}

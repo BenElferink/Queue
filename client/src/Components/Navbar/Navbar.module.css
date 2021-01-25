@@ -1,0 +1,53 @@
+.component {
+  width: 100%;
+  padding: 10px 0px 10px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #20b99f;
+  overflow-x: hidden;
+}
+
+.sticky {
+  -webkit-animation: slideIn 0.3s ease-in;
+  animation: slideIn 0.3s ease-in;
+  background-color: #fff;
+  box-shadow: -1px 10px 23px -5px #0000004d;
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 0px;
+  left: 0px;
+  z-index: 999;
+}
+
+@-webkit-keyframes slideIn {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
+
+.logo {
+  width: 100px;
+  -o-object-fit: contain;
+  object-fit: contain;
+}
+
+.icons {
+  background-color: #f5f5f5;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  padding: 3px 10px;
+  display: flex;
+}
