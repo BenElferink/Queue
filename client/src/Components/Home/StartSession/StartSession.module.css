@@ -1,9 +1,9 @@
 .component {
   width: 100%;
+  height: 90vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   background-color: #20b99f;
 }
 
@@ -30,7 +30,6 @@
 
 .form {
   width: 100%;
-  margin-bottom: 42vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,10 +73,18 @@
 }
 
 .component > svg {
-  margin-bottom: 5vh;
   font-size: 50px;
+  position: absolute;
+  bottom: 7vh;
   -webkit-animation: bounce 0.5s alternate infinite ease-out;
   animation: bounce 0.5s alternate infinite ease-out;
+}
+
+@media (max-height: 500px) {
+  .component > svg {
+    position: unset;
+    margin-top: 10vh;
+  }
 }
 
 @-webkit-keyframes bounce {
