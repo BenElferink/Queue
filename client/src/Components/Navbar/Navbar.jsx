@@ -11,7 +11,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 
 export default function Navbar() {
-  const [navbar, setNavbar] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [userAuth, setUserAuth] = useState(false); //set true to enable user Navbar options
   const [hostAuth, setHostAuth] = useState(false); //set true to enable host Navbar options
 
@@ -19,9 +19,9 @@ export default function Navbar() {
     const addNavShadow = () => {
       // if scrolling passed 80px from the top
       if (window.scrollY >= 80) {
-        setNavbar(true);
+        setIsScrolled(true);
       } else {
-        setNavbar(false);
+        setIsScrolled(false);
       }
     };
 
@@ -41,7 +41,7 @@ export default function Navbar() {
   // }
 
   return (
-    <div className={`${styles.component} ${navbar && styles.sticky}`}>
+    <div className={`${styles.component} ${isScrolled && styles.sticky}`}>
       <img src={blackQueueLogo} className={styles.logo} alt='Queue' />
 
       {/* Nav-icons for the homepage */}
