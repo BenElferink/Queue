@@ -1,0 +1,48 @@
+.form {
+  width: 100%;
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.form > input {
+  width: 30%;
+  height: 40px;
+  padding: 10px;
+  background-color: #d3d3d3;
+  border: 1px #d3d3d3 solid;
+  border-radius: 5px 0 0 5px;
+  caret-color: #808080;
+  outline: none;
+  transition: background-color 0.25s ease-in-out;
+  transition: width 2s;
+}
+.form > input:focus,
+.form > input:valid {
+  background-color: #fff;
+  border: 2px rgba(18, 16, 19, 0.8) solid;
+  border-right-width: 0;
+}
+.form > button {
+  height: 40px;
+  background-color: rgba(18, 16, 19, 0.8) !important;
+  border-radius: 0 5px 5px 0;
+  color: #fff !important;
+}
+
+@media (max-width: 500px) {
+  .form > input {
+    width: 60%;
+    transition: width 2s;
+  }
+  .form > button {
+    width: 80px;
+    transition: width 2s;
+  }
+}
+@media (max-width: 820px) {
+  .form > input {
+    width: 50%;
+    transition: width 2s;
+  }
+}

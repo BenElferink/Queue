@@ -14,18 +14,7 @@ export const newSession = async (body) => {
   try {
     const response = await axios.post(`${url}/new`, body);
     console.log(response.status, response.statusText);
-    return { session: response.data.session, token: response.data.yourToken };
-  } catch (error) {
-    console.log(error.message);
-    return false;
-  }
-};
-
-export const newUser = async (sessionId, body) => {
-  try {
-    const response = await axios.post(`${url}/${sessionId}/login`, body);
-    console.log(response.status, response.statusText);
-    return { session: response.data.session, token: response.data.yourToken };
+    return { token: response.data.token };
   } catch (error) {
     console.log(error.message);
     return false;
@@ -37,6 +26,17 @@ export const requestSession = async (sessionId) => {
     const response = await axios.get(`${url}/${sessionId}`);
     console.log(response.status, response.statusText);
     return { session: response.data.session };
+  } catch (error) {
+    console.log(error.message);
+    return false;
+  }
+};
+
+export const newUser = async (sessionId, body) => {
+  try {
+    const response = await axios.post(`${url}/${sessionId}/login`, body);
+    console.log(response.status, response.statusText);
+    return { token: response.data.token };
   } catch (error) {
     console.log(error.message);
     return false;

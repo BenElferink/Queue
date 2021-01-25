@@ -6,7 +6,9 @@ export const TokenProvider = (props) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
 
   useEffect(() => {
-    localStorage.setItem('token', token);
+    if (token !== null && token !== undefined) {
+      localStorage.setItem('token', token);
+    }
   }, [token]);
 
   return (

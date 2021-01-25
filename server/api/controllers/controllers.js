@@ -18,13 +18,8 @@ export const newSession = async (request, response, next) => {
 
     // create host token, and populate session
     const hostToken = generateToken({ session: newSession._id, id: newHost._id, role: 'host' });
-    const populatedSession = await Session.populate(newSession, {
-      path: 'host users queue history',
-    });
 
-    response
-      .status(201)
-      .json({ message: 'Session created', yourToken: hostToken, session: populatedSession });
+    response.status(201).json({ message: 'Session created', token: hostToken });
   } catch (error) {
     console.log(error);
     response.status(500).json(error);
@@ -62,13 +57,8 @@ export const newUser = async (request, response, next) => {
 
     // create user token, and populate session
     const userToken = generateToken({ session: foundSession._id, id: newUser._id, role: 'user' });
-    const populatedSession = await Session.populate(foundSession, {
-      path: 'host users queue history',
-    });
 
-    response
-      .status(201)
-      .json({ message: 'Welcome to the session', yourToken: userToken, session: populatedSession });
+    response.status(201).json({ message: 'Welcome to the session', token: userToken });
   } catch (error) {
     console.log(error);
     response.status(500).json(error);
@@ -78,7 +68,7 @@ export const newUser = async (request, response, next) => {
 export const getSession = async (request, response, next) => {
   try {
     // find the session, filter data for public view
-    const foundSession = await Session.findOne({ _id: request.params.id }).populate(
+    const foundSession = await Session.findOne({ _id: request.sessionId }).populate(
       'host users queue history',
     );
     if (!foundSession) return response.status(404).json({ message: 'Session not found' });

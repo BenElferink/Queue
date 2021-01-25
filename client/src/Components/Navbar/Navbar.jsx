@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { LoggedContext } from '../../contexts/LoggedContext';
 import styles from './Navbar.module.css';
 import blackQueueLogo from './../../images/blackQueueLogo.svg';
 import { IconWrapper, Icon } from './NavbarIcon';
@@ -11,9 +12,9 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 
 export default function Navbar() {
+  const { logged } = useContext(LoggedContext);
+  // const logged = { role: 'user' };
   const [isScrolled, setIsScrolled] = useState(false);
-  const [userAuth, setUserAuth] = useState(false); //set true to enable user Navbar options
-  const [hostAuth, setHostAuth] = useState(true); //set true to enable host Navbar options
 
   useEffect(() => {
     const addNavShadow = () => {
@@ -31,21 +32,15 @@ export default function Navbar() {
     };
   }, []);
 
-  // if (session_role === 'user') {
-  //   setUserAuth(true);
-  // } else if (session_role === 'host') {
-  //   setHostAuth(true);
-  // } else {
-  //   setUserAuth(false);
-  //   setHostAuth(false);
-  // }
-
   return (
-    <div className={`${styles.component} ${isScrolled && styles.sticky} ${(userAuth | hostAuth) && styles.glassMorph}`}>
+    <div
+      className={`${styles.component} ${isScrolled && styles.navColor} ${
+        logged.role !== null && styles.glassMorph
+      }`}>
       <img src={blackQueueLogo} className={styles.logo} alt='Queue' />
 
       {/* Nav-icons for the homepage */}
-      {!userAuth && !hostAuth && (
+      {logged.role === null && (
         <IconWrapper glassMorph={false}>
           <Icon link={'/#home'} title='Home' icon={<HomeIcon />} />
           <Icon link={'#aboutQueue'} title='About Us' icon={<InfoIcon />} />
@@ -55,14 +50,14 @@ export default function Navbar() {
       )}
 
       {/* Nav-icons for the user dashboard */}
-      {userAuth && (
+      {logged.role === 'user' && (
         <IconWrapper glassMorph={true}>
           <Icon link={'/#home'} title='Leave Session' icon={<ExitToAppIcon />} />
         </IconWrapper>
       )}
 
       {/* Nav-icons for the host dashboard */}
-      {hostAuth && (
+      {logged.role === 'host' && (
         <IconWrapper glassMorph={true}>
           <Icon link={'/#home'} title='Set Timer for Doubts' icon={<TimerIcon />} />
           <Icon link={'/#home'} title='Invite to Session' icon={<PersonAddIcon />} />

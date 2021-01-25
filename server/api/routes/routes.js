@@ -21,9 +21,9 @@ const router = express.Router();
 */
 
 router.post('/session/new', newSession);
+router.get('/session', authenticateToken, getSession);
 router.get('/session/:id', requestSession);
 router.post('/session/:id/login', newUser);
-router.get('/session', authenticateToken, getSession);
 router.post('/session/quest', authenticateToken, askQuestion);
 router.put('/session/quest/:id', authenticateToken, answerQuestion);
 router.delete('/session', authenticateToken, deleteSession);
