@@ -1,12 +1,11 @@
-import React from 'react'
-import './UserDashboard.css'
+import styles from './UserDashboard.module.css';
 
 function UserDashboard() {
-    return (
-        <div className="userDashboard">
-            
-        </div>
-    )
+  return (
+    <div className={styles.component}>
+      <div className={styles.baseGlass}></div>
+    </div>
+  );
 }
 
-export default UserDashboard
+export default UserDashboard;

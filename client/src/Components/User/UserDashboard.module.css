@@ -1,0 +1,28 @@
+.component {
+  width: 100%;
+  min-height: 100vh;
+  /* background: linear-gradient(
+    to bottom,
+    rgba(32, 185, 159, 0.7),
+    rgba(32, 185, 159, 0.4),
+    rgba(155, 153, 153, 0.4)
+  ); */
+  background-image: url("../../images/DashboardBG.svg");
+  background-repeat: repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 50px;
+}
+
+.baseGlass {
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  display: flex;
+  width: 92vw;
+  height: 80vh;
+  max-width: 90%;
+  max-height: 90%;
+  box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.18);
+}
