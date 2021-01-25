@@ -12,9 +12,9 @@
   -webkit-animation: slideIn 0.3s ease-in;
   animation: slideIn 0.3s ease-in;
   background-color: #fff;
-  box-shadow: -1px 10px 23px -5px #0000004d;
-  position: -webkit-sticky !important;
-  position: sticky !important;
+  box-shadow: -1px 10px 23px -5px rgba(0, 0, 0, 0.3);
+  position: -webkit-sticky;
+  position: sticky;
   top: 0px;
   left: 0px;
   z-index: 999;
