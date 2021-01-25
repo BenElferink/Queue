@@ -1,0 +1,22 @@
+.about {
+  padding: 100px 150px;
+  background-color: #121013;
+  color: #fff;
+  text-align: center;
+}
+
+@media (max-width: 868px) {
+  .about {
+    padding: 60px;
+  }
+}
+
+.about > h1 {
+  font-size: 35px;
+}
+
+.about > p {
+  font-size: 18px;
+  margin-top: 30px;
+  line-height: 1.6;
+}
