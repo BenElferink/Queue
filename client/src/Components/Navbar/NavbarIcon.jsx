@@ -2,10 +2,10 @@ import { NavHashLink } from 'react-router-hash-link';
 import styles from './Navbar.module.css';
 import { Slide, IconButton, Tooltip } from '@material-ui/core';
 
-export function IconWrapper({ children }) {
+export function IconWrapper({ children, glassMorph }) {
   return (
     <Slide in={true} direction={'left'} timeout={500}>
-      <div className={styles.icons}>{children}</div>
+      <div className={`${styles.icons} ${glassMorph && styles.glass}`}>{children}</div>
     </Slide>
   );
 }
