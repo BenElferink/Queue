@@ -75,6 +75,21 @@ export const newUser = async (request, response, next) => {
   }
 };
 
+export const getSession = async (request, response, next) => {
+  try {
+    // find the session, filter data for public view
+    const foundSession = await Session.findOne({ _id: request.params.id }).populate(
+      'host users queue history',
+    );
+    if (!foundSession) return response.status(404).json({ message: 'Session not found' });
+
+    response.status(200).json({ message: 'Session found', session: foundSession });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json(error);
+  }
+};
+
 export const askQuestion = async (request, response, next) => {
   try {
     // find session
