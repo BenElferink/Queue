@@ -9,10 +9,10 @@
   background: #20b99fcc;
   border-radius: 15px;
   text-align: center;
-
   box-shadow: -4px 3px 33px -20px rgba(0, 0, 0, 0.6);
   -webkit-box-shadow: -4px 3px 33px -20px rgba(0, 0, 0, 0.6);
   -moz-box-shadow: -4px 3px 33px -20px rgba(0, 0, 0, 0.6);
+  transition: 0.3s max-width;
 }
 
 .component > h1 {
