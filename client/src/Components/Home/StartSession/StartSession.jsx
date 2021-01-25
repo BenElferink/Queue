@@ -37,10 +37,9 @@ export default function StartSession() {
           required
         />
         <Button
+          type='submit'
           variant='contained'
           startIcon={<AddCircleIcon />}
-          color='primary'
-          type='submit'
           disabled={hostNameInput === ''}>
           Host
         </Button>
