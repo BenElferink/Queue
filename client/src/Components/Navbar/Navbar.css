@@ -42,4 +42,23 @@
   border-top-left-radius: 25px;
   border-bottom-left-radius: 25px;
   padding: 3px 10px;
+  display: flex;
+}
+
+.navbar__right--hide {
+  display: none !important;
+}
+
+.navbar__user,
+.navbar__host {
+  background-color: whitesmoke;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  padding: 3px 10px;
+  display: none;
+}
+
+.navbar__user--show,
+.navbar__host--show {
+  display: flex;
 }

@@ -41,8 +41,10 @@ function HomeFeatures() {
           </div>
           <div className='col-md-6'>
             <IndividualFeature featureName='One Click Session Commencement' imgSrc={oneClick} />
+            <div id="Support_the_Application"></div>
           </div>
         </div>
+        
       </div>
     </div>
   );

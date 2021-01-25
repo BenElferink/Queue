@@ -3,6 +3,7 @@ import Canvas from './HomeCanvas/Canvas'
 import './Home.css'
 import HomeFeatures from './HomeFeatures/HomeFeatures'
 import Footer from './ContactFooter/Footer'
+import Donate from './Donate/Donate'
 
 function Home() {
     return (
@@ -19,6 +20,7 @@ function Home() {
             <div className="home__features">
                 <HomeFeatures/>
             </div>
+            <Donate/>
             <Footer/>
         </div>
     )
