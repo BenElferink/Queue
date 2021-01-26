@@ -15,9 +15,9 @@
 }
 
 .welcome {
-  font-size: 20px;
+  font-size: 20px !important;
   margin: auto 30px auto 0;
-  padding: 5px 15px;
+  padding: 5px 15px !important;
   background-color: rgba(245, 0, 87, 0.6) !important;
   -webkit-backdrop-filter: blur(5px) !important;
   backdrop-filter: blur(5px) !important;

@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { TokenContext } from '../../contexts/TokenContext';
 import { SessionContext } from '../../contexts/SessionContext';
 import { LoggedContext } from '../../contexts/LoggedContext';

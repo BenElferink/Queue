@@ -2,10 +2,9 @@ import { useContext } from 'react';
 import { SessionContext } from './../../contexts/SessionContext';
 import styles from './Dashboard.module.css';
 import DashboardSection from './DashboardSection/DashboardSection';
-import QuestionItem from './QuestionItem/QuestionItem';
-import HistoryItem from './HistoryItem/HistoryItem';
 import AskQuestion from './AskQuestion/AskQuestion';
 import AnswerQuestion from './AnswerQuestion/AnswerQuestion';
+import QuestAnsTemplate from './QuestAnsTemplate/QuestAnsTemplate';
 
 export default function Dashboard({ isHost }) {
   const { session } = useContext(SessionContext);
@@ -15,7 +14,8 @@ export default function Dashboard({ isHost }) {
       <div className={styles.baseGlass}>
         <DashboardSection title='Queue'>
           {session.queue.map((item, i) => (
-            <QuestionItem
+            <QuestAnsTemplate
+              historyQuest={false}
               key={i}
               item={item}
               user={session.users.find((user) => user._id === item.from)}
@@ -27,12 +27,23 @@ export default function Dashboard({ isHost }) {
 
         <DashboardSection title='History'>
           {session.history.map((item, i) => (
-            <HistoryItem
+            <QuestAnsTemplate
+              historyQuest={true}
               key={i}
               item={item}
               user={session.users.find((user) => user._id === item.from)}
             />
           ))}
+          
+          {/* Start : This part is hard coded for testing purposes, Exclude from deployment */}
+          <QuestAnsTemplate
+              historyQuest={true}
+              key={123}
+              item={{question:"My name is Aman and what is yours?", answer: "Hey Aman, I am Ben. This Project is gonna rock and people will love it."}}
+              user={{username:"Aman",} }
+            />
+          {/* End : This part is hard code for testing purposes, Exclude from deployment */}
+
         </DashboardSection>
       </div>
     </div>
