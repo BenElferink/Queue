@@ -5,7 +5,7 @@ import { LoggedContext } from '../../contexts/LoggedContext';
 import styles from './Navbar.module.css';
 import blackQueueLogo from './../../images/blackQueueLogo.svg';
 import { IconWrapper, Icon } from './NavbarIcon';
-import { Chip } from '@material-ui/core';
+import { Chip, IconButton, TextField } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
 import TimerIcon from '@material-ui/icons/Timer';
@@ -13,12 +13,13 @@ import BugReportIcon from '@material-ui/icons/BugReport';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 
 const Emoji = () => <div className={styles.welcomeIcon}>👋🏼</div>;
 
 export default function Navbar() {
   const { logoutToken } = useContext(TokenContext);
-  const { logoutSession } = useContext(SessionContext);
+  const { session, logoutSession } = useContext(SessionContext);
   const { logoutLogged, logged } = useContext(LoggedContext);
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -65,14 +66,12 @@ export default function Navbar() {
       {/* Nav-icons for the user dashboard */}
       {logged.role === 'user' && (
         <IconWrapper glassMorph={true}>
-          {/* <div className={styles.right}> */}
           <Chip
             icon={<Emoji />}
             className={styles.welcome}
             label={logged.username}
             color='secondary'
           />
-          {/* </div> */}
           <Icon onClick={handleLogout} title='Leave Session' icon={<ExitToAppIcon />} />
         </IconWrapper>
       )}
@@ -86,10 +85,23 @@ export default function Navbar() {
             className={styles.welcome}
             label={logged.username}
             color='secondary'
-          />*/}
+          />
+        
+          <div className={`${dropDown && styles.copyToClip}`}>
+            <input
+            value={`https://localhost:3000/join/${session._id}`}
+            readonly
+            />
+            <IconButton>
+              <FileCopyIcon/>
+            </IconButton>
+          </div>
+
+        */}
           <Icon link={'/#home'} title='Set Timer for Doubts' icon={<TimerIcon />} />
-          <Icon link={'/#home'} title='Invite to Session' icon={<PersonAddIcon />} />
+          <Icon title='Invite to Session' icon={<PersonAddIcon />}/>
           <Icon link={'/#home'} title='Leave Session' icon={<ExitToAppIcon />} />
+
         </IconWrapper>
       )}
     </div>
