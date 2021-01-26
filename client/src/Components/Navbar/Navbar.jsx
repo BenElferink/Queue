@@ -80,6 +80,13 @@ export default function Navbar() {
       {/* Nav-icons for the host dashboard */}
       {logged.role === 'host' && (
         <IconWrapper glassMorph={true}>
+          {/*To be fixed to display hostname : low priority 
+          <Chip
+            icon={<Emoji />}
+            className={styles.welcome}
+            label={logged.username}
+            color='secondary'
+          />*/}
           <Icon link={'/#home'} title='Set Timer for Doubts' icon={<TimerIcon />} />
           <Icon link={'/#home'} title='Invite to Session' icon={<PersonAddIcon />} />
           <Icon link={'/#home'} title='Leave Session' icon={<ExitToAppIcon />} />
