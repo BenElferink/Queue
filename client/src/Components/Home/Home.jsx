@@ -1,9 +1,9 @@
 import { Fragment } from 'react';
-import LandingPage from '../LandingPage/LandingPage';
+import LandingPage from './LandingPage/LandingPage';
 import About from './About/About';
 import Features from './Features/Features';
 import Donate from './Donate/Donate';
-import Footer from './ContactFooter/Footer';
+import ContactUs from './ContactUs/ContactUs';
 
 export default function Home({ isHost }) {
   return (
@@ -12,7 +12,7 @@ export default function Home({ isHost }) {
       <About />
       <Features />
       <Donate />
-      <Footer />
+      <ContactUs />
     </Fragment>
   );
 }

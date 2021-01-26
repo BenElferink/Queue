@@ -1,16 +1,17 @@
 import { useState, useContext, Fragment } from 'react';
-import { TokenContext } from '../../../contexts/TokenContext';
-import { newSession, newUser } from '../../../api';
+import { TokenContext } from '../../../../contexts/TokenContext';
+import { newSession, newUser } from '../../../../api';
 import styles from './NameForm.module.css';
 import { CircularProgress } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
-function NameForm({ isHost, sessionId }) {
+export default function NameForm({ isHost, sessionId }) {
   const { setToken } = useContext(TokenContext);
   const [input, setInp] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // this function makes a request to the backend, controlled by isHost (true/false)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -39,5 +40,3 @@ function NameForm({ isHost, sessionId }) {
     </Fragment>
   );
 }
-
-export default NameForm;

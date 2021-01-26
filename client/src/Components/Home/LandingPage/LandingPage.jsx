@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { requestSession } from '../../api';
+import { requestSession } from '../../../api';
 import styles from './LandingPage.module.css';
 import NameForm from './NameForm/NameForm';
 import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded';
@@ -9,6 +9,8 @@ export default function LandingPage({ isHost }) {
   const { id } = useParams();
   const [hostName, setHostName] = useState('');
 
+  // this side effect requests the session,
+  // then receives the host name and sets that name inot state, to display in the UI
   useEffect(() => {
     if (id) {
       (async () => {
@@ -43,9 +45,7 @@ export default function LandingPage({ isHost }) {
           </span>
         </p>
       </div>
-
       <NameForm isHost={isHost} sessionId={id} />
-
       <ExpandMoreRoundedIcon />
     </div>
   );

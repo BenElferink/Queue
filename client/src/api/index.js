@@ -78,7 +78,7 @@ export const answerQuestion = async (token, questId, body) => {
 
 export const deleteSession = async (token) => {
   try {
-    const response = await axios.put(url, headers(token));
+    const response = await axios.delete(url, headers(token));
     console.log(response.status, response.statusText, response.data.message);
     return true;
   } catch (error) {

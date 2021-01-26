@@ -1,32 +1,32 @@
-.contact {
-  background-color: rgba(18, 16, 19, 1) !important;
+.component {
   margin-top: 60px;
   padding: 80px 100px 40px 100px;
-  text-align: center;
   display: flex;
-  justify-content: center;
   flex-direction: column;
+  justify-content: center;
+  background-color: rgba(18, 16, 19, 1) !important;
+  text-align: center;
 }
 
-.contact__quote > h4 {
-  color: white;
+.quote > h4 {
+  color: #fff;
   font-size: 20px;
   font-style: italic;
 }
 
-.contact__quote > h6 {
-  color: gray;
+.quote > h6 {
+  color: #808080;
   font-size: 15px;
 }
 
-.contact__email {
+.email {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 20px;
 }
 
-.contain__chip {
+.chip {
   text-decoration: none !important;
   margin: 10px 15px;
 }

@@ -41,17 +41,19 @@
   width: 24px;
   height: 24px;
   background: rgba(0, 0, 0, 0.5) !important;
-  cursor: pointer;
 }
 .avatarMic > svg {
   padding: 2px;
 }
-.avatarMic:hover,
-.avatarMic:active {
+.pointer {
+  cursor: pointer;
+}
+.pointer:hover,
+.pointer:active {
   background: rgba(0, 0, 0, 0.7) !important;
 }
-.avatarMic:hover > svg,
-.avatarMic:active > svg {
+.pointer:hover > svg,
+.pointer:active > svg {
   color: #00c800;
 }
 

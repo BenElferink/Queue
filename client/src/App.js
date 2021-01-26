@@ -9,12 +9,22 @@ import Navbar from './Components/Navbar/Navbar';
 import Home from './Components/Home/Home';
 import Dashboard from './Components/Dashboard/Dashboard';
 import LoadingApp from './Components/LoadingApp/LoadingApp';
+import SessionUrl from './Components/SessionUrl/SessionUrl';
+
+const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
+  cluster: 'ap2',
+});
 
 function App() {
   const { token, setToken } = useContext(TokenContext);
   const { session, setSession } = useContext(SessionContext);
   const { logged, setLogged } = useContext(LoggedContext);
   const [loading, setLoading] = useState(false);
+  const [showSessionUrl, setShowSessionUrl] = useState(false);
+
+  const toggleShowSessionUrl = () => {
+    setShowSessionUrl(!showSessionUrl);
+  };
 
   // this side effect tries to get the session data if a token exists,
   // this is to re-login the user/host if he/she accidentally closed the window
@@ -50,10 +60,6 @@ function App() {
   // this side effect subscribes to the pusher channel, using the channel ID
   // subscription happens only if the session ID exists, meaning the session was fetched
   useEffect(() => {
-    const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
-      cluster: 'ap2',
-    });
-
     if (logged.isLogged) {
       const channel = pusher.subscribe(`session-${session._id}`);
       channel.bind('update-session', function (data) {
@@ -85,7 +91,9 @@ function App() {
         <LoadingApp />
       ) : (
         <Router>
-          <Navbar />
+          <Navbar toggleShowSessionUrl={toggleShowSessionUrl} />
+          {showSessionUrl && <SessionUrl id={session._id} toggleState={toggleShowSessionUrl} />}
+
           <Switch>
             <Route exact path='/'>
               {/* 

@@ -6,7 +6,7 @@ import timeQueue from './../../../images/timeQueue.svg';
 import timerDoubt from './../../../images/timerDoubt.svg';
 import oneClick from './../../../images/oneClick.svg';
 
-export default function HomeFeatures() {
+export default function Features() {
   return (
     <div className={styles.component}>
       <h1>Features</h1>
