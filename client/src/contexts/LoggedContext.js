@@ -6,9 +6,20 @@ export const LoggedProvider = (props) => {
   const [logged, setLogged] = useState({
     isLogged: false,
     role: null,
+    username: '',
   });
 
+  const logoutLogged = () => {
+    setLogged({
+      isLogged: false,
+      role: null,
+      username: '',
+    });
+  };
+
   return (
-    <LoggedContext.Provider value={{ logged, setLogged }}>{props.children}</LoggedContext.Provider>
+    <LoggedContext.Provider value={{ logged, setLogged, logoutLogged }}>
+      {props.children}
+    </LoggedContext.Provider>
   );
 };

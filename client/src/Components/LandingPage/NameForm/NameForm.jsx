@@ -8,13 +8,15 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 function NameForm({ isHost, sessionId }) {
   const { setToken } = useContext(TokenContext);
-  const [inp, setInp] = useState('');
+  const [input, setInp] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const data = isHost ? await newSession({ username: inp }) : await newUser(sessionId, inp);
+    const data = isHost
+      ? await newSession({ username: input })
+      : await newUser(sessionId, { username: input });
     setToken(data.token);
   };
 
@@ -24,12 +26,12 @@ function NameForm({ isHost, sessionId }) {
         <CircularProgress color='secondary' />
       ) : (
         <form className={styles.form} onSubmit={handleSubmit}>
-          <input type='text' value={inp} onChange={(e) => setInp(e.target.value)} required />
+          <input type='text' value={input} onChange={(e) => setInp(e.target.value)} required />
           <Button
             type='submit'
             variant='contained'
             startIcon={<AddCircleIcon />}
-            disabled={inp === ''}>
+            disabled={input === ''}>
             {isHost ? 'CREATE' : 'JOIN'}
           </Button>
         </form>

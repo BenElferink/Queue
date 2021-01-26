@@ -1,0 +1,27 @@
+.component {
+  width: 100%;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background-color: white;
+  animation: slideUp 0.35s ease-out;
+  z-index: 999 !important;
+  position: absolute;
+  top: 0;
+}
+
+.component > embed {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}

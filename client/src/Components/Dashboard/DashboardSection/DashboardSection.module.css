@@ -1,0 +1,31 @@
+.component {
+  height: 80vh;
+  flex: 0.29;
+  background-color: rgba(255, 255, 255, 0.4);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  border-radius: 25px;
+  padding: 25px 10px 10px 10px;
+  overflow-y: scroll !important;
+}
+
+::-webkit-scrollbar {
+  width: 10px !important;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media only screen and (max-width: 868px) {
+  .component {
+    width: 100%;
+  }
+}
+
+.title {
+  color: #20b99f;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid whitesmoke;
+  margin-bottom: 30px;
+}

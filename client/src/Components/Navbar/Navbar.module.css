@@ -14,6 +14,26 @@
   animation: slideIn 0.5s ease-in;
 }
 
+.welcome {
+  font-size: 20px;
+  margin: auto 30px auto 0;
+  padding: 5px 15px;
+  background-color: rgba(245, 0, 87, 0.6) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  backdrop-filter: blur(5px) !important;
+}
+.welcomeIcon {
+  /* margin: ; */
+  font-size: 20px;
+}
+
+.right {
+  display: flex;
+  flex: row nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
 @-webkit-keyframes slideIn {
   from {
     transform: translateY(-100%);

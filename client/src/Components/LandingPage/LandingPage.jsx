@@ -10,17 +10,17 @@ export default function LandingPage({ isHost }) {
   const [hostName, setHostName] = useState('');
 
   useEffect(() => {
-    (async () => {
-      const data = await requestSession(id);
-      if (data) {
-        setHostName(data.session.host.username);
-      } else {
-        console.log('Unexpected error: tried to request session');
-      }
-    })();
+    if (id) {
+      (async () => {
+        const data = await requestSession(id);
+        if (data) {
+          setHostName(data.session.host.username);
+        } else {
+          console.log('Unexpected error: tried to request session');
+        }
+      })();
+    }
   }, [id]);
-
-  // 600f31277a616e4d942d1579
 
   return (
     <div className={styles.component}>

@@ -10,11 +10,11 @@ export function IconWrapper({ children, glassMorph }) {
   );
 }
 
-export function Icon({ link, title, icon }) {
+export function Icon({ link, title, icon, onClick }) {
   return (
-    <NavHashLink smooth to={link}>
+    <NavHashLink smooth to={link ? link : ''}>
       <Tooltip position='bottom' title={title}>
-        <IconButton>{icon}</IconButton>
+        <IconButton onClick={onClick}>{icon}</IconButton>
       </Tooltip>
     </NavHashLink>
   );

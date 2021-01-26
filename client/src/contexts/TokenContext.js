@@ -5,6 +5,10 @@ export const TokenContext = createContext();
 export const TokenProvider = (props) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
 
+  const logoutToken = () => {
+    setToken('');
+  };
+
   useEffect(() => {
     if (token !== null && token !== undefined) {
       localStorage.setItem('token', token);
@@ -12,6 +16,8 @@ export const TokenProvider = (props) => {
   }, [token]);
 
   return (
-    <TokenContext.Provider value={{ token, setToken }}>{props.children}</TokenContext.Provider>
+    <TokenContext.Provider value={{ token, setToken, logoutToken }}>
+      {props.children}
+    </TokenContext.Provider>
   );
 };

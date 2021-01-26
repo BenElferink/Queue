@@ -36,5 +36,5 @@ app.get('/', (request, response, next) => response.status(200).json('Queue'));
 app.use('/api/v1', routes);
 
 // server is listening for requests
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`✅ Server is listening on port: ${PORT}`));

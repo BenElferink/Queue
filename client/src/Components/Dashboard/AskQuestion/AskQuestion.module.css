@@ -1,0 +1,33 @@
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.form > textarea {
+  width: 90%;
+  height: 80px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px white solid;
+  border-radius: 5px 0 0 5px;
+  caret-color: #808080;
+  outline: none;
+  transition: background-color 0.25s ease-in-out;
+  transition: height 1s;
+}
+.form > textarea:focus,
+.form > textarea:valid {
+  background-color: #fff;
+  border: 2px rgba(18, 16, 19, 0.8) solid;
+  height: 120px;
+  transition: height 1s;
+}
+.form > Button {
+  height: 40px;
+  width: 90% !important;
+  background-color: rgba(18, 16, 19, 0.8) !important;
+  color: #fff !important;
+  margin-top: 20px;
+}

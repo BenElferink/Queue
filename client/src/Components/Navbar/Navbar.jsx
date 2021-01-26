@@ -1,8 +1,11 @@
-import { useContext, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useState } from 'react';
+import { TokenContext } from '../../contexts/TokenContext';
+import { SessionContext } from '../../contexts/SessionContext';
 import { LoggedContext } from '../../contexts/LoggedContext';
 import styles from './Navbar.module.css';
 import blackQueueLogo from './../../images/blackQueueLogo.svg';
 import { IconWrapper, Icon } from './NavbarIcon';
+import { Chip } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
 import TimerIcon from '@material-ui/icons/Timer';
@@ -11,9 +14,13 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 
+const Emoji = () => <div className={styles.welcomeIcon}>👋🏼</div>;
+
 export default function Navbar() {
-  const { logged } = useContext(LoggedContext);
-  // const logged = { role: 'user' };
+  const { logoutToken } = useContext(TokenContext);
+  const { logoutSession } = useContext(SessionContext);
+  const { logoutLogged, logged } = useContext(LoggedContext);
+
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -31,6 +38,12 @@ export default function Navbar() {
       window.removeEventListener('scroll', addNavShadow);
     };
   }, []);
+
+  const handleLogout = () => {
+    logoutToken();
+    logoutSession();
+    logoutLogged();
+  };
 
   return (
     <div
@@ -52,7 +65,15 @@ export default function Navbar() {
       {/* Nav-icons for the user dashboard */}
       {logged.role === 'user' && (
         <IconWrapper glassMorph={true}>
-          <Icon link={'/#home'} title='Leave Session' icon={<ExitToAppIcon />} />
+          {/* <div className={styles.right}> */}
+          <Chip
+            icon={<Emoji />}
+            className={styles.welcome}
+            label={logged.username}
+            color='secondary'
+          />
+          {/* </div> */}
+          <Icon onClick={handleLogout} title='Leave Session' icon={<ExitToAppIcon />} />
         </IconWrapper>
       )}
 
