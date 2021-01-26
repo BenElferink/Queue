@@ -29,6 +29,9 @@ function App() {
           const decodedToken = window.atob(splitToken[1]);
           const parsedData = JSON.parse(decodedToken);
 
+          console.log(`🔐 Session ID: ${data.session._id}`);
+          console.log(`🔐 Join session URL: http://localhost:3000/join/${data.session._id}`);
+
           setSession(data.session);
           setLogged({ isLogged: true, role: parsedData.role, username: parsedData.username });
           setLoading(false);
