@@ -1,0 +1,21 @@
+.component {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.formControl {
+  margin: 10px;
+  min-width: 150px !important;
+  display: flex;
+  align-items: center;
+}
+
+.formControl > span {
+  margin-left: 10px;
+}

@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useState } from 'react';
 import { TokenContext } from '../../contexts/TokenContext';
 import { SessionContext } from '../../contexts/SessionContext';
 import { LoggedContext } from '../../contexts/LoggedContext';
 import styles from './Navbar.module.css';
 import blackQueueLogo from './../../images/blackQueueLogo.svg';
 import { IconWrapper, Icon } from './NavbarIcon';
-import { Chip, IconButton, TextField } from '@material-ui/core';
+import { Chip } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
 import TimerIcon from '@material-ui/icons/Timer';
@@ -13,16 +13,22 @@ import BugReportIcon from '@material-ui/icons/BugReport';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
+import DoneIcon from '@material-ui/icons/Done';
+import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
+import TimerModal from './TimerModal/TimerModal';
+import Counter from './TimerModal/Counter';
+import { deleteSession } from '../../api';
 
-const Emoji = () => <div className={styles.welcomeIcon}>👋🏼</div>;
+const Emoji = () => <div className={styles.welcomeIcon}>🔑</div>;
 
-export default function Navbar() {
-  const { logoutToken } = useContext(TokenContext);
-  const { session, logoutSession } = useContext(SessionContext);
+export default function Navbar({ toggleShowSessionUrl }) {
+  const { logoutToken, token } = useContext(TokenContext);
+  const { logoutSession } = useContext(SessionContext);
   const { logoutLogged, logged } = useContext(LoggedContext);
 
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showTimer, setShowTimer] = useState(false);
+  const [timer, setTimer] = useState({ minutes: 0, seconds: 0 });
 
   useEffect(() => {
     const addNavShadow = () => {
@@ -40,10 +46,17 @@ export default function Navbar() {
     };
   }, []);
 
-  const handleLogout = () => {
+  const handleUserLogout = () => {
     logoutToken();
     logoutSession();
     logoutLogged();
+  };
+
+  const handleHostLogout = async () => {
+    const response = await deleteSession(token);
+    if (response) {
+      handleUserLogout();
+    }
   };
 
   return (
@@ -52,14 +65,17 @@ export default function Navbar() {
         logged.role !== null && styles.glassMorph
       }`}>
       <img src={blackQueueLogo} className={styles.logo} alt='Queue' />
+      {showTimer ? (
+        <TimerModal showTimer={true} setShowTimer={setShowTimer} setTimer={setTimer} />
+      ) : null}
 
       {/* Nav-icons for the homepage */}
       {logged.role === null && (
         <IconWrapper glassMorph={false}>
           <Icon link={'/#home'} title='Home' icon={<HomeIcon />} />
-          <Icon link={'#aboutQueue'} title='About Us' icon={<InfoIcon />} />
+          <Icon link={'#aboutQueue'} title='About us' icon={<InfoIcon />} />
           <Icon link={'#Support_the_Application'} title='Donate' icon={<MonetizationOnIcon />} />
-          <Icon link={'#ContactInfo'} title='Report Bug' icon={<BugReportIcon />} />
+          <Icon link={'#ContactInfo'} title='Report a bug' icon={<BugReportIcon />} />
         </IconWrapper>
       )}
 
@@ -70,39 +86,38 @@ export default function Navbar() {
             icon={<Emoji />}
             className={styles.welcome}
             label={logged.username}
-            color='secondary'
+            color='primary'
           />
-          <Icon onClick={handleLogout} title='Leave Session' icon={<ExitToAppIcon />} />
+          <Icon onClick={handleUserLogout} title='Leave session' icon={<ExitToAppIcon />} />
         </IconWrapper>
       )}
 
       {/* Nav-icons for the host dashboard */}
       {logged.role === 'host' && (
-        <IconWrapper glassMorph={true}>
-          {/*To be fixed to display hostname : low priority 
+        <Fragment>
           <Chip
-            icon={<Emoji />}
-            className={styles.welcome}
-            label={logged.username}
+            icon={<AccessAlarmIcon />}
             color='secondary'
+            deleteIcon={<DoneIcon />}
+            label={
+              timer.minutes !== 0 ? (
+                <Counter className={styles.counter} timer={timer} setTimer={setTimer} />
+              ) : (
+                '00:00:00'
+              )
+            }
           />
-        
-          <div className={`${dropDown && styles.copyToClip}`}>
-            <input
-            value={`https://localhost:3000/join/${session._id}`}
-            readonly
+
+          <IconWrapper glassMorph={true}>
+            <Icon title='Set Q&A Timer' icon={<TimerIcon />} onClick={() => setShowTimer(true)} />
+            <Icon
+              title='Invite to session'
+              icon={<PersonAddIcon />}
+              onClick={toggleShowSessionUrl}
             />
-            <IconButton>
-              <FileCopyIcon/>
-            </IconButton>
-          </div>
-
-        */}
-          <Icon link={'/#home'} title='Set Timer for Doubts' icon={<TimerIcon />} />
-          <Icon title='Invite to Session' icon={<PersonAddIcon />}/>
-          <Icon link={'/#home'} title='Leave Session' icon={<ExitToAppIcon />} />
-
-        </IconWrapper>
+            <Icon onClick={handleHostLogout} title='Delete session' icon={<ExitToAppIcon />} />
+          </IconWrapper>
+        </Fragment>
       )}
     </div>
   );

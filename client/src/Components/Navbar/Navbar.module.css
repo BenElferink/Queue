@@ -15,16 +15,18 @@
 }
 
 .welcome {
-  font-size: 20px !important;
   margin: auto 30px auto 0;
   padding: 5px 15px !important;
-  background-color: rgba(245, 0, 87, 0.6) !important;
-  -webkit-backdrop-filter: blur(5px) !important;
-  backdrop-filter: blur(5px) !important;
+  background-color: rgba(32, 185, 159, 0.5) !important;
+  color: #333 !important;
+  font-size: 16px !important;
+  font-weight: 100 !important;
 }
 .welcomeIcon {
-  /* margin: ; */
-  font-size: 20px;
+  font-size: 18px;
+  /* APPLY SHADOW TO ALPHA BORDER- OBJECT ON TRANSPARENT BACKGROUND */
+  -webkit-filter: drop-shadow(0 0 2px #fff);
+  filter: drop-shadow(0 0 2px #fff);
 }
 
 .right {
@@ -80,15 +82,11 @@
 }
 
 .icons {
-  background-color: #f5f5f5;
+  background-color: rgba(255, 255, 255, 0.5) !important;
   border-top-left-radius: 25px;
   border-bottom-left-radius: 25px;
   padding: 3px 10px;
   display: flex;
-}
-
-.icons {
-  background-color: rgba(255, 255, 255, 0.5) !important;
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
 }
