@@ -24,7 +24,7 @@ export const newSession = async (request, response, next) => {
     });
 
     response.status(201).json({
-      message: 'Session created',
+      message: 'Session and host created',
       token: hostToken,
     });
   } catch (error) {
@@ -45,7 +45,7 @@ export const requestSession = async (request, response, next) => {
       });
 
     response.status(200).json({
-      message: 'Session found',
+      message: 'Session requested',
       session: foundSession,
     });
   } catch (error) {
@@ -80,7 +80,7 @@ export const newUser = async (request, response, next) => {
     });
 
     response.status(201).json({
-      message: 'Welcome to the session',
+      message: 'User joined session',
       token: userToken,
     });
   } catch (error) {
@@ -101,7 +101,7 @@ export const getSession = async (request, response, next) => {
       });
 
     response.status(200).json({
-      message: 'Session found',
+      message: 'Session fetched',
       session: foundSession,
     });
   } catch (error) {

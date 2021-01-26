@@ -13,7 +13,7 @@ const headers = (token) => {
 export const newSession = async (body) => {
   try {
     const response = await axios.post(`${url}/new`, body);
-    console.log(response.status, response.statusText);
+    console.log(response.status, response.statusText, response.data.message);
     return { token: response.data.token };
   } catch (error) {
     console.log(error.message);
@@ -24,7 +24,7 @@ export const newSession = async (body) => {
 export const requestSession = async (sessionId) => {
   try {
     const response = await axios.get(`${url}/${sessionId}`);
-    console.log(response.status, response.statusText);
+    console.log(response.status, response.statusText, response.data.message);
     return { session: response.data.session };
   } catch (error) {
     console.log(error.message);
@@ -35,7 +35,7 @@ export const requestSession = async (sessionId) => {
 export const newUser = async (sessionId, body) => {
   try {
     const response = await axios.post(`${url}/${sessionId}/login`, body);
-    console.log(response.status, response.statusText);
+    console.log(response.status, response.statusText, response.data.message);
     return { token: response.data.token };
   } catch (error) {
     console.log(error.message);
@@ -46,7 +46,7 @@ export const newUser = async (sessionId, body) => {
 export const getSession = async (token) => {
   try {
     const response = await axios.get(url, headers(token));
-    console.log(response.status, response.statusText);
+    console.log(response.status, response.statusText, response.data.message);
     return { session: response.data.session };
   } catch (error) {
     console.log(error.message);
@@ -57,7 +57,7 @@ export const getSession = async (token) => {
 export const askQuestion = async (token, body) => {
   try {
     const response = await axios.post(`${url}/quest`, body, headers(token));
-    console.log(response.status, response.statusText);
+    console.log(response.status, response.statusText, response.data.message);
     return true;
   } catch (error) {
     console.log(error.message);
@@ -68,7 +68,7 @@ export const askQuestion = async (token, body) => {
 export const answerQuestion = async (token, questId, body) => {
   try {
     const response = await axios.put(`${url}/quest/${questId}`, body, headers(token));
-    console.log(response.status, response.statusText);
+    console.log(response.status, response.statusText, response.data.message);
     return true;
   } catch (error) {
     console.log(error.message);
@@ -79,7 +79,7 @@ export const answerQuestion = async (token, questId, body) => {
 export const deleteSession = async (token) => {
   try {
     const response = await axios.put(url, headers(token));
-    console.log(response.status, response.statusText);
+    console.log(response.status, response.statusText, response.data.message);
     return true;
   } catch (error) {
     console.log(error.message);

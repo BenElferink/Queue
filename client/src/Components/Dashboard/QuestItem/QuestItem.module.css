@@ -1,0 +1,80 @@
+.component {
+  margin: 0 0 10px 0;
+  border-radius: 8px;
+  box-shadow: 5px 5px 24px -14px rgba(0, 0, 0, 0.6);
+  -webkit-box-shadow: 5px 5px 24px -14px rgba(0, 0, 0, 0.6);
+  -moz-box-shadow: 5px 5px 24px -14px rgba(0, 0, 0, 0.6);
+  outline: none !important;
+  z-index: 999 !important;
+}
+.component > div {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  border-radius: 8px 8px 0 0;
+}
+
+.notAnswered {
+  background: rgba(239, 79, 79, 0.6);
+}
+.notAnswered > div {
+  background: rgba(239, 79, 79, 0.8);
+}
+
+.answered {
+  background: rgba(0, 103, 76, 0.5);
+}
+.answered > div {
+  background: rgba(45, 129, 107, 1);
+}
+
+.avatar {
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.3) !important;
+  color: #333;
+  font-size: 14px;
+  font-weight: 100;
+}
+
+.avatarMic {
+  width: 24px;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.5) !important;
+  cursor: pointer;
+}
+.avatarMic > svg {
+  padding: 2px;
+}
+.avatarMic:hover,
+.avatarMic:active {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+.avatarMic:hover > svg,
+.avatarMic:active > svg {
+  color: #00c800;
+}
+
+.avatar ~ span,
+.avatarMic ~ span {
+  width: 100%;
+  margin-left: 10px;
+  border-bottom: 1px solid rgba(245, 245, 245, 0.5);
+  color: #f5f5f5;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+}
+
+.question,
+.answer {
+  margin: 0;
+  padding: 10px 13px;
+  font-size: 15px;
+  font-weight: 400;
+}
+.question {
+  color: #101213;
+}
+.answer {
+  color: #f5f5f5;
+}

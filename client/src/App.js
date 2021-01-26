@@ -43,6 +43,7 @@ function App() {
         }
       })();
     }
+
     // eslint-disable-next-line
   }, [token]);
 
