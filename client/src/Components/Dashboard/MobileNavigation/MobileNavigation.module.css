@@ -1,0 +1,19 @@
+.component {
+  background-color: whitesmoke;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.navButton {
+  width: 100%;
+}
+
+@media (min-width: 868px) {
+  .component {
+    display: none;
+  }
+}

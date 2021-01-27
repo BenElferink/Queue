@@ -1,21 +1,45 @@
 import { useContext, useState, useEffect } from 'react';
+import styles from './Dashboard.module.css';
+import Pusher from 'pusher-js';
+import FlipMove from 'react-flip-move';
 import { SessionContext } from './../../contexts/SessionContext';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import styles from './Dashboard.module.css';
+import QuestItem from './QuestItem/QuestItem';
+import QueueItemHandler from './QueueItemHandler/QueueItemHandler';
 import DashboardSection from './DashboardSection/DashboardSection';
 import MobileNavigation from './MobileNavigation/MobileNavigation';
-import QueueItemHandler from './QueueItemHandler/QueueItemHandler';
-import QuestItem from './QuestItem/QuestItem';
-import FlipMove from 'react-flip-move';
+
+const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
+  cluster: 'ap2',
+});
 
 export default function Dashboard({ isHost }) {
-  const { session } = useContext(SessionContext);
+  const { session, setSession } = useContext(SessionContext);
   const [queue, setQueue] = useState([]);
   const [history, setHistory] = useState([]);
   const { transcript, resetTranscript } = useSpeechRecognition();
   const [listening, setListening] = useState(false);
   const [text, setText] = useState('');
   const [questToAnswer, setQuestToAnswer] = useState(null);
+  const [mobileNav, setMobileNav] = useState({
+    section1: true,
+    section2: false,
+    section3: false,
+  });
+
+  // this side effect subscribes to the pusher channel, using the channel ID
+  // subscription happens only if the session ID exists, meaning the session was fetched
+  useEffect(() => {
+    const channel = pusher.subscribe(`session-${session._id}`);
+    channel.bind('update-session', function (data) {
+      setSession(data.session);
+    });
+
+    return () => {
+      pusher.unsubscribe();
+      pusher.unbind_all();
+    };
+  }, [session, setSession]);
 
   // this side effect is reposnaible for sorting the queue and history
   // queue is FIFO, history is LIFO
@@ -48,68 +72,74 @@ export default function Dashboard({ isHost }) {
   return (
     <div className={styles.component}>
       <div className={styles.baseGlass}>
-        <DashboardSection title='Queue'>
-          {/* questions queue (modified for use on both user && host dashboard) */}
-          <FlipMove>
-            {queue.map(
-              (item) =>
-                item._id !== questToAnswer?._id && (
-                  <QuestItem
-                    key={item._id}
-                    item={item}
-                    user={session.users.find((user) => user._id === item.from)}
-                    answered={false}
-                    questToAnswerId={questToAnswer?._id}
-                    leverageQuest={() => setQuestToAnswer(item)}
-                    isMic={isHost}
-                    SpeechRecognition={SpeechRecognition}
-                    handleSpeech={handleSpeech}
-                    listening={listening}
-                  />
-                ),
-            )}
-          </FlipMove>
-        </DashboardSection>
-
+        <div className={`${styles.hide} ${mobileNav.section1 && styles.show}`}>
+          <DashboardSection title='Queue'>
+            {/* questions queue (modified for use on both user && host dashboard) */}
+            <FlipMove>
+              {queue.map(
+                (item) =>
+                  item._id !== questToAnswer?._id && (
+                    <QuestItem
+                      key={item._id}
+                      item={item}
+                      user={session.users.find((user) => user._id === item.from)}
+                      answered={false}
+                      questToAnswerId={questToAnswer?._id}
+                      leverageQuest={() => setQuestToAnswer(item)}
+                      isHost={isHost}
+                      SpeechRecognition={SpeechRecognition}
+                      handleSpeech={handleSpeech}
+                      listening={listening}
+                    />
+                  ),
+              )}
+            </FlipMove>
+          </DashboardSection>
+        </div>
         {/* ask or answer question (modified for use on both user && host dashboard) */}
-        <QueueItemHandler
-          text={text}
-          setText={setText}
-          isHost={isHost}
-          questToAnswerId={questToAnswer?._id}
-          SpeechRecognition={SpeechRecognition}
-          handleSpeech={handleSpeech}
-          listening={listening}
-          clearLeverage={() => setQuestToAnswer(null)}>
-          {questToAnswer && (
-            <QuestItem
-              item={queue.find((quest) => quest._id === questToAnswer._id)}
-              user={session.users.find((user) => user._id === questToAnswer.from)}
-              answered={false}
-              questToAnswerId={questToAnswer._id}
-              leverageQuest={() => null}
-              isMic={isHost}
-              SpeechRecognition={SpeechRecognition}
-              handleSpeech={handleSpeech}
-              listening={listening}
-            />
-          )}
-        </QueueItemHandler>
-
-        <DashboardSection title='History'>
-          {/* answered queue (modified for use on both user && host dashboard) */}
-          <FlipMove>
-            {history.map((item, i) => (
+        <div className={`${styles.hide} ${mobileNav.section2 && styles.show}`}>
+          <QueueItemHandler
+            text={text}
+            setText={setText}
+            isHost={isHost}
+            questToAnswerId={questToAnswer?._id}
+            SpeechRecognition={SpeechRecognition}
+            handleSpeech={handleSpeech}
+            listening={listening}
+            clearLeverage={() => setQuestToAnswer(null)}>
+            {questToAnswer && (
               <QuestItem
-                key={item._id}
-                item={item}
-                user={session.users.find((user) => user._id === item.from)}
-                answered={true}
+                item={queue.find((quest) => quest._id === questToAnswer._id)}
+                user={session.users.find((user) => user._id === questToAnswer.from)}
+                answered={false}
+                questToAnswerId={questToAnswer._id}
+                leverageQuest={() => null}
+                isHost={isHost}
+                SpeechRecognition={SpeechRecognition}
+                handleSpeech={handleSpeech}
+                listening={listening}
               />
-            ))}
-          </FlipMove>
-        </DashboardSection>
+            )}
+          </QueueItemHandler>
+        </div>
+
+        <div className={`${styles.hide} ${mobileNav.section3 && styles.show}`}>
+          <DashboardSection title='History'>
+            {/* answered queue (modified for use on both user && host dashboard) */}
+            <FlipMove>
+              {history.map((item, i) => (
+                <QuestItem
+                  key={item._id}
+                  item={item}
+                  user={session.users.find((user) => user._id === item.from)}
+                  answered={true}
+                />
+              ))}
+            </FlipMove>
+          </DashboardSection>
+        </div>
       </div>
+      <MobileNavigation />
     </div>
   );
 }

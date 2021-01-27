@@ -3,11 +3,12 @@ import { Fragment, useEffect } from 'react';
 function Counter({ timer, setTimer }) {
   useEffect(() => {
     let seconds = Number(timer.seconds);
-    let minutes = Number(timer.minutes)
+    let minutes = Number(timer.minutes);
+
     const interval = setInterval(() => {
-      if(seconds !== 0 && minutes !== 0){
+      if (seconds !== 0) {
         setTimer({ minutes: minutes, seconds: seconds - 1 });
-      } else if(seconds === 0 && minutes !== 0){
+      } else if (minutes !== 0 && seconds === 0) {
         setTimer({ minutes: minutes - 1, seconds: 59 });
       }
     }, 1000);

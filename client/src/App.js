@@ -4,17 +4,12 @@ import { TokenContext } from './contexts/TokenContext';
 import { SessionContext } from './contexts/SessionContext';
 import { LoggedContext } from './contexts/LoggedContext';
 import { getSession } from './api';
-import Pusher from 'pusher-js';
 import Navbar from './Components/Navbar/Navbar';
 import Home from './Components/Home/Home';
 import Dashboard from './Components/Dashboard/Dashboard';
 import LoadingApp from './Components/LoadingApp/LoadingApp';
 import SessionUrl from './Components/SessionUrl/SessionUrl';
 import TimerSnackbar from './Components/TimerSnackbar/TimerSnackbar';
-
-const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
-  cluster: 'ap2',
-});
 
 function App() {
   const { token, setToken } = useContext(TokenContext);
@@ -40,9 +35,7 @@ function App() {
           const splitToken = token.split('.');
           const decodedToken = window.atob(splitToken[1]);
           const parsedData = JSON.parse(decodedToken);
-
           console.log(`🔐 Session ID: ${data.session._id}`);
-          console.log(`🔐 Join session URL: http://localhost:3000/join/${data.session._id}`);
 
           setSession(data.session);
           setLogged({ isLogged: true, role: parsedData.role, username: parsedData.username });
@@ -59,22 +52,6 @@ function App() {
     // eslint-disable-next-line
   }, [token]);
 
-  // this side effect subscribes to the pusher channel, using the channel ID
-  // subscription happens only if the session ID exists, meaning the session was fetched
-  useEffect(() => {
-    if (logged.isLogged) {
-      const channel = pusher.subscribe(`session-${session._id}`);
-      channel.bind('update-session', function (data) {
-        setSession(data.session);
-      });
-    }
-
-    return () => {
-      pusher.unsubscribe();
-      pusher.unbind_all();
-    };
-  }, [logged, session, setSession]);
-
   const RedirectAuthUser = () => {
     switch (logged.role) {
       case 'host':
@@ -87,14 +64,14 @@ function App() {
   };
 
   return (
-    <div id='home'>
+    <Fragment>
       {loading ? (
         <LoadingApp />
       ) : (
         <Router>
           <Navbar toggleShowSessionUrl={toggleShowSessionUrl} setSnack={setSnack} snack={snack} />
           {showSessionUrl && <SessionUrl id={session._id} toggleState={toggleShowSessionUrl} />}
-          {snack && <TimerSnackbar snack={snack} setSnack={setSnack}/>}
+          {snack && <TimerSnackbar snack={snack} setSnack={setSnack} />}
 
           <Switch>
             <Route exact path='/'>
@@ -127,7 +104,7 @@ function App() {
           </Switch>
         </Router>
       )}
-    </div>
+    </Fragment>
   );
 }
 

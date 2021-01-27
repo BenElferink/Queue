@@ -1,21 +1,21 @@
 import { forwardRef } from 'react';
 import styles from './QuestItem.module.css';
-import Avatar from '@material-ui/core/Avatar';
+import { Avatar, CircularProgress } from '@material-ui/core';
 import MicIcon from '@material-ui/icons/Mic';
 import MicOffRoundedIcon from '@material-ui/icons/MicOffRounded';
-import { CircularProgress } from '@material-ui/core';
+import DoneRoundedIcon from '@material-ui/icons/DoneRounded';
 
 export default forwardRef(function QuestItem(
   {
     item,
     user,
     answered,
-    questToAnswerId,
-    leverageQuest,
-    isMic,
+    isHost,
     SpeechRecognition,
     handleSpeech,
     listening,
+    leverageQuest,
+    questToAnswerId,
   },
   ref,
 ) {
@@ -24,33 +24,34 @@ export default forwardRef(function QuestItem(
       ref={ref}
       className={`${styles.component} ${answered ? styles.answered : styles.notAnswered}`}>
       <div>
-        {isMic && SpeechRecognition.browserSupportsSpeechRecognition() ? (
+        {isHost ? (
           <Avatar
             className={`${styles.avatarMic} ${!listening && styles.pointer}`}
             onClick={() => {
               if (!listening) {
                 leverageQuest();
-                handleSpeech();
+                if (SpeechRecognition.browserSupportsSpeechRecognition()) handleSpeech();
               }
             }}>
-            {listening && questToAnswerId === item._id ? (
-              <CircularProgress color='secondary' />
-            ) : (
-              <MicIcon />
-            )}
+            {
+              // IF! microphone is supported and is ON (listening)
+              (SpeechRecognition.browserSupportsSpeechRecognition() && listening) ||
+              // OR IF! microphone is not supported and question IS leveraged
+              (!SpeechRecognition.browserSupportsSpeechRecognition() &&
+                questToAnswerId === item._id) ? (
+                <CircularProgress color='secondary' />
+              ) : // ELSE! if microphone is supported and is OFF (NOT-listening)
+              SpeechRecognition.browserSupportsSpeechRecognition() ? (
+                <MicIcon />
+              ) : (
+                // ELSE! if microphone is not supported and question IS NOT leveraged
+                <MicOffRoundedIcon />
+              )
+            }
           </Avatar>
-        ) : isMic && !SpeechRecognition.browserSupportsSpeechRecognition() ? (
-          <Avatar
-            className={`${styles.avatarMic} ${!listening && styles.pointer}`}
-            onClick={() => {
-              leverageQuest();
-              // alert('Your browser does not support this feature...');
-            }}>
-            {questToAnswerId === item._id ? (
-              <CircularProgress color='secondary' />
-            ) : (
-              <MicOffRoundedIcon />
-            )}
+        ) : answered ? (
+          <Avatar className={styles.avatar}>
+            <DoneRoundedIcon />
           </Avatar>
         ) : (
           <Avatar className={styles.avatar}>{user?.username[0]}</Avatar>
@@ -59,7 +60,14 @@ export default forwardRef(function QuestItem(
       </div>
 
       <p className={styles.question}>Q: {item?.question}</p>
-      {answered && <p className={styles.answer}>A: {item?.answer}</p>}
+      {answered && (
+        <p className={styles.answer}>
+          A:{' '}
+          {item.answer
+            ? item.answer
+            : "~NO CONTEXT: the host's browser does not support microphone"}
+        </p>
+      )}
     </div>
   );
 });

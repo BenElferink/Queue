@@ -23,7 +23,7 @@ export default function SessionUrl({ id, toggleState }) {
       <CopyIcon onClick={copyOutput} />
       <input
         ref={copyRef}
-        value={isCopied ? 'copied 👍' : `http://localhost:4000/join/${id}`}
+        value={isCopied ? 'copied 👍' : `http://localhost:3000/join/${id}`}
         readOnly
       />
     </div>

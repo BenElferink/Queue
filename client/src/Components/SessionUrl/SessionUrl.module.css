@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   position: absolute;
-  top: 11vh;
+  top: 10vh;
   right: 3px;
   padding: 7px;
   background-color: #d2ebe6;
@@ -13,7 +13,7 @@
 }
 
 .sessionUrl > input {
-  width: 110px;
+  width: 250px;
   border-radius: 4px;
   border: 0.5px solid #808080;
   color: #20b99f;
@@ -22,16 +22,18 @@
 }
 
 .sessionUrl > svg {
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   margin-right: 5px;
+  padding: 2px;
+  border-radius: 7px;
   fill: #000;
   cursor: pointer;
 }
 
 .sessionUrl > svg:hover,
 .sessionUrl > svg:active {
-  transform: scale(1.2);
+  background-color: #f5f5f5;
 }
 
 @-webkit-keyframes zoomIn {

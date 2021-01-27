@@ -25,7 +25,7 @@ export default function LandingPage({ isHost }) {
   }, [id]);
 
   return (
-    <div className={styles.component}>
+    <div className={styles.component} id='home'>
       <div className={styles.text}>
         {isHost ? (
           <h1>
