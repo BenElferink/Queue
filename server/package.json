@@ -1,4 +1,5 @@
 {
+  "homepage": "https://queue-and-a.herokuapp.com/",
   "name": "server",
   "version": "1.0.0",
   "main": "server.js",

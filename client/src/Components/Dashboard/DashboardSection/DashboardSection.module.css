@@ -1,6 +1,7 @@
 .component {
-  flex: 0.3;
+  flex: 1;
   height: 80vh;
+  margin: 0 15px;
   padding: 15px 10px 0px 10px;
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 15px;
@@ -26,13 +27,9 @@
   text-align: center;
 }
 
-@media only screen and(max-width: 550px) {
+@media only screen and(max-width: 868px) {
   .component {
-    min-width: 800px !important;
-    overflow: visible !important;
+    height: 85vh;
+    margin: 0;
   }
-}
-
-.hide {
-  display: none !important;
 }

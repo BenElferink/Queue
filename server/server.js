@@ -17,12 +17,12 @@ app.use(morgan('common')); // logs requests
 dotenv.config();
 
 // configure db:
-const CONNECTION_URL = process.env.CONNECTION_URL;
+const MONGO_URI = process.env.MONGO_URI;
 const DEPRECATED_FIX = { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true };
 
 // connect to db
 mongoose
-  .connect(CONNECTION_URL, DEPRECATED_FIX)
+  .connect(MONGO_URI, DEPRECATED_FIX)
   .catch((error) => console.log('❌ MongoDB connection error', error)); // listen for errors on initial connection
 mongoose.connection.on('connected', () => console.log('✅ MongoDB connected')); // connected
 mongoose.connection.on('disconnected', () => console.log('❌ MongoDB disconnected')); // disconnected

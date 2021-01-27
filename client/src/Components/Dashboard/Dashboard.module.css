@@ -34,16 +34,6 @@
 
 @media only screen and (max-width: 868px) {
   .baseGlass {
-    padding: 0 15px;
+    padding: 0;
   }
-}
-
-.hide {
-  display: none !important;
-}
-
-.show {
-  display: block !important;
-  display: flex;
-  width: 100vw !important;
 }

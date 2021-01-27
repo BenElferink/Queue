@@ -21,11 +21,6 @@ export default function Dashboard({ isHost }) {
   const [listening, setListening] = useState(false);
   const [text, setText] = useState('');
   const [questToAnswer, setQuestToAnswer] = useState(null);
-  const [mobileNav, setMobileNav] = useState({
-    section1: true,
-    section2: false,
-    section3: false,
-  });
 
   // this side effect subscribes to the pusher channel, using the channel ID
   // subscription happens only if the session ID exists, meaning the session was fetched
@@ -69,10 +64,42 @@ export default function Dashboard({ isHost }) {
     if (transcript && listening) setText(transcript);
   }, [transcript, listening]);
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 868 ? true : false);
+  const [mobileNav, setMobileNav] = useState({
+    section1: true,
+    section2: true,
+    section3: true,
+  });
+
+  useEffect(() => {
+    const configMobile = () => {
+      // if window is lesss than 868px
+      if (window.innerWidth <= 868) {
+        if (!isMobile) setIsMobile(true);
+      } else {
+        if (isMobile) {
+          setIsMobile(false);
+          setMobileNav({
+            section1: true,
+            section2: true,
+            section3: true,
+          });
+        }
+      }
+    };
+
+    // if (window.innerWidth <= 868) configMobile();
+    window.addEventListener('resize', configMobile);
+    return () => {
+      window.removeEventListener('resize', configMobile);
+    };
+    // eslint-disable-next-line
+  }, [window.innerWidth]);
+
   return (
     <div className={styles.component}>
       <div className={styles.baseGlass}>
-        <div className={`${styles.hide} ${mobileNav.section1 && styles.show}`}>
+        {mobileNav.section1 && (
           <DashboardSection title='Queue'>
             {/* questions queue (modified for use on both user && host dashboard) */}
             <FlipMove>
@@ -95,9 +122,10 @@ export default function Dashboard({ isHost }) {
               )}
             </FlipMove>
           </DashboardSection>
-        </div>
+        )}
+
         {/* ask or answer question (modified for use on both user && host dashboard) */}
-        <div className={`${styles.hide} ${mobileNav.section2 && styles.show}`}>
+        {mobileNav.section2 && (
           <QueueItemHandler
             text={text}
             setText={setText}
@@ -121,9 +149,9 @@ export default function Dashboard({ isHost }) {
               />
             )}
           </QueueItemHandler>
-        </div>
+        )}
 
-        <div className={`${styles.hide} ${mobileNav.section3 && styles.show}`}>
+        {mobileNav.section3 && (
           <DashboardSection title='History'>
             {/* answered queue (modified for use on both user && host dashboard) */}
             <FlipMove>
@@ -137,9 +165,9 @@ export default function Dashboard({ isHost }) {
               ))}
             </FlipMove>
           </DashboardSection>
-        </div>
+        )}
       </div>
-      <MobileNavigation />
+      {isMobile && <MobileNavigation setMobileNav={setMobileNav} />}
     </div>
   );
 }

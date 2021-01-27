@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:4000/api/v1/session';
+const url = 'https://queue-and-a.herokuapp.com/api/v1/session';
 const headers = (token) => {
   return {
     headers: {
