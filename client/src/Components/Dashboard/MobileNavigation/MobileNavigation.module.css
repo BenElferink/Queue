@@ -34,3 +34,8 @@
     display: none;
   }
 }
+
+.component > button:visited {
+  background-color: gray !important;
+  border-top: 2px lightblue solid !important;
+}

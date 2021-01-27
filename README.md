@@ -1,6 +1,6 @@
 # MERN Stack
 
-<img src='https://github.com/belferink1996/MERN-template/blob/images/images/mern.jpeg' alt='MERN banner' width='700' />
+### Open app: [https://belferink1996.github.io/MERN-Queue](https://belferink1996.github.io/MERN-Queue)
 
 - **M** = [MongoDB](https://www.mongodb.com)
 - **E** = [Express.js](https://expressjs.com)

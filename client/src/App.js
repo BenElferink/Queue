@@ -74,7 +74,7 @@ function App() {
           {snack && <TimerSnackbar snack={snack} setSnack={setSnack} />}
 
           <Switch>
-            <Route exact path='/'>
+            <Route exact path={'/' || '/MERN-Queue'}>
               {/* 
               this is the landing page for host-create-session
               This needs a form with input field of "username"...
@@ -83,12 +83,12 @@ function App() {
             */}
               {logged.isLogged ? <RedirectAuthUser /> : <Home isHost={true} />}
             </Route>
-            <Route exact path='/host'>
+            <Route path='/host'>
               {/* this is the host dashboard */}
               {logged.isLogged ? <Dashboard isHost={true} /> : <Redirect to='/' />}
             </Route>
 
-            <Route exact path='/join/:id'>
+            <Route path='/join/:id'>
               {/* 
               this is the page for user-join-session
               This needs a form with input field of "username"...
@@ -97,7 +97,7 @@ function App() {
             */}
               {logged.isLogged ? <RedirectAuthUser /> : <Home isHost={false} />}
             </Route>
-            <Route exact path='/user'>
+            <Route path='/user'>
               {/* this is the user dashboard */}
               {logged.isLogged ? <Dashboard isHost={false} /> : <Redirect to='/' />}
             </Route>
