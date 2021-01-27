@@ -51,7 +51,7 @@ export default () => {
     }
 
     if (data) {
-      console.log(channelName, eventName, data);
+      // console.log(channelName, eventName, data);
       pusher.trigger(channelName, eventName, data);
     }
   });
