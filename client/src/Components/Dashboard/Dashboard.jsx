@@ -3,6 +3,7 @@ import { SessionContext } from './../../contexts/SessionContext';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import styles from './Dashboard.module.css';
 import DashboardSection from './DashboardSection/DashboardSection';
+import MobileNavigation from './MobileNavigation/MobileNavigation';
 import QueueItemHandler from './QueueItemHandler/QueueItemHandler';
 import QuestItem from './QuestItem/QuestItem';
 import FlipMove from 'react-flip-move';

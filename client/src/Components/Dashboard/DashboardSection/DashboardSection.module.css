@@ -9,12 +9,6 @@
   overflow-y: scroll;
 }
 
-@media only screen and (max-width: 868px) {
-  .component {
-    width: 100%;
-  }
-}
-
 ::-webkit-scrollbar {
   width: 0px !important;
 }
@@ -30,4 +24,12 @@
   font-size: 22px;
   font-weight: 600;
   text-align: center;
+}
+
+@media only screen and(max-width: 480px) {
+  .component {
+    width: 100vw;
+    flex: 1;
+    overflow: visible !important;
+  }
 }

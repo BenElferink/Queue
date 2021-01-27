@@ -1,44 +1,28 @@
-import React, { useEffect } from 'react';
+import {Fragment, useState} from 'react'
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import { makeStyles } from '@material-ui/core/styles';
+import styles from './TimerSnackbar.module.css'
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-    '& > * + *': {
-      marginTop: theme.spacing(2),
-    },
-  },
-}));
+export default function TimerSnackbar({ snack, setSnack }) {
+  const handleClose = (event, reason) => setSnack(false)
+  const [state, setState] = useState({
+    vertical: 'top',
+    horizontal: 'center',
+  });
 
-export default function TimerSnackbar({ timeup }) {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-
-  useEffect(() => {
-    setOpen(timeup);
-  }, [timeup]);
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
+  const { vertical, horizontal } = state;
 
   return (
-    <div className={classes.root}>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+    <Fragment>
+      <Snackbar className={styles.component} open={snack} onClose={handleClose} anchorOrigin={{ vertical, horizontal }} key={vertical + horizontal}>
         <Alert onClose={handleClose} severity='warning'>
-          Time for the Doubts Session!
+          Time to clear the Queue!
         </Alert>
       </Snackbar>
-    </div>
+    </Fragment>
   );
 }

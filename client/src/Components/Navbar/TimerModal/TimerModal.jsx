@@ -8,56 +8,48 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Input from '@material-ui/core/Input';
 import Select from '@material-ui/core/Select';
 
-export default function TimerModal({ showTimer, setShowTimer, setTimer }) {
-  const [open, setOpen] = useState(false);
-  const [time, setTime] = useState('');
+export default function TimerModal({ selectedMinutes, setSelectedMinutes, setTimer, setShowTimerModal }) {
+  const clickConfirm = () => {
+    setTimer({ minutes: selectedMinutes, seconds: 0 });
+    setShowTimerModal(false);
+  };
+
+  const clickCancel = () => {
+    setShowTimerModal(false);
+  };
 
   const handleChange = (event) => {
-    setTime(Number(event.target.value) || '');
+    setSelectedMinutes(Number(event.target.value));
   };
-  const handleClose = () => {
-    setOpen(false);
-    setShowTimer(false);
-  };
-
-  const setConfirm = () => {
-    setTimer({ minutes: time, seconds: 0 });
-    setOpen(false);
-    setShowTimer(false);
-  };
-
-  useEffect(() => {
-    setOpen(showTimer);
-  }, [showTimer]);
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={true}>
         <DialogTitle>Set a duration for your next interaction session.</DialogTitle>
         <DialogContent>
           <div className={styles.container}>
             <div className={styles.formControl}>
               <Select
                 native
-                value={time}
+                value={selectedMinutes}
                 onChange={handleChange}
                 input={<Input id='timer_duration' />}>
-                <option aria-label='None' value='' />
-                <option value={2}>Two</option>
-                <option value={5}>Five</option>
-                <option value={10}>Ten</option>
-                <option value={20}>Twenty</option>
-                <option value={30}>Thirty</option>
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={15}>15</option>
+                <option value={20}>20</option>
+                <option value={25}>25</option>
+                <option value={30}>30</option>
               </Select>
               <span>(minutes).</span>
             </div>
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color='primary'>
+          <Button onClick={clickCancel} color='primary'>
             Cancel
           </Button>
-          <Button onClick={setConfirm} color='primary'>
+          <Button onClick={clickConfirm} color='primary'>
             Ok
           </Button>
         </DialogActions>

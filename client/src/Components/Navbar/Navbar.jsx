@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useState, useRef } from 'react';
 import { TokenContext } from '../../contexts/TokenContext';
 import { SessionContext } from '../../contexts/SessionContext';
 import { LoggedContext } from '../../contexts/LoggedContext';
@@ -13,7 +13,6 @@ import BugReportIcon from '@material-ui/icons/BugReport';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import DoneIcon from '@material-ui/icons/Done';
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import TimerModal from './TimerModal/TimerModal';
 import Counter from './TimerModal/Counter';
@@ -21,14 +20,16 @@ import { deleteSession } from '../../api';
 
 const Emoji = () => <div className={styles.welcomeIcon}>🔑</div>;
 
-export default function Navbar({ toggleShowSessionUrl, setTimeup }) {
+export default function Navbar({ toggleShowSessionUrl, setSnack }) {
   const { logoutToken, token } = useContext(TokenContext);
   const { logoutSession } = useContext(SessionContext);
   const { logoutLogged, logged } = useContext(LoggedContext);
 
   const [isScrolled, setIsScrolled] = useState(false);
-  const [showTimer, setShowTimer] = useState(false);
+  const [showTimerModal, setShowTimerModal] = useState(false);
+  const [selectedMinutes, setSelectedMinutes] = useState(10)
   const [timer, setTimer] = useState({ minutes: 0, seconds: 0 });
+  const onMountRef = useRef(true)
 
   useEffect(() => {
     const addNavShadow = () => {
@@ -37,12 +38,6 @@ export default function Navbar({ toggleShowSessionUrl, setTimeup }) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
-      }
-
-      if (timer.minutes === 0 && timer.seconds === 1) {
-        setTimeup(true);
-      } else {
-        setTimeup(false);
       }
     };
 
@@ -65,15 +60,22 @@ export default function Navbar({ toggleShowSessionUrl, setTimeup }) {
     }
   };
 
+  useEffect(() => {
+    if(!onMountRef.current && timer.minutes === 0 && timer.seconds === 0){
+      setSnack(true)
+      onMountRef.current = true
+    }
+
+    if(onMountRef) onMountRef.current = false
+  }, [timer.minutes, timer.seconds])
+
   return (
     <div
       className={`${styles.component} ${isScrolled && styles.navColor} ${
         logged.role !== null && styles.glassMorph
       }`}>
       <img src={blackQueueLogo} className={styles.logo} alt='Queue' />
-      {showTimer ? (
-        <TimerModal showTimer={true} setShowTimer={setShowTimer} setTimer={setTimer} />
-      ) : null}
+      
 
       {/* Nav-icons for the homepage */}
       {logged.role === null && (
@@ -90,7 +92,7 @@ export default function Navbar({ toggleShowSessionUrl, setTimeup }) {
         <IconWrapper glassMorph={true}>
           <Chip
             icon={<Emoji />}
-            className={styles.welcome}
+            className={styles.welcomeChip}
             label={logged.username}
             color='primary'
           />
@@ -98,24 +100,20 @@ export default function Navbar({ toggleShowSessionUrl, setTimeup }) {
         </IconWrapper>
       )}
 
+      {showTimerModal ? (
+        <TimerModal selectedMinutes={selectedMinutes} setSelectedMinutes={setSelectedMinutes} setTimer={setTimer} setShowTimerModal={setShowTimerModal}  />
+      ) : null}
       {/* Nav-icons for the host dashboard */}
       {logged.role === 'host' && (
         <Fragment>
           <Chip
             icon={<AccessAlarmIcon />}
-            color='secondary'
-            deleteIcon={<DoneIcon />}
-            label={
-              timer.minutes !== 0 ? (
-                <Counter className={styles.counter} timer={timer} setTimer={setTimer} />
-              ) : (
-                '00:00:00'
-              )
-            }
+            className={styles.timerChip}
+            label={<Counter timer={timer} setTimer={setTimer}/>}
           />
 
           <IconWrapper glassMorph={true}>
-            <Icon title='Set Q&A Timer' icon={<TimerIcon />} onClick={() => setShowTimer(true)} />
+            <Icon title='Set Q&A Timer' icon={<TimerIcon />} onClick={() => setShowTimerModal(true)} />
             <Icon
               title='Invite to session'
               icon={<PersonAddIcon />}

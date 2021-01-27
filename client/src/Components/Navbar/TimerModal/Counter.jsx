@@ -2,12 +2,13 @@ import { Fragment, useEffect } from 'react';
 
 function Counter({ timer, setTimer }) {
   useEffect(() => {
-    let num = Number(timer.seconds);
+    let seconds = Number(timer.seconds);
+    let minutes = Number(timer.minutes)
     const interval = setInterval(() => {
-      if (num < 1) {
-        setTimer({ minutes: Number(timer.minutes) - 1, seconds: Number(59) });
-      } else {
-        setTimer({ minutes: Number(timer.minutes), seconds: num - 1 });
+      if(seconds !== 0 && minutes !== 0){
+        setTimer({ minutes: minutes, seconds: seconds - 1 });
+      } else if(seconds === 0 && minutes !== 0){
+        setTimer({ minutes: minutes - 1, seconds: 59 });
       }
     }, 1000);
 
@@ -24,7 +25,7 @@ function Counter({ timer, setTimer }) {
     return `${minutes}:${seconds}`;
   };
 
-  return <Fragment>Next Interaction: {timeToString(timer)}</Fragment>;
+  return <Fragment>{timeToString(timer)}</Fragment>;
 }
 
 export default Counter;

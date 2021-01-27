@@ -37,3 +37,11 @@
     padding: 0 15px;
   }
 }
+
+@media only screen and (max-width: 480px) {
+  .baseGlass {
+    display: flex;
+    flex-direction: row;
+    overflow: scroll;
+  }
+}

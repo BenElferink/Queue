@@ -22,7 +22,7 @@ function App() {
   const { logged, setLogged } = useContext(LoggedContext);
   const [loading, setLoading] = useState(false);
   const [showSessionUrl, setShowSessionUrl] = useState(false);
-  const [timeup, setTimeup] = useState(false);
+  const [snack, setSnack] = useState(false);
 
   const toggleShowSessionUrl = () => {
     setShowSessionUrl(!showSessionUrl);
@@ -92,9 +92,9 @@ function App() {
         <LoadingApp />
       ) : (
         <Router>
-          <Navbar toggleShowSessionUrl={toggleShowSessionUrl} setTimeup={setTimeup} />
+          <Navbar toggleShowSessionUrl={toggleShowSessionUrl} setSnack={setSnack} snack={snack} />
           {showSessionUrl && <SessionUrl id={session._id} toggleState={toggleShowSessionUrl} />}
-          {timeup && <TimerSnackbar timeup={timeup} />}
+          {snack && <TimerSnackbar snack={snack} setSnack={setSnack}/>}
 
           <Switch>
             <Route exact path='/'>

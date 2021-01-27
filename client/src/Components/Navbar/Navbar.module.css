@@ -14,10 +14,14 @@
   animation: slideIn 0.5s ease-in;
 }
 
-.welcome {
-  margin: auto 30px auto 0;
+.timerChip {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.welcomeChip {
+  margin: auto 0 auto 0;
   padding: 5px 15px !important;
-  background-color: rgba(32, 185, 159, 0.5) !important;
+  background-color: rgba(245, 245, 245, 0.4) !important;
   color: #333 !important;
   font-size: 16px !important;
   font-weight: 100 !important;
@@ -97,21 +101,20 @@
   backdrop-filter: blur(5px);
 }
 
-/* .copyToClip {
-  display: flex !important;
-  background-color: white !important;
-  align-items: center;
-  padding: 5px 5px 5px 15px !important;
-  border-radius: 5px;
-  box-shadow: 10px 10px 25px -1px rgba(0, 0, 0, 0.3);
-  position: absolute;
-  right: 0;
-  top: 60px;
-  z-index: 999;
+.Answer_Questions {
+  font-size: small !important;
 }
 
-.copyToClip > input {
-  outline-color: rgb(9, 63, 180);
-  padding: 2px 5px;
-  max-width: 350px;
-} */
+.Answer_Questions + .MuiChip-colorSecondary {
+  background-color: green !important;
+}
+
+@media only screen and (max-width: 480px) {
+  .component {
+    padding-left: 15px;
+  }
+
+  .icons {
+    padding: 1px;
+  }
+}
