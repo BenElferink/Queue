@@ -21,10 +21,10 @@ function Counter({ timer, setTimer }) {
     let seconds = Number(timer.seconds);
     minutes < 10 ? (minutes = `0${minutes}`) : (minutes = `${minutes}`);
     seconds < 10 ? (seconds = `0${seconds}`) : (seconds = `${seconds}`);
-    return `00:${minutes}:${seconds}`;
+    return `${minutes}:${seconds}`;
   };
 
-  return <Fragment>Next Interaction in {timeToString(timer)} minutes</Fragment>;
+  return <Fragment>Next Interaction: {timeToString(timer)}</Fragment>;
 }
 
 export default Counter;

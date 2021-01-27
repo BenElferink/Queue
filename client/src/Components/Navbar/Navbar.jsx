@@ -21,7 +21,7 @@ import { deleteSession } from '../../api';
 
 const Emoji = () => <div className={styles.welcomeIcon}>🔑</div>;
 
-export default function Navbar({ toggleShowSessionUrl }) {
+export default function Navbar({ toggleShowSessionUrl, setTimeup }) {
   const { logoutToken, token } = useContext(TokenContext);
   const { logoutSession } = useContext(SessionContext);
   const { logoutLogged, logged } = useContext(LoggedContext);
@@ -37,6 +37,12 @@ export default function Navbar({ toggleShowSessionUrl }) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
+      }
+
+      if (timer.minutes === 0 && timer.seconds === 1) {
+        setTimeup(true);
+      } else {
+        setTimeup(false);
       }
     };
 

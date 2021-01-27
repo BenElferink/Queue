@@ -8,37 +8,37 @@
 
 .form > textarea {
   width: 90%;
-  height: 50vh !important;
+  height: 42vh !important;
   padding: 10px;
-  background-color: rgba(252, 214, 57, 0.8) !important;
+  background-color: rgba(252, 214, 57, 0.7) !important;
   border: 1px #fff solid;
   border-radius: 5px;
   caret-color: #808080;
   outline: none;
-  transition: background-color 0.25s ease-in-out;
-  transition: height 1s;
   box-shadow: 5px 5px 24px -14px rgba(0, 0, 0, 0.6);
   -webkit-box-shadow: 5px 5px 24px -14px rgba(0, 0, 0, 0.6);
   -moz-box-shadow: 5px 5px 24px -14px rgba(0, 0, 0, 0.6);
+  transition: background-color 0.25s ease-in-out;
   transition: height 1s;
 }
-/* .form > textarea:focus,
-.form > textarea:active,
-.form > textarea:valid {
-  border: 1px rgba(18, 16, 19, 0.8) solid;
-  height: 120px;
-} */
-
-.form > Button {
-  height: 40px;
-  width: 90% !important;
-  margin-top: 15px;
-  background-color: rgba(18, 16, 19, 0.8) !important;
-  color: #fff !important;
+.form > textarea:focus,
+.form > textarea:active {
+  border: 1px solid rgba(18, 16, 19, 0.5);
 }
 
-/* @media (min-width: 868px) {
-  .form > textarea {
-    height: 50vh !important;
-  }
-} */
+.form > button {
+  height: 40px;
+  width: 90% !important;
+  margin: 10px 0;
+  background-color: rgba(18, 16, 19, 0.8) !important;
+  color: #f5f5f5 !important;
+  transition: background-color 1s;
+}
+.form > button:disabled {
+  background-color: rgba(18, 16, 19, 0.3) !important;
+}
+
+.centerThis {
+  display: grid;
+  place-items: center;
+}

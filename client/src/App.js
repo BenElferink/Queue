@@ -10,6 +10,7 @@ import Home from './Components/Home/Home';
 import Dashboard from './Components/Dashboard/Dashboard';
 import LoadingApp from './Components/LoadingApp/LoadingApp';
 import SessionUrl from './Components/SessionUrl/SessionUrl';
+import TimerSnackbar from './Components/TimerSnackbar/TimerSnackbar';
 
 const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
   cluster: 'ap2',
@@ -21,6 +22,7 @@ function App() {
   const { logged, setLogged } = useContext(LoggedContext);
   const [loading, setLoading] = useState(false);
   const [showSessionUrl, setShowSessionUrl] = useState(false);
+  const [timeup, setTimeup] = useState(false);
 
   const toggleShowSessionUrl = () => {
     setShowSessionUrl(!showSessionUrl);
@@ -71,8 +73,7 @@ function App() {
       pusher.unsubscribe();
       pusher.unbind_all();
     };
-    // eslint-disable-next-line
-  }, [logged, session]);
+  }, [logged, session, setSession]);
 
   const RedirectAuthUser = () => {
     switch (logged.role) {
@@ -91,8 +92,9 @@ function App() {
         <LoadingApp />
       ) : (
         <Router>
-          <Navbar toggleShowSessionUrl={toggleShowSessionUrl} />
+          <Navbar toggleShowSessionUrl={toggleShowSessionUrl} setTimeup={setTimeup} />
           {showSessionUrl && <SessionUrl id={session._id} toggleState={toggleShowSessionUrl} />}
+          {timeup && <TimerSnackbar timeup={timeup} />}
 
           <Switch>
             <Route exact path='/'>

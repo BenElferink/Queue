@@ -43,6 +43,7 @@ export default function TimerModal({ showTimer, setShowTimer, setTimer }) {
                 onChange={handleChange}
                 input={<Input id='timer_duration' />}>
                 <option aria-label='None' value='' />
+                <option value={2}>Two</option>
                 <option value={5}>Five</option>
                 <option value={10}>Ten</option>
                 <option value={20}>Twenty</option>

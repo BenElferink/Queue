@@ -7,14 +7,14 @@ import { SessionProvider } from './contexts/SessionContext';
 import { LoggedProvider } from './contexts/LoggedContext';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <TokenProvider>
-      <SessionProvider>
-        <LoggedProvider>
-          <App />
-        </LoggedProvider>
-      </SessionProvider>
-    </TokenProvider>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <TokenProvider>
+    <SessionProvider>
+      <LoggedProvider>
+        <App />
+      </LoggedProvider>
+    </SessionProvider>
+  </TokenProvider>,
+  // </React.StrictMode>,
   document.getElementById('root'),
 );
