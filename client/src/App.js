@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, Fragment } from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { TokenContext } from './contexts/TokenContext';
 import { SessionContext } from './contexts/SessionContext';
 import { LoggedContext } from './contexts/LoggedContext';
@@ -74,7 +74,7 @@ function App() {
           {snack && <TimerSnackbar snack={snack} setSnack={setSnack} />}
 
           <Switch>
-            <Route exact path={'/' || '/MERN-Queue'}>
+            <Route exact path='/'>
               {/* 
               this is the landing page for host-create-session
               This needs a form with input field of "username"...
@@ -83,11 +83,6 @@ function App() {
             */}
               {logged.isLogged ? <RedirectAuthUser /> : <Home isHost={true} />}
             </Route>
-            <Route path='/host'>
-              {/* this is the host dashboard */}
-              {logged.isLogged ? <Dashboard isHost={true} /> : <Redirect to='/' />}
-            </Route>
-
             <Route path='/join/:id'>
               {/* 
               this is the page for user-join-session
@@ -96,6 +91,11 @@ function App() {
               1. user token
             */}
               {logged.isLogged ? <RedirectAuthUser /> : <Home isHost={false} />}
+            </Route>
+
+            <Route path='/host'>
+              {/* this is the host dashboard */}
+              {logged.isLogged ? <Dashboard isHost={true} /> : <Redirect to='/' />}
             </Route>
             <Route path='/user'>
               {/* this is the user dashboard */}
