@@ -4,7 +4,9 @@ import cors from 'cors'; // HTTP headers (enable requests)
 import morgan from 'morgan'; // Logs incoming requests
 import dotenv from 'dotenv'; // Secures variables
 import routes from './api/routes/routes.js';
-import pusherHandler from './api/middleware/pusher.js';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const socket = require('socket.io'); // web sockets (real-time)
 
 // initialize app
 const app = express();
@@ -28,13 +30,16 @@ mongoose.connection.on('connected', () => console.log('✅ MongoDB connected'));
 mongoose.connection.on('disconnected', () => console.log('❌ MongoDB disconnected')); // disconnected
 mongoose.connection.on('error', (error) => console.log('❌ MongoDB connection error', error)); // listen for errors during the session
 
-// pusher
-mongoose.connection.once('open', pusherHandler);
-
 // routes
 app.get('/', (request, response, next) => response.status(200).json('Queue'));
 app.use('/api/v1', routes);
 
 // server is listening for requests
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`✅ Server is listening on port: ${PORT}`));
+const server = app.listen(PORT, () => console.log(`✅ Server is listening on port: ${PORT}`));
+
+// web sockets
+const io = socket(server);
+io.on('connection', (user) => {
+  console.log('Socket opened', user);
+});

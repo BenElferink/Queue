@@ -1,6 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
 import styles from './Dashboard.module.css';
-import Pusher from 'pusher-js';
 import FlipMove from 'react-flip-move';
 import { SessionContext } from './../../contexts/SessionContext';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
@@ -9,32 +8,35 @@ import QueueItemHandler from './QueueItemHandler/QueueItemHandler';
 import DashboardSection from './DashboardSection/DashboardSection';
 import MobileNavigation from './MobileNavigation/MobileNavigation';
 
-const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
-  cluster: 'ap2',
-});
+import { TokenContext } from '../../contexts/TokenContext';
+import { getSession } from './../../api';
+// import { io } from 'socket.io-client';
+// const socket = io('ws:https://localhost:4000');
 
 export default function Dashboard({ isHost }) {
+  const { token } = useContext(TokenContext);
   const { session, setSession } = useContext(SessionContext);
   const [queue, setQueue] = useState([]);
   const [history, setHistory] = useState([]);
-  const { transcript, resetTranscript } = useSpeechRecognition();
-  const [listening, setListening] = useState(false);
-  const [text, setText] = useState('');
-  const [questToAnswer, setQuestToAnswer] = useState(null);
 
-  // this side effect subscribes to the pusher channel, using the channel ID
-  // subscription happens only if the session ID exists, meaning the session was fetched
+  // console.log('socket', socket);
+
+  // temporary 10-second interval for fetching the session data,
+  // will be replaced with socket.io
   useEffect(() => {
-    const channel = pusher.subscribe(`session-${session._id}`);
-    channel.bind('update-session', function (data) {
-      setSession(data.session);
-    });
+    const interval = setInterval(async () => {
+      const response = await getSession(token);
+      if (response) {
+        setSession(response.session);
+      } else {
+        console.log('dev error');
+      }
+    }, 10000);
 
     return () => {
-      pusher.unsubscribe();
-      pusher.unbind_all();
+      clearInterval(interval);
     };
-  }, [session, setSession]);
+  });
 
   // this side effect is reposnaible for sorting the queue and history
   // queue is FIFO, history is LIFO
@@ -46,6 +48,16 @@ export default function Dashboard({ isHost }) {
     setQueue(sortedQueue);
     setHistory(sortedHistory);
   }, [session.queue, session.history]);
+
+  const { transcript, resetTranscript } = useSpeechRecognition();
+  const [listening, setListening] = useState(false);
+  const [text, setText] = useState('');
+  const [questToAnswer, setQuestToAnswer] = useState(null);
+
+  // this side effect keeps the spoken transcript in a state (can be presented in UI)
+  useEffect(() => {
+    if (transcript && listening) setText(transcript);
+  }, [transcript, listening]);
 
   // this function enables and disables the microphone
   const handleSpeech = async () => {
@@ -59,11 +71,6 @@ export default function Dashboard({ isHost }) {
     }
   };
 
-  // this side effect keeps the spoken transcript in a state (can be presented in UI)
-  useEffect(() => {
-    if (transcript && listening) setText(transcript);
-  }, [transcript, listening]);
-
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 868 ? true : false);
   const [mobileNav, setMobileNav] = useState({
     section1: true,
@@ -73,7 +80,7 @@ export default function Dashboard({ isHost }) {
 
   useEffect(() => {
     const configMobile = () => {
-      // if window is lesss than 868px
+      // if window is less than 868px
       if (window.innerWidth <= 868) {
         if (!isMobile) setIsMobile(true);
       } else {
@@ -155,7 +162,7 @@ export default function Dashboard({ isHost }) {
           <DashboardSection title='History'>
             {/* answered queue (modified for use on both user && host dashboard) */}
             <FlipMove>
-              {history.map((item, i) => (
+              {history.map((item) => (
                 <QuestItem
                   key={item._id}
                   item={item}
