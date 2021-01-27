@@ -8,14 +8,17 @@ import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 function MobileNavigation() {
   return (
     <div className={styles.component}>
-      <Button className={styles.navButton}>
-        <h1>Queue</h1>
+      <Button>
+        <HelpIcon />
+        <h5>Queue</h5>
       </Button>
-      <Button className={styles.navButton}>
-        <h1>Ask</h1>
+      <Button>
+        <QuestionAnswerIcon />
+        <h5>Ask</h5>
       </Button>
-      <Button className={styles.navButton}>
-        <h1>History</h1>
+      <Button>
+        <HistoryIcon />
+        <h5>History</h5>
       </Button>
     </div>
   );
