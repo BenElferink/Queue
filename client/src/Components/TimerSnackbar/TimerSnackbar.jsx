@@ -1,36 +1,47 @@
-import {Fragment, useEffect, useState} from 'react'
+import { Fragment, useEffect, useState } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import styles from './TimerSnackbar.module.css'
-import like from "./sound-files/state-change_confirm-up.wav";
+import styles from './TimerSnackbar.module.css';
+import { Howl, Howler } from 'howler';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
 }
 
 export default function TimerSnackbar({ snack, setSnack }) {
-  const handleClose = (event, reason) => setSnack(false)
+  const handleClose = (event, reason) => setSnack(false);
   const [state, setState] = useState({
     vertical: 'top',
     horizontal: 'center',
   });
 
-  const likeAudio = new Audio(like);
+  const popUpNotify = () => {
+    // const popUp = new Audio(
+    //   'https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3',
+    // );
+    // popUp.play();
 
-  const playSound = (audioFile) => {
-    audioFile.play();
+    Howler.autoUnlock = true;
+
+    const sound = new Howl({
+      src: 'https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3',
+    });
+    sound.play();
   };
-  
   useEffect(() => {
-    playSound(likeAudio)
-    // eslint-disable-next-line
-  }, [])
+    popUpNotify();
+  }, [snack]);
 
   const { vertical, horizontal } = state;
 
   return (
     <Fragment>
-      <Snackbar className={styles.component} open={snack} onClose={handleClose} anchorOrigin={{ vertical, horizontal }} key={vertical + horizontal}>
+      <Snackbar
+        className={styles.component}
+        open={snack}
+        onClose={handleClose}
+        anchorOrigin={{ vertical, horizontal }}
+        key={vertical + horizontal}>
         <Alert onClose={handleClose} severity='warning'>
           Time to clear the Queue!
         </Alert>

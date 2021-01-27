@@ -29,7 +29,7 @@ export default function Navbar({ toggleShowSessionUrl, setSnack }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showTimerModal, setShowTimerModal] = useState(false);
   const [selectedMinutes, setSelectedMinutes] = useState(10);
-  const [timer, setTimer] = useState({ minutes: 0, seconds: 0 });
+  const [timer, setTimer] = useState({ minutes: 0, seconds: 10 });
   const onMountRef = useRef(true);
 
   useEffect(() => {

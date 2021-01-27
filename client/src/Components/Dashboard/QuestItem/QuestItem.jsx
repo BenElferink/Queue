@@ -35,7 +35,9 @@ export default forwardRef(function QuestItem(
             }}>
             {
               // IF! microphone is supported and is ON (listening)
-              (SpeechRecognition.browserSupportsSpeechRecognition() && listening) ||
+              (SpeechRecognition.browserSupportsSpeechRecognition() &&
+                questToAnswerId === item._id &&
+                listening) ||
               // OR IF! microphone is not supported and question IS leveraged
               (!SpeechRecognition.browserSupportsSpeechRecognition() &&
                 questToAnswerId === item._id) ? (
@@ -60,14 +62,7 @@ export default forwardRef(function QuestItem(
       </div>
 
       <p className={styles.question}>Q: {item?.question}</p>
-      {answered && (
-        <p className={styles.answer}>
-          A:{' '}
-          {item.answer
-            ? item.answer
-            : "~NO CONTEXT: the host's browser does not support microphone"}
-        </p>
-      )}
+      {answered && item.answer && <p className={styles.answer}>A: {item.answer}</p>}
     </div>
   );
 });

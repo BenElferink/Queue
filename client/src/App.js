@@ -11,7 +11,7 @@ import LoadingApp from './Components/LoadingApp/LoadingApp';
 import SessionUrl from './Components/SessionUrl/SessionUrl';
 import TimerSnackbar from './Components/TimerSnackbar/TimerSnackbar';
 
-function App() {
+export default function App() {
   const { token, setToken } = useContext(TokenContext);
   const { session, setSession } = useContext(SessionContext);
   const { logged, setLogged } = useContext(LoggedContext);
@@ -107,5 +107,3 @@ function App() {
     </Fragment>
   );
 }
-
-export default App;

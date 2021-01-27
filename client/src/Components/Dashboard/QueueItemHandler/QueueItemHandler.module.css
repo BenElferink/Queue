@@ -8,7 +8,7 @@
 
 .form > textarea {
   width: 90%;
-  height: 42vh !important;
+  height: 30vh !important;
   padding: 10px;
   background-color: rgba(252, 214, 57, 0.7) !important;
   border: 1px #fff solid;

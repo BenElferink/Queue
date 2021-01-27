@@ -80,7 +80,6 @@ export default function QueueItemHandler({
                   ? 'Your browser does not support speech recognition, please type your answer (not required)...'
                   : 'Ask your question here...'
               }
-              required={SpeechRecognition.browserSupportsSpeechRecognition()}
             />
 
             {isHost ? (
@@ -90,7 +89,6 @@ export default function QueueItemHandler({
                 variant='contained'
                 disabled={
                   !questToAnswerId ||
-                  (SpeechRecognition.browserSupportsSpeechRecognition() && text === '') ||
                   (SpeechRecognition.browserSupportsSpeechRecognition() && listening)
                 }
                 endIcon={<SendIcon />}>
