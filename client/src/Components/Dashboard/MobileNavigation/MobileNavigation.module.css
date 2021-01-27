@@ -35,7 +35,11 @@
   }
 }
 
-.component > button:visited {
-  background-color: gray !important;
-  border-top: 2px lightblue solid !important;
+.component > button:focus {
+  background-color: rgba(180, 132, 132, 0.6) !important;
+  transition: background-color 1s;
+}
+
+.component > button:focus + .component > button > span > svg {
+  color: #fafafa;
 }
