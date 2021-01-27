@@ -23,7 +23,7 @@ export default function SessionUrl({ id, toggleState }) {
       <CopyIcon onClick={copyOutput} />
       <input
         ref={copyRef}
-        value={isCopied ? 'copied 👍' : `http://localhost:3000/join/${id}`}
+        value={isCopied ? 'copied 👍' : `https://belferink1996.github.io/MERN-Queue/#/join/${id}`}
         readOnly
       />
     </div>
