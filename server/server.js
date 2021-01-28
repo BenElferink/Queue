@@ -25,9 +25,11 @@ const DEPRECATED_FIX = { useNewUrlParser: true, useUnifiedTopology: true, useCre
 mongoose
   .connect(MONGO_URI, DEPRECATED_FIX)
   .catch((error) => console.log('❌ MongoDB connection error', error)); // listen for errors on initial connection
-mongoose.connection.on('connected', () => console.log('✅ MongoDB connected')); // connected
-mongoose.connection.on('disconnected', () => console.log('❌ MongoDB disconnected')); // disconnected
-mongoose.connection.on('error', (error) => console.log('❌ MongoDB connection error', error)); // listen for errors during the session
+
+const db = mongoose.connection;
+db.on('connected', () => console.log('✅ MongoDB connected')); // connected
+db.on('disconnected', () => console.log('❌ MongoDB disconnected')); // disconnected
+db.on('error', (error) => console.log('❌ MongoDB connection error', error)); // listen for errors during the session
 
 // routes
 app.get('/', (request, response, next) => response.status(200).json('Queue'));
@@ -46,8 +48,35 @@ const io = require('socket.io')(server, {
   },
 });
 
+// socket connection
 io.on('connection', (socket) => {
   console.log('New connection!!');
+
+  // emit 'join'
+  socket.on('join', ({ sessionId, username }, callback) => {
+    // find session
+    const session = {};
+
+    // gen token
+
+    // response to joined user
+    socket.emit('joined', {});
+
+    // response to all in room, except for joined user
+    socket.broadcast.to(sessionId).emit('joined', {});
+
+    // ???
+    socket.join(sessionId);
+    callback();
+  });
+
+  // emit 'send'
+  // socket.on('sendMessage', (item, callback) => {
+  //   io.to(sessionId).emit('message', {})
+  //   callback();
+  // });
+
+  // emit 'disconnect'
   socket.on('disconnect', () => {
     console.log('User left..!');
   });

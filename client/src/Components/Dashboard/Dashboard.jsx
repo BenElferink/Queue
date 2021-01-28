@@ -11,6 +11,7 @@ import MobileNavigation from './MobileNavigation/MobileNavigation';
 import { TokenContext } from '../../contexts/TokenContext';
 import { getSession } from './../../api';
 import { io } from 'socket.io-client';
+const ENDPOINT = 'localhost:4000';
 
 export default function Dashboard({ isHost }) {
   const { token } = useContext(TokenContext);
@@ -21,22 +22,35 @@ export default function Dashboard({ isHost }) {
   // temporary 10-second interval for fetching the session data,
   // will be replaced with socket.io
   useEffect(() => {
-    // const interval = setInterval(async () => {
-    //   const response = await getSession(token);
-    //   if (response) {
-    //     setSession(response.session);
-    //   } else {
-    //     console.log('dev error');
-    //   }
-    // }, 10000);
+    const interval = setInterval(async () => {
+      const response = await getSession(token);
+      if (response) {
+        setSession(response.session);
+      } else {
+        console.log('dev error');
+      }
+    }, 10000);
 
+    return () => {
+      clearInterval(interval);
+    };
+
+    // const socket = io(ENDPOINT);
+
+    // socket.emit('join', { sessionId: session._id }, (cb) => {
+    //   // callback always called
+    // });
+
+    // socket.on('message', (msg) => {
+    //   console.log(msg);
+    // });
+
+    // console.log('socket', socket);
     // return () => {
-    //   clearInterval(interval);
+    //   socket.emit('disconnect');
+    //   socket.off();
     // };
-
-    const socket = io('localhost:4000');
-    console.log('socket', socket);
-  }, []);
+  }, [session._id]);
 
   // this side effect is reposnaible for sorting the queue and history
   // queue is FIFO, history is LIFO
