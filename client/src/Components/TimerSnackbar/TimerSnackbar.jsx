@@ -15,21 +15,30 @@ export default function TimerSnackbar({ snack, setSnack }) {
     horizontal: 'center',
   });
 
-  const popUpNotify = () => {
-    // const popUp = new Audio(
-    //   'https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3',
-    // );
-    // popUp.play();
+  // const popUpNotify = () => {
+  //   // const popUp = new Audio(
+  //   //   'https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3',
+  //   // );
+  //   // popUp.play();
 
-    Howler.autoUnlock = true;
+  //   Howler.autoUnlock = true;
 
-    const sound = new Howl({
-      src: 'https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3',
-    });
-    sound.play();
-  };
+  //   const sound = new Howl({
+  //     src: 'https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3',
+  //   });
+  //   sound.play();
+  // };
+
+  const showNotification = () => {
+    const notification = new Notification("Reminder from Queue",{
+      body: "Time to answer some questions"
+    })
+
+    return notification;
+  }
+
   useEffect(() => {
-    popUpNotify();
+    showNotification();
   }, [snack]);
 
   const { vertical, horizontal } = state;
