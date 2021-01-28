@@ -3,7 +3,8 @@ import express from 'express'; // Backend App (server)
 import cors from 'cors'; // HTTP headers (enable requests)
 import morgan from 'morgan'; // Logs incoming requests
 import dotenv from 'dotenv'; // Secures variables
-import routes from './api/v1/routes/routes.js';
+import routesV1 from './api/v1/routes/routes.js';
+// import routesV2 from './api/v2/routes/httpRoutes.js';
 import { createRoom, joinRoom, askQuestion } from './api/v2/controllers/socketHandlers.js';
 import { createRequire } from 'module';
 
@@ -34,7 +35,8 @@ db.on('error', (error) => console.log('❌ MongoDB connection error', error)); /
 
 // routes
 app.get('/', (request, response, next) => response.status(200).json('Queue'));
-app.use('/api/v1', routes);
+app.use('/api/v1', routesV1);
+// app.use('/api/v2', routesV2);
 
 // server is listening for requests
 const PORT = process.env.PORT || 4000;
@@ -63,7 +65,7 @@ io.on('connection', (socket) => {
     cb();
   });
 
-  // join a room - { sessionId, username }
+  // join a room - { roomId, username }
   socket.on('join', (body, callback) => {
     const { isError, data } = joinRoom(body);
     if (isError) return cb(isError);
