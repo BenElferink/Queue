@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticateToken } from './../middleware/jsonWebToken.js';
+import { authenticateToken } from '../middleware/jsonWebToken.js';
 import {
   newSession,
   requestSession,

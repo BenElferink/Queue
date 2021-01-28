@@ -3,7 +3,8 @@ import express from 'express'; // Backend App (server)
 import cors from 'cors'; // HTTP headers (enable requests)
 import morgan from 'morgan'; // Logs incoming requests
 import dotenv from 'dotenv'; // Secures variables
-import routes from './api/routes/routes.js';
+import routes from './api/v1/routes/routes.js';
+import { createRoom, joinRoom, askQuestion } from './api/v2/controllers/socketHandlers.js';
 import { createRequire } from 'module';
 
 // initialize app
@@ -52,29 +53,44 @@ const io = require('socket.io')(server, {
 io.on('connection', (socket) => {
   console.log('New connection!!');
 
-  // emit 'join'
-  socket.on('join', ({ sessionId, username }, callback) => {
-    // find session
-    const session = {};
+  // create a room - { username }
+  socket.on('create', (body, cb) => {
+    const { isError, data } = createRoom(body);
+    if (isError) return cb(isError);
 
-    // gen token
+    socket.emit('created', data);
+    socket.join(data.roomId);
+    cb();
+  });
 
-    // response to joined user
-    socket.emit('joined', {});
+  // join a room - { sessionId, username }
+  socket.on('join', (body, callback) => {
+    const { isError, data } = joinRoom(body);
+    if (isError) return cb(isError);
 
-    // response to all in room, except for joined user
-    socket.broadcast.to(sessionId).emit('joined', {});
-
-    // ???
-    socket.join(sessionId);
+    socket.emit('joined', data);
+    // socket.broadcast.to(data.roomId).emit('joined', {});
+    socket.join(data.roomId);
     callback();
   });
 
-  // emit 'send'
-  // socket.on('sendMessage', (item, callback) => {
-  //   io.to(sessionId).emit('message', {})
-  //   callback();
-  // });
+  // ask a question - { token, question }
+  socket.on('ask', (body, callback) => {
+    const { isError, data } = askQuestion(body);
+    if (isError) return cb(isError);
+
+    io.to(data.roomId).emit('asked', data);
+    callback();
+  });
+
+  // answer a question - { token, questId, answer }
+  socket.on('answer', (body, callback) => {
+    const { isError, data } = asnwerQuestion(body);
+    if (isError) return cb(isError);
+
+    io.to(data.roomId).emit('answered', data);
+    callback();
+  });
 
   // emit 'disconnect'
   socket.on('disconnect', () => {

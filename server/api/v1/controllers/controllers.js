@@ -33,27 +33,6 @@ export const newSession = async (request, response, next) => {
   }
 };
 
-export const requestSession = async (request, response, next) => {
-  try {
-    // find the session, filter data for public view
-    const foundSession = await Session.findOne({ _id: request.params.id })
-      .select('_id host')
-      .populate('host');
-    if (!foundSession)
-      return response.status(404).json({
-        message: 'Session not found',
-      });
-
-    response.status(200).json({
-      message: 'Session requested',
-      session: foundSession,
-    });
-  } catch (error) {
-    console.log(error);
-    response.status(500).json(error);
-  }
-};
-
 export const newUser = async (request, response, next) => {
   try {
     // find the session
@@ -82,6 +61,27 @@ export const newUser = async (request, response, next) => {
     response.status(201).json({
       message: 'User joined session',
       token: userToken,
+    });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json(error);
+  }
+};
+
+export const requestSession = async (request, response, next) => {
+  try {
+    // find the session, filter data for public view
+    const foundSession = await Session.findOne({ _id: request.params.id })
+      .select('_id host')
+      .populate('host');
+    if (!foundSession)
+      return response.status(404).json({
+        message: 'Session not found',
+      });
+
+    response.status(200).json({
+      message: 'Session requested',
+      session: foundSession,
     });
   } catch (error) {
     console.log(error);
