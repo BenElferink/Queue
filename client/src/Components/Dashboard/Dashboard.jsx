@@ -10,8 +10,7 @@ import MobileNavigation from './MobileNavigation/MobileNavigation';
 
 import { TokenContext } from '../../contexts/TokenContext';
 import { getSession } from './../../api';
-// import { io } from 'socket.io-client';
-// const socket = io('ws:https://localhost:4000');
+import { io } from 'socket.io-client';
 
 export default function Dashboard({ isHost }) {
   const { token } = useContext(TokenContext);
@@ -19,24 +18,25 @@ export default function Dashboard({ isHost }) {
   const [queue, setQueue] = useState([]);
   const [history, setHistory] = useState([]);
 
-  // console.log('socket', socket);
-
   // temporary 10-second interval for fetching the session data,
   // will be replaced with socket.io
   useEffect(() => {
-    const interval = setInterval(async () => {
-      const response = await getSession(token);
-      if (response) {
-        setSession(response.session);
-      } else {
-        console.log('dev error');
-      }
-    }, 10000);
+    // const interval = setInterval(async () => {
+    //   const response = await getSession(token);
+    //   if (response) {
+    //     setSession(response.session);
+    //   } else {
+    //     console.log('dev error');
+    //   }
+    // }, 10000);
 
-    return () => {
-      clearInterval(interval);
-    };
-  });
+    // return () => {
+    //   clearInterval(interval);
+    // };
+
+    const socket = io('localhost:4000');
+    console.log('socket', socket);
+  }, []);
 
   // this side effect is reposnaible for sorting the queue and history
   // queue is FIFO, history is LIFO

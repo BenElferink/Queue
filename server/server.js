@@ -5,18 +5,17 @@ import morgan from 'morgan'; // Logs incoming requests
 import dotenv from 'dotenv'; // Secures variables
 import routes from './api/routes/routes.js';
 import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const socket = require('socket.io'); // web sockets (real-time)
 
 // initialize app
 const app = express();
+const origin = 'http://localhost:3000';
 
 // middlewares
+dotenv.config();
+app.use(cors({ origin }));
 app.use(express.json({ limit: '1mb', extended: false })); // body parser
 app.use(express.urlencoded({ limit: '1mb', extended: false })); // url parser
-app.use(cors());
 app.use(morgan('common')); // logs requests
-dotenv.config();
 
 // configure db:
 const MONGO_URI = process.env.MONGO_URI;
@@ -39,7 +38,17 @@ const PORT = process.env.PORT || 4000;
 const server = app.listen(PORT, () => console.log(`✅ Server is listening on port: ${PORT}`));
 
 // web sockets
-const io = socket(server);
-io.on('connection', (user) => {
-  console.log('Socket opened', user);
+const require = createRequire(import.meta.url);
+const io = require('socket.io')(server, {
+  cors: {
+    origin,
+    methods: ['GET', 'POST'],
+  },
+});
+
+io.on('connection', (socket) => {
+  console.log('New connection!!');
+  socket.on('disconnect', () => {
+    console.log('User left..!');
+  });
 });
