@@ -15,7 +15,8 @@ import { createRequire } from 'module';
 
 // initialize app
 const app = express();
-const origin = 'https://queue-client.herokuapp.com/';
+const origin = '*';
+// const origin = 'https://queue-client.herokuapp.com/';
 // const origin = 'https://belferink1996.github.io/MERN-Queue';
 // const origin = 'http://localhost:3000';
 
