@@ -5,7 +5,7 @@ import { useRef, useState } from 'react';
 export default function SessionUrl({ roomId, closeThis }) {
   const [isCopied, setIsCopied] = useState(false);
   const copyRef = useRef();
-  const joinUrl = `http://localhost:3000/join/${roomId}`;
+  const joinUrl = `https://belferink1996.github.io/MERN-Queue/join/${roomId}`;
 
   const copyOutput = () => {
     if (!isCopied) {

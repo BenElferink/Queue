@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const url = 'http://localhost:4000/api/v2/room';
-// const url = 'https://queue-and-a.herokuapp.com/api/v2/room';
+// const url = 'http://localhost:4000/api/v2/room';
+const url = 'https://queue-and-a.herokuapp.com/api/v2/room';
 const headers = (token) => {
   return {
     headers: {

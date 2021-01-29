@@ -15,8 +15,8 @@ import { createRequire } from 'module';
 
 // initialize app
 const app = express();
-// const origin = 'https://belferink1996.github.io/MERN-Queue';
-const origin = 'http://localhost:3000';
+const origin = 'https://belferink1996.github.io/MERN-Queue';
+// const origin = 'http://localhost:3000';
 
 // middlewares
 dotenv.config();
