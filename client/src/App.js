@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect, Fragment } from 'react';
-import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutAction, refetchedRoom } from './app/actions';
 import { SocketContext } from './app/SocketContext';
