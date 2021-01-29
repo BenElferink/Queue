@@ -1,29 +1,36 @@
 import { forwardRef } from 'react';
+import { useSelector } from 'react-redux';
 import styles from './QuestItem.module.css';
-import { Avatar, CircularProgress } from '@material-ui/core';
+import { Avatar, CircularProgress, IconButton } from '@material-ui/core';
 import MicIcon from '@material-ui/icons/Mic';
 import MicOffRoundedIcon from '@material-ui/icons/MicOffRounded';
 import DoneRoundedIcon from '@material-ui/icons/DoneRounded';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 export default forwardRef(function QuestItem(
-  {
-    item,
-    user,
-    answered,
-    isHost,
-    SpeechRecognition,
-    handleSpeech,
-    listening,
-    leverageQuest,
-    questToAnswerId,
-  },
+  { item, isHost, leveragedQuestId, leverageQuest, SpeechRecognition, handleSpeech, listening },
   ref,
 ) {
+  const { userId } = useSelector((state) => state.authReducer);
+
+  const deleteQuestion = () => {
+    window.alert('This Function should delete this messagess');
+  };
+
   return (
     <div
       ref={ref}
-      className={`${styles.component} ${answered ? styles.answered : styles.notAnswered}`}>
+      className={`${styles.component} ${item?.answered ? styles.answered : styles.notAnswered}`}>
       <div>
+        {(isHost || item?.from._id === userId) && !item?.answered && !item?.answer ? (
+          <IconButton onClick={() => deleteQuestion()}>
+            <CancelIcon />
+          </IconButton>
+        ) : (
+          ''
+        )}
+        <span>{item?.from.username}</span>
+
         {isHost ? (
           <Avatar
             className={`${styles.avatarMic} ${!listening && styles.pointer}`}
@@ -36,11 +43,11 @@ export default forwardRef(function QuestItem(
             {
               // IF! microphone is supported and is ON (listening)
               (SpeechRecognition.browserSupportsSpeechRecognition() &&
-                questToAnswerId === item._id &&
+                leveragedQuestId === item?._id &&
                 listening) ||
               // OR IF! microphone is not supported and question IS leveraged
               (!SpeechRecognition.browserSupportsSpeechRecognition() &&
-                questToAnswerId === item._id) ? (
+                leveragedQuestId === item?._id) ? (
                 <CircularProgress color='secondary' />
               ) : // ELSE! if microphone is supported and is OFF (NOT-listening)
               SpeechRecognition.browserSupportsSpeechRecognition() ? (
@@ -51,18 +58,17 @@ export default forwardRef(function QuestItem(
               )
             }
           </Avatar>
-        ) : answered ? (
+        ) : item?.answered ? (
           <Avatar className={styles.avatar}>
             <DoneRoundedIcon />
           </Avatar>
         ) : (
-          <Avatar className={styles.avatar}>{user?.username[0]}</Avatar>
+          <Avatar className={styles.avatar}>{item?.from.username[0]}</Avatar>
         )}
-        <span>{user?.username}</span>
       </div>
 
       <p className={styles.question}>Q: {item?.question}</p>
-      {answered && item.answer && <p className={styles.answer}>A: {item.answer}</p>}
+      {item?.answered && item?.answer && <p className={styles.answer}>A: {item?.answer}</p>}
     </div>
   );
 });

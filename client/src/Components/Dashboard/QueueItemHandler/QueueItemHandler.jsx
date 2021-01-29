@@ -1,6 +1,6 @@
 import { Fragment, useContext, useState } from 'react';
-import { TokenContext } from '../../../contexts/TokenContext';
-import { answerQuestion, askQuestion } from '../../../api';
+import { useSelector } from 'react-redux';
+import { SocketContext } from '../../../app/SocketContext';
 import styles from './QueueItemHandler.module.css';
 import DashboardSection from '../DashboardSection/DashboardSection';
 import { Button, CircularProgress } from '@material-ui/core';
@@ -11,31 +11,41 @@ export default function QueueItemHandler({
   text,
   setText,
   isHost,
-  questToAnswerId,
+  leveragedQuestId,
+  clearLeveragedQuest,
   SpeechRecognition,
   handleSpeech,
   listening,
   children,
-  clearLeverage,
 }) {
-  const { token } = useContext(TokenContext);
+  const { socket } = useContext(SocketContext);
+  const { token } = useSelector((state) => state.authReducer);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     (async () => {
       setLoading(true);
-      const data = isHost
-        ? await answerQuestion(token, questToAnswerId, { answer: text })
-        : await askQuestion(token, { question: text });
-      if (data) {
-        setLoading(false);
-        setText('');
-        if (isHost) clearLeverage();
-      } else {
-        alert('Your session has expired');
-        window.location.reload();
-      }
+      isHost
+        ? socket.emit('answer', { token, questId: leveragedQuestId, answer: text }, (error) => {
+            if (error) {
+              console.log(error);
+              // alert('Your session has expired');
+              // window.location.reload();
+            }
+            setText('');
+            setLoading(false);
+            clearLeveragedQuest();
+          })
+        : socket.emit('ask', { token, question: text }, (error) => {
+            if (error) {
+              console.log(error);
+              // alert('Your session has expired');
+              // window.location.reload();
+            }
+            setText('');
+            setLoading(false);
+          });
     })();
   };
 
@@ -68,14 +78,14 @@ export default function QueueItemHandler({
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder={
-                isHost && !questToAnswerId
+                isHost && !leveragedQuestId
                   ? 'Select a question from the Queue by clicking the microphone.'
                   : isHost &&
-                    questToAnswerId &&
+                    leveragedQuestId &&
                     SpeechRecognition.browserSupportsSpeechRecognition()
                   ? 'Speak or type your answer...'
                   : isHost &&
-                    questToAnswerId &&
+                    leveragedQuestId &&
                     !SpeechRecognition.browserSupportsSpeechRecognition()
                   ? 'Your browser does not support speech recognition, please type your answer (not required)...'
                   : 'Ask your question here...'
@@ -88,7 +98,7 @@ export default function QueueItemHandler({
                 type='submit'
                 variant='contained'
                 disabled={
-                  !questToAnswerId ||
+                  !leveragedQuestId ||
                   (SpeechRecognition.browserSupportsSpeechRecognition() && listening)
                 }
                 endIcon={<SendIcon />}>

@@ -3,13 +3,19 @@ import express from 'express'; // Backend App (server)
 import cors from 'cors'; // HTTP headers (enable requests)
 import morgan from 'morgan'; // Logs incoming requests
 import dotenv from 'dotenv'; // Secures variables
-import routesV1 from './api/v1/routes/routes.js';
-// import routesV2 from './api/v2/routes/httpRoutes.js';
-import { createRoom, joinRoom, askQuestion } from './api/v2/controllers/socketHandlers.js';
+import routesV2 from './api/routes/httpRoutes.js';
+import {
+  createRoom,
+  joinRoom,
+  askQuestion,
+  answerQuestion,
+  getRoom,
+} from './api/controllers/socketHandlers.js';
 import { createRequire } from 'module';
 
 // initialize app
 const app = express();
+// const origin = 'https://belferink1996.github.io/MERN-Queue';
 const origin = 'http://localhost:3000';
 
 // middlewares
@@ -35,8 +41,7 @@ db.on('error', (error) => console.log('❌ MongoDB connection error', error)); /
 
 // routes
 app.get('/', (request, response, next) => response.status(200).json('Queue'));
-app.use('/api/v1', routesV1);
-// app.use('/api/v2', routesV2);
+app.use('/api/v2', routesV2);
 
 // server is listening for requests
 const PORT = process.env.PORT || 4000;
@@ -53,49 +58,63 @@ const io = require('socket.io')(server, {
 
 // socket connection
 io.on('connection', (socket) => {
-  console.log('New connection!!');
+  const ID = socket.id;
+  console.log(`New connection! ${ID}`);
 
-  // create a room - { username }
-  socket.on('create', (body, cb) => {
-    const { isError, data } = createRoom(body);
+  // refetch the room - { token }
+  socket.on('refetch', async (body, cb) => {
+    const { isError, data } = await getRoom(body);
     if (isError) return cb(isError);
 
+    socket.join(JSON.stringify(data.roomId));
+    socket.emit('refetched', data);
+    cb();
+  });
+
+  // create a room - { username }
+  socket.on('create', async (body, cb) => {
+    const { isError, data } = await createRoom(body);
+    if (isError) return cb(isError);
+
+    socket.join(JSON.stringify(data.roomId));
     socket.emit('created', data);
-    socket.join(data.roomId);
     cb();
   });
 
   // join a room - { roomId, username }
-  socket.on('join', (body, callback) => {
-    const { isError, data } = joinRoom(body);
+  socket.on('join', async (body, callback) => {
+    const { isError, data } = await joinRoom(body);
     if (isError) return cb(isError);
 
+    socket.join(JSON.stringify(data.roomId));
     socket.emit('joined', data);
-    // socket.broadcast.to(data.roomId).emit('joined', {});
-    socket.join(data.roomId);
     callback();
   });
 
   // ask a question - { token, question }
-  socket.on('ask', (body, callback) => {
-    const { isError, data } = askQuestion(body);
+  socket.on('ask', async (body, callback) => {
+    const { isError, data } = await askQuestion(body);
     if (isError) return cb(isError);
 
-    io.to(data.roomId).emit('asked', data);
+    io.to(JSON.stringify(data.roomId)).emit('asked', data);
     callback();
   });
 
   // answer a question - { token, questId, answer }
-  socket.on('answer', (body, callback) => {
-    const { isError, data } = asnwerQuestion(body);
+  socket.on('answer', async (body, callback) => {
+    const { isError, data } = await answerQuestion(body);
     if (isError) return cb(isError);
 
-    io.to(data.roomId).emit('answered', data);
+    io.to(JSON.stringify(data.roomId)).emit('answered', data);
     callback();
   });
 
-  // emit 'disconnect'
+  socket.on('disconnecting', () => {
+    console.log(`Disconnecting... ${ID}`);
+    console.log('Rooms:', socket.rooms);
+  });
+
   socket.on('disconnect', () => {
-    console.log('User left..!');
+    console.log(`User disconnected! ${ID}`);
   });
 });

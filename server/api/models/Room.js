@@ -2,10 +2,9 @@ import mongoose from 'mongoose';
 
 const instance = new mongoose.Schema(
   {
-    host: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    host: { type: mongoose.Schema.Types.ObjectId, ref: 'Person' },
+    guests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Person' }],
     queue: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Quest' }],
-    history: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Quest' }],
   },
   {
     timestamps: true,
@@ -19,6 +18,6 @@ const instance = new mongoose.Schema(
 
 // NOTE! use a singular model name, mongoose automatically creates a collection like so:
 // model: 'User' === collection: 'users'
-const modelName = 'Session';
+const modelName = 'Room';
 
 export default mongoose.model(modelName, instance);

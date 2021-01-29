@@ -1,6 +1,6 @@
 import Room from '../models/Room.js';
-// import User from '../models/User.js';
-// import Quest from '../models/Quest.js';
+import Person from '../models/Person.js';
+import Quest from '../models/Quest.js';
 import { generateToken, authenticateToken_v2 } from '../middleware/jsonWebToken.js';
 // more about response status codes   --->   https://restapitutorial.com/httpstatuscodes.html
 
@@ -12,7 +12,7 @@ export const createRoom = async ({ username }) => {
 
   try {
     // create host, and save it
-    const newHost = new User({ username });
+    const newHost = new Person({ username });
     await newHost.save();
 
     // create session, and save it
@@ -47,47 +47,39 @@ export const joinRoom = async ({ roomId, username }) => {
   };
 
   try {
-    // find the session
+    // find the room
     const foundRoom = await Room.findOne({ _id: roomId });
     if (!foundRoom) {
       response.isError = { error: 'room not found', id: roomId };
     } else {
       // create user, and save it
-      const newUser = new User({ username });
-      await newUser.save();
+      const newGuest = new Person({ username });
+      await newGuest.save();
 
-      // add the new user to session
-      foundRoom.users.push(newUser._id);
+      // add the new user to room
+      foundRoom.guests.push(newGuest._id);
       await foundRoom.save();
 
       // populate queue
-      Room.populate(
-        foundRoom,
-        {
-          path: 'queue',
-          populate: { path: 'from' },
-        },
-        (err, doc) => {
-          if (err) {
-            isError = { error: err };
-          } else {
-            // create user token
-            const token = generateToken({
-              roomId: foundRoom._id,
-              userId: newUser._id,
-              username: newUser.username,
-              role: 'user',
-            });
+      await Room.populate(foundRoom, {
+        path: 'queue',
+        populate: { path: 'from' },
+      });
 
-            response.data = {
-              message: 'joined room',
-              roomId: foundRoom._id,
-              queue: doc.queue,
-              token,
-            };
-          }
-        },
-      );
+      // create user token
+      const token = generateToken({
+        roomId: foundRoom._id,
+        userId: newGuest._id,
+        username: newGuest.username,
+        role: 'user',
+      });
+
+      response.data = {
+        message: 'joined room',
+        roomId: foundRoom._id,
+        queue: foundRoom.queue,
+        token,
+      };
     }
   } catch (error) {
     response.isError = { error };
@@ -105,6 +97,7 @@ export const askQuestion = async ({ token, question }) => {
 
   try {
     const { tokenError, tokenData } = authenticateToken_v2(token);
+
     if (tokenError) {
       response.isError = { error: tokenError };
     } else {
@@ -125,17 +118,14 @@ export const askQuestion = async ({ token, question }) => {
         await foundRoom.save();
 
         // populate quest
-        Quest.populate(newQuest, { path: 'from' }, (err, doc) => {
-          if (err) {
-            response.isError = { error: err };
-          } else {
-            response.data = {
-              message: 'question asked',
-              roomId: tokenData.roomId,
-              quest: doc,
-            };
-          }
-        });
+        await Quest.populate(newQuest, 'from');
+
+        console.log(newQuest);
+        response.data = {
+          message: 'question asked',
+          roomId: tokenData.roomId,
+          quest: newQuest,
+        };
       }
     }
   } catch (error) {
@@ -170,17 +160,47 @@ export const answerQuestion = async ({ token, questId, answer }) => {
         await foundQuestion.save();
 
         // populate quest
-        Quest.populate(foundQuestion, { path: 'from' }, (err, doc) => {
-          if (err) {
-            response.isError = { error: err };
-          } else {
-            response.data = {
-              message: 'question asnwered',
-              roomId: tokenData.roomId,
-              quest: doc,
-            };
-          }
-        });
+        await Quest.populate(foundQuestion, 'from');
+
+        response.data = {
+          message: 'question asnwered',
+          roomId: tokenData.roomId,
+          quest: foundQuestion,
+        };
+      }
+    }
+  } catch (error) {
+    response.isError = { error };
+  }
+
+  console.log(response);
+  return response;
+};
+
+export const getRoom = async ({ token }) => {
+  let response = {
+    data: {},
+    isError: false,
+  };
+
+  try {
+    const { tokenError, tokenData } = authenticateToken_v2(token);
+    if (tokenError) {
+      response.isError = { error: tokenError };
+    } else {
+      // find the session, filter data for public view
+      const foundRoom = await Room.findOne({ _id: tokenData.roomId }).populate({
+        path: 'queue',
+        populate: { path: 'from' },
+      });
+      if (!foundRoom) {
+        response.isError = { error: 'room not found', id: tokenData.roomId };
+      } else {
+        response.data = {
+          message: 'room fetched',
+          roomId: foundRoom._id,
+          queue: foundRoom.queue,
+        };
       }
     }
   } catch (error) {

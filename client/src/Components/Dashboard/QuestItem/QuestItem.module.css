@@ -13,6 +13,32 @@
   display: flex;
   align-items: center;
   border-radius: 8px 8px 0 0;
+  justify-content: space-evenly;
+  position: relative;
+}
+
+.component > div > span {
+  border-bottom: 2px solid rgba(245, 245, 245, 0.7) !important;
+  width: 90%;
+}
+
+.component > div > button {
+  position: absolute !important;
+  top: -10px;
+  left: -10px;
+  width: 18px;
+  height: 18px;
+  background-color: #f5f5f5;
+}
+
+.component > div > button:hover {
+  background-color: lightgray;
+}
+
+.component > div > button > span > svg {
+  color: rgb(241, 140, 140);
+  width: 20px;
+  height: 20px;
 }
 
 .notAnswered {
@@ -36,6 +62,7 @@
   color: #333;
   font-size: 14px;
   font-weight: 100;
+  margin-left: 10px;
 }
 
 .avatarMic {

@@ -1,7 +1,8 @@
 import { Fragment, useContext, useEffect, useState, useRef } from 'react';
-import { TokenContext } from '../../contexts/TokenContext';
-import { SessionContext } from '../../contexts/SessionContext';
-import { LoggedContext } from '../../contexts/LoggedContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutAction } from '../../app/actions';
+import { SocketContext } from './../../app/SocketContext';
+import { deleteRoom } from '../../api';
 import styles from './Navbar.module.css';
 import blackQueueLogo from './../../images/blackQueueLogo.svg';
 import Counter from './TimerModal/Counter';
@@ -17,19 +18,18 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
-import { deleteSession } from '../../api';
+import GetAppIcon from '@material-ui/icons/GetApp';
 
 const Emoji = () => <div className={styles.welcomeIcon}>🔑</div>;
 
-export default function Navbar({ toggleShowSessionUrl, setSnack }) {
-  const { logoutToken, token } = useContext(TokenContext);
-  const { logoutSession } = useContext(SessionContext);
-  const { logoutLogged, logged } = useContext(LoggedContext);
-
+export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
+  const dispatch = useDispatch();
+  const { role, username, token } = useSelector((state) => state.authReducer);
+  const { socket } = useContext(SocketContext);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showTimerModal, setShowTimerModal] = useState(false);
   const [selectedMinutes, setSelectedMinutes] = useState(10);
-  const [timer, setTimer] = useState({ minutes: 0, seconds: 10 });
+  const [timer, setTimer] = useState({ minutes: 0, seconds: 0 });
   const onMountRef = useRef(true);
 
   useEffect(() => {
@@ -41,44 +41,41 @@ export default function Navbar({ toggleShowSessionUrl, setSnack }) {
         setIsScrolled(false);
       }
     };
-
     window.addEventListener('scroll', addNavShadow);
     return () => {
       window.removeEventListener('scroll', addNavShadow);
     };
   }, []);
 
-  const handleUserLogout = () => {
-    logoutToken();
-    logoutSession();
-    logoutLogged();
-  };
+  useEffect(() => {
+    if (!onMountRef.current && timer.minutes === 0 && timer.seconds === 0) {
+      triggerAlert();
+      onMountRef.current = true;
+    }
+    if (onMountRef) onMountRef.current = false;
+    // eslint-disable-next-line
+  }, [timer.minutes, timer.seconds]);
 
+  const handleUserLogout = () => {
+    socket.disconnect();
+    dispatch(logoutAction());
+  };
   const handleHostLogout = async () => {
-    const response = await deleteSession(token);
+    const response = await deleteRoom(token);
     if (response) {
       handleUserLogout();
     }
   };
 
-  useEffect(() => {
-    if (!onMountRef.current && timer.minutes === 0 && timer.seconds === 0) {
-      setSnack(true);
-      onMountRef.current = true;
-    }
-
-    if (onMountRef) onMountRef.current = false;
-  }, [setSnack, timer.minutes, timer.seconds]);
-
   return (
     <div
       className={`${styles.component} ${isScrolled && styles.navColor} ${
-        logged.role !== null && styles.glassMorph
+        role !== null && styles.glassMorph
       }`}>
       <img src={blackQueueLogo} className={styles.logo} alt='Queue' />
 
       {/* Nav-icons for the homepage */}
-      {logged.role === null && (
+      {role === null && (
         <IconWrapper glassMorph={false}>
           <Icon link={'/#home'} title='Home' icon={<HomeIcon />} />
           <Icon link={'#aboutQueue'} title='About us' icon={<InfoIcon />} />
@@ -88,28 +85,16 @@ export default function Navbar({ toggleShowSessionUrl, setSnack }) {
       )}
 
       {/* Nav-icons for the user dashboard */}
-      {logged.role === 'user' && (
+      {role === 'user' && (
         <IconWrapper glassMorph={true}>
-          <Chip
-            icon={<Emoji />}
-            className={styles.welcomeChip}
-            label={logged.username}
-            color='primary'
-          />
+          <Chip icon={<Emoji />} className={styles.welcomeChip} label={username} color='primary' />
+          <Icon icon={<GetAppIcon />} title='Download History' />
           <Icon onClick={handleUserLogout} title='Leave session' icon={<ExitToAppIcon />} />
         </IconWrapper>
       )}
 
-      {showTimerModal && (
-        <TimerModal
-          selectedMinutes={selectedMinutes}
-          setSelectedMinutes={setSelectedMinutes}
-          setTimer={setTimer}
-          setShowTimerModal={setShowTimerModal}
-        />
-      )}
       {/* Nav-icons for the host dashboard */}
-      {logged.role === 'host' && (
+      {role === 'host' && (
         <Fragment>
           <Chip
             className={styles.timerChip}
@@ -133,6 +118,14 @@ export default function Navbar({ toggleShowSessionUrl, setSnack }) {
             <Icon onClick={handleHostLogout} title='Delete session' icon={<ExitToAppIcon />} />
           </IconWrapper>
         </Fragment>
+      )}
+      {showTimerModal && (
+        <TimerModal
+          selectedMinutes={selectedMinutes}
+          setSelectedMinutes={setSelectedMinutes}
+          setTimer={setTimer}
+          setShowTimerModal={setShowTimerModal}
+        />
       )}
     </div>
   );

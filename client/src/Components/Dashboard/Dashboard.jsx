@@ -1,72 +1,62 @@
 import { useContext, useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { answeredQuestion, askedQuestion } from '../../app/actions';
+import { SocketContext } from '../../app/SocketContext';
 import styles from './Dashboard.module.css';
 import FlipMove from 'react-flip-move';
-import { SessionContext } from './../../contexts/SessionContext';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import QuestItem from './QuestItem/QuestItem';
 import QueueItemHandler from './QueueItemHandler/QueueItemHandler';
 import DashboardSection from './DashboardSection/DashboardSection';
 import MobileNavigation from './MobileNavigation/MobileNavigation';
 
-import { TokenContext } from '../../contexts/TokenContext';
-import { getSession } from './../../api';
-import { io } from 'socket.io-client';
-const ENDPOINT = 'localhost:4000';
-
 export default function Dashboard({ isHost }) {
-  const { token } = useContext(TokenContext);
-  const { session, setSession } = useContext(SessionContext);
-  const [queue, setQueue] = useState([]);
-  const [history, setHistory] = useState([]);
-
-  // temporary 10-second interval for fetching the session data,
-  // will be replaced with socket.io
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      const response = await getSession(token);
-      if (response) {
-        setSession(response.session);
-      } else {
-        console.log('dev error');
-      }
-    }, 10000);
-
-    return () => {
-      clearInterval(interval);
-    };
-
-    // const socket = io(ENDPOINT);
-
-    // socket.emit('join', { sessionId: session._id }, (cb) => {
-    //   // callback always called
-    // });
-
-    // socket.on('message', (msg) => {
-    //   console.log(msg);
-    // });
-
-    // console.log('socket', socket);
-    // return () => {
-    //   socket.emit('disconnect');
-    //   socket.off();
-    // };
-  }, [session._id]);
-
-  // this side effect is reposnaible for sorting the queue and history
-  // queue is FIFO, history is LIFO
-  useEffect(() => {
-    const sortedQueue = session.queue.sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt));
-    const sortedHistory = session.history.sort(
-      (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt),
-    );
-    setQueue(sortedQueue);
-    setHistory(sortedHistory);
-  }, [session.queue, session.history]);
-
+  const dispatch = useDispatch();
+  const { queue, history } = useSelector((state) => state.roomReducer);
+  const { socket } = useContext(SocketContext);
   const { transcript, resetTranscript } = useSpeechRecognition();
+
+  const [unAnswered, setUnAnswered] = useState([]);
+  const [answered, setAnswered] = useState([]);
+
   const [listening, setListening] = useState(false);
   const [text, setText] = useState('');
-  const [questToAnswer, setQuestToAnswer] = useState(null);
+  const [leveragedQuest, setLeveragedQuest] = useState(null);
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 868 ? true : false);
+  const [mobileNav, setMobileNav] = useState({
+    section1: true,
+    section2: true,
+    section3: true,
+  });
+
+  useEffect(() => {
+    const asked = (data) => {
+      dispatch(askedQuestion({ quest: data.quest }));
+    };
+    const answered = (data) => {
+      dispatch(answeredQuestion({ quest: data.quest }));
+    };
+    socket.on('asked', asked);
+    socket.on('answered', answered);
+    return () => {
+      socket.off('asked', asked);
+      socket.off('answered', answered);
+    };
+    // eslint-disable-next-line
+  }, [isHost, socket]);
+
+  // this side effect is reposnaible for extracting the queue,
+  // and arranging the dashboard logic from it
+  // unAnswered is FIFO, answered is LIFO
+  useEffect(() => {
+    // sort by timestamps (updatedAt)
+    const unAnsweredQuests = queue.sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt));
+    const answeredQuests = history.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    // set changes to local state
+    setUnAnswered(unAnsweredQuests);
+    setAnswered(answeredQuests);
+  }, [history, queue]);
 
   // this side effect keeps the spoken transcript in a state (can be presented in UI)
   useEffect(() => {
@@ -85,13 +75,6 @@ export default function Dashboard({ isHost }) {
     }
   };
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 868 ? true : false);
-  const [mobileNav, setMobileNav] = useState({
-    section1: true,
-    section2: true,
-    section3: true,
-  });
-
   useEffect(() => {
     const configMobile = () => {
       // if window is less than 868px
@@ -108,7 +91,6 @@ export default function Dashboard({ isHost }) {
         }
       }
     };
-
     // if (window.innerWidth <= 868) configMobile();
     window.addEventListener('resize', configMobile);
     return () => {
@@ -124,17 +106,15 @@ export default function Dashboard({ isHost }) {
           <DashboardSection title='Queue'>
             {/* questions queue (modified for use on both user && host dashboard) */}
             <FlipMove>
-              {queue.map(
+              {unAnswered.map(
                 (item) =>
-                  item._id !== questToAnswer?._id && (
+                  item._id !== leveragedQuest?._id && (
                     <QuestItem
                       key={item._id}
                       item={item}
-                      user={session.users.find((user) => user._id === item.from)}
-                      answered={false}
-                      questToAnswerId={questToAnswer?._id}
-                      leverageQuest={() => setQuestToAnswer(item)}
                       isHost={isHost}
+                      leveragedQuestId={leveragedQuest?._id}
+                      leverageQuest={() => setLeveragedQuest(item)}
                       SpeechRecognition={SpeechRecognition}
                       handleSpeech={handleSpeech}
                       listening={listening}
@@ -151,19 +131,17 @@ export default function Dashboard({ isHost }) {
             text={text}
             setText={setText}
             isHost={isHost}
-            questToAnswerId={questToAnswer?._id}
+            leveragedQuestId={leveragedQuest?._id}
+            clearLeveragedQuest={() => setLeveragedQuest(null)}
             SpeechRecognition={SpeechRecognition}
             handleSpeech={handleSpeech}
-            listening={listening}
-            clearLeverage={() => setQuestToAnswer(null)}>
-            {questToAnswer && (
+            listening={listening}>
+            {leveragedQuest && (
               <QuestItem
-                item={queue.find((quest) => quest._id === questToAnswer._id)}
-                user={session.users.find((user) => user._id === questToAnswer.from)}
-                answered={false}
-                questToAnswerId={questToAnswer._id}
-                leverageQuest={() => null}
+                item={queue.find((quest) => quest._id === leveragedQuest._id)}
                 isHost={isHost}
+                leveragedQuestId={leveragedQuest._id}
+                leverageQuest={() => null}
                 SpeechRecognition={SpeechRecognition}
                 handleSpeech={handleSpeech}
                 listening={listening}
@@ -176,13 +154,8 @@ export default function Dashboard({ isHost }) {
           <DashboardSection title='History'>
             {/* answered queue (modified for use on both user && host dashboard) */}
             <FlipMove>
-              {history.map((item) => (
-                <QuestItem
-                  key={item._id}
-                  item={item}
-                  user={session.users.find((user) => user._id === item.from)}
-                  answered={true}
-                />
+              {answered.map((item) => (
+                <QuestItem key={item._id} item={item} />
               ))}
             </FlipMove>
           </DashboardSection>

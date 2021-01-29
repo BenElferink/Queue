@@ -4,7 +4,7 @@ import { Slide, IconButton, Tooltip } from '@material-ui/core';
 
 export function IconWrapper({ children, glassMorph }) {
   return (
-    <Slide in={true} direction={'left'} timeout={800}>
+    <Slide in={true} direction={'left'} timeout={1200}>
       <div className={`${styles.icons} ${glassMorph && styles.glass}`}>{children}</div>
     </Slide>
   );

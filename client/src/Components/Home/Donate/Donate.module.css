@@ -30,6 +30,11 @@
   color: #fff;
   font-size: 20px;
 }
+
+.component > p > span {
+  font-size: 12px;
+  color: darkred;
+}
 .component > span {
   font-style: italic;
 }

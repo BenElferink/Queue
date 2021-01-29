@@ -1,9 +1,9 @@
 const initialState = {
   token: localStorage.getItem('token') || '',
-  id: null,
-  role: null,
-  username: null,
   isLogged: false,
+  userId: null,
+  username: null,
+  role: null,
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -16,15 +16,33 @@ export const authReducer = (state = initialState, action) => {
       localStorage.setItem('token', token);
       return {
         token,
-        id: parsedData.userId,
+        userId: parsedData.userId,
         role: parsedData.role,
         username: parsedData.username,
         isLogged: true,
       };
 
+    case 'REFETCHED':
+      const copiedToken = state.token;
+      const fromToken = JSON.parse(window.atob(copiedToken.split('.')[1]));
+      localStorage.setItem('token', copiedToken);
+      return {
+        token: copiedToken,
+        userId: fromToken.userId,
+        role: fromToken.role,
+        username: fromToken.username,
+        isLogged: true,
+      };
+
     case 'LOGOUT':
       localStorage.removeItem('token');
-      return initialState;
+      return {
+        token: '',
+        isLogged: false,
+        userId: null,
+        username: null,
+        role: null,
+      };
 
     default:
       return state;

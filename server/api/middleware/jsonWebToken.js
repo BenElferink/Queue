@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 dotenv.config();
-const SECRET = process.env.JWT_SECRET_V2;
+const SECRET = process.env.JWT_SECRET;
 // "secret key" generator   --->   https://www.allkeysgenerator.com/Random/Security-Encryption-Key-Generator.aspx
 // Reminder: make sure to set up a secret key in .env (the presented 'secret' is not production valid)
 
@@ -28,8 +28,7 @@ export const authenticateToken_v2 = (token) => {
   let tokenData = {},
     tokenError = false;
   try {
-    const decoded = jwt.verify(token, new Buffer.from(SECRET, 'base64'));
-    tokenData = decoded;
+    tokenData = jwt.verify(token, new Buffer.from(SECRET, 'base64'));
   } catch (error) {
     console.log(error);
     isError = { error };

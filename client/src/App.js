@@ -1,67 +1,60 @@
-import { useState, useEffect, useContext, Fragment } from 'react';
+import { useContext, useState, useEffect, Fragment } from 'react';
 import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
-import { TokenContext } from './contexts/TokenContext';
-import { SessionContext } from './contexts/SessionContext';
-import { LoggedContext } from './contexts/LoggedContext';
-import { getSession } from './api';
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutAction, refetchedRoom } from './app/actions';
+import { SocketContext } from './app/SocketContext';
 import Navbar from './Components/Navbar/Navbar';
 import Home from './Components/Home/Home';
 import Dashboard from './Components/Dashboard/Dashboard';
 import LoadingApp from './Components/LoadingApp/LoadingApp';
 import SessionUrl from './Components/SessionUrl/SessionUrl';
-import TimerSnackbar from './Components/TimerSnackbar/TimerSnackbar';
+import TimerAlert from './Components/TimerAlert/TimerAlert';
 
 export default function App() {
-  const { token, setToken } = useContext(TokenContext);
-  const { session, setSession } = useContext(SessionContext);
-  const { logged, setLogged } = useContext(LoggedContext);
+  const dispatch = useDispatch();
+  const { roomId } = useSelector((state) => state.roomReducer);
+  const { socket } = useContext(SocketContext);
+  const { isLogged, token, role } = useSelector((state) => state.authReducer);
   const [loading, setLoading] = useState(false);
-  const [showSessionUrl, setShowSessionUrl] = useState(false);
-  const [snack, setSnack] = useState(false);
 
-  const toggleShowSessionUrl = () => {
-    setShowSessionUrl(!showSessionUrl);
-  };
-
-  // this side effect tries to get the session data if a token exists,
+  // this side effect tries to get the session data if a token exists (and the user is not logged in),
   // this is to re-login the user/host if he/she accidentally closed the window
   useEffect(() => {
-    if (token !== null && token !== undefined && token !== '') {
-      (async () => {
-        setLoading(true);
-        const data = await getSession(token);
-        if (data) {
-          // this extracts the data from inside the token
-          const splitToken = token.split('.');
-          const decodedToken = window.atob(splitToken[1]);
-          const parsedData = JSON.parse(decodedToken);
-          console.log(`🔐 Session ID: ${data.session._id}`);
+    const refetched = (data) => {
+      dispatch(refetchedRoom({ roomId: data.roomId, queue: data.queue }));
+      setLoading(false);
+    };
 
-          setSession(data.session);
-          setLogged({ isLogged: true, role: parsedData.role, username: parsedData.username });
-          setLoading(false);
-        } else {
-          setToken('');
-          setSession({});
-          setLogged({ isLogged: false, role: null });
-          setLoading(false);
-        }
-      })();
+    if (!isLogged && token) {
+      setLoading(true);
+      socket.emit(
+        'refetch',
+        { token },
+        (error) =>
+          error && console.log(error) + dispatch(logoutAction()) + window.location.reload(),
+      );
+      socket.on('refetched', refetched);
     }
 
+    return () => {
+      socket.off('refetched', refetched);
+    };
     // eslint-disable-next-line
-  }, [token]);
+  }, [isLogged, token]);
 
   const RedirectAuthUser = () => {
-    switch (logged.role) {
+    switch (role) {
       case 'host':
         return <Redirect to='/host' />;
       case 'user':
-        return <Redirect to='/user' />;
+        return <Redirect to='/guest' />;
       default:
         return <Fragment />;
     }
   };
+
+  const [showSessionUrl, setShowSessionUrl] = useState(false);
+  const [showTimerAlert, setShowTimerAlert] = useState(false);
 
   return (
     <Fragment>
@@ -69,9 +62,19 @@ export default function App() {
         <LoadingApp />
       ) : (
         <Router>
-          <Navbar toggleShowSessionUrl={toggleShowSessionUrl} setSnack={setSnack} snack={snack} />
-          {showSessionUrl && <SessionUrl id={session._id} toggleState={toggleShowSessionUrl} />}
-          {snack && <TimerSnackbar snack={snack} setSnack={setSnack} />}
+          <Navbar
+            toggleShowSessionUrl={() => setShowSessionUrl(!showSessionUrl)}
+            triggerAlert={() => setShowTimerAlert(true)}
+          />
+          {showSessionUrl && (
+            <SessionUrl roomId={roomId} closeThis={() => setShowSessionUrl(false)} />
+          )}
+          {showTimerAlert && (
+            <TimerAlert
+              showTimerAlert={showTimerAlert}
+              closeThis={() => setShowTimerAlert(false)}
+            />
+          )}
 
           <Switch>
             <Route exact path='/'>
@@ -81,8 +84,13 @@ export default function App() {
               Response from API will be:
               1. host token
             */}
-              {logged.isLogged ? <RedirectAuthUser /> : <Home isHost={true} />}
+              {isLogged ? <RedirectAuthUser /> : <Home isHost={true} />}
             </Route>
+            <Route path='/host'>
+              {/* this is the host dashboard */}
+              {isLogged ? <Dashboard isHost={true} /> : <Redirect to='/' />}
+            </Route>
+
             <Route path='/join/:id'>
               {/* 
               this is the page for user-join-session
@@ -90,16 +98,11 @@ export default function App() {
               Response from API will be:
               1. user token
             */}
-              {logged.isLogged ? <RedirectAuthUser /> : <Home isHost={false} />}
+              {isLogged ? <RedirectAuthUser /> : <Home isHost={false} />}
             </Route>
-
-            <Route path='/host'>
-              {/* this is the host dashboard */}
-              {logged.isLogged ? <Dashboard isHost={true} /> : <Redirect to='/' />}
-            </Route>
-            <Route path='/user'>
+            <Route path='/guest'>
               {/* this is the user dashboard */}
-              {logged.isLogged ? <Dashboard isHost={false} /> : <Redirect to='/' />}
+              {isLogged ? <Dashboard isHost={false} /> : <Redirect to='/' />}
             </Route>
           </Switch>
         </Router>

@@ -1,10 +1,11 @@
 import styles from './SessionUrl.module.css';
-import CopyIcon from './CopyIcon';
+import CopyIcon from './icon/CopyIcon';
 import { useRef, useState } from 'react';
 
-export default function SessionUrl({ id, toggleState }) {
+export default function SessionUrl({ roomId, closeThis }) {
   const [isCopied, setIsCopied] = useState(false);
   const copyRef = useRef();
+  const joinUrl = `http://localhost:3000/join/${roomId}`;
 
   const copyOutput = () => {
     if (!isCopied) {
@@ -13,7 +14,7 @@ export default function SessionUrl({ id, toggleState }) {
       setIsCopied(true);
       setTimeout(() => {
         setIsCopied(false);
-        toggleState();
+        closeThis();
       }, 1000);
     }
   };
@@ -21,11 +22,7 @@ export default function SessionUrl({ id, toggleState }) {
   return (
     <div className={styles.sessionUrl}>
       <CopyIcon onClick={copyOutput} />
-      <input
-        ref={copyRef}
-        value={isCopied ? 'copied 👍' : `https://belferink1996.github.io/MERN-Queue/#/join/${id}`}
-        readOnly
-      />
+      <input ref={copyRef} value={isCopied ? 'copied 👍' : joinUrl} readOnly />
     </div>
   );
 }

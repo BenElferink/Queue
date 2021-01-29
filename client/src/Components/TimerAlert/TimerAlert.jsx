@@ -1,15 +1,12 @@
 import { Fragment, useEffect, useState } from 'react';
+import { Howl, Howler } from 'howler';
+import styles from './TimerAlert.module.css';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import styles from './TimerSnackbar.module.css';
-import { Howl, Howler } from 'howler';
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant='filled' {...props} />;
-}
+const Alert = (props) => <MuiAlert elevation={6} variant='filled' {...props} />;
 
-export default function TimerSnackbar({ snack, setSnack }) {
-  const handleClose = (event, reason) => setSnack(false);
+export default function TimerAlert({ showTimerAlert, closeThis }) {
   const [state, setState] = useState({
     vertical: 'top',
     horizontal: 'center',
@@ -30,16 +27,16 @@ export default function TimerSnackbar({ snack, setSnack }) {
   // };
 
   const showNotification = () => {
-    const notification = new Notification("Reminder from Queue",{
-      body: "Time to answer some questions"
-    })
+    const notification = new Notification('Reminder from Queue', {
+      body: 'Time to answer some questions',
+    });
 
     return notification;
-  }
+  };
 
   useEffect(() => {
     showNotification();
-  }, [snack]);
+  }, [showTimerAlert]);
 
   const { vertical, horizontal } = state;
 
@@ -47,11 +44,11 @@ export default function TimerSnackbar({ snack, setSnack }) {
     <Fragment>
       <Snackbar
         className={styles.component}
-        open={snack}
-        onClose={handleClose}
+        open={showTimerAlert}
+        onClose={closeThis}
         anchorOrigin={{ vertical, horizontal }}
         key={vertical + horizontal}>
-        <Alert onClose={handleClose} severity='warning'>
+        <Alert onClose={closeThis} severity='warning'>
           Time to clear the Queue!
         </Alert>
       </Snackbar>
