@@ -161,7 +161,7 @@ export default function Dashboard({ isHost }) {
           </DashboardSection>
         )}
       </div>
-      {isMobile && <MobileNavigation setMobileNav={setMobileNav} />}
+      {isMobile && <MobileNavigation setMobileNav={setMobileNav} isHost={isHost}/>}
     </div>
   );
 }

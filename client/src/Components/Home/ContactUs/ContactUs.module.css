@@ -30,3 +30,9 @@
   text-decoration: none !important;
   margin: 10px 15px;
 }
+
+@media (max-width: 620px) {
+  .component {
+    padding: 80px 60px 40px 60px !important;
+  }
+}

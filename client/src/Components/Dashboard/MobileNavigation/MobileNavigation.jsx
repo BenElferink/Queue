@@ -6,7 +6,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import Slide from '@material-ui/core/Slide';
 
-export default function MobileNavigation({ setMobileNav }) {
+export default function MobileNavigation({ setMobileNav, isHost }) {
   useEffect(() => {
     setMobileNav({ section1: true, section2: false, section3: false });
     // eslint-disable-next-line
@@ -21,7 +21,7 @@ export default function MobileNavigation({ setMobileNav }) {
         </Button>
         <Button onClick={() => setMobileNav({ section1: false, section2: true, section3: false })}>
           <QuestionAnswerIcon />
-          <h5>Ask</h5>
+          <h5>{isHost? "Answer" : "Ask"}</h5>
         </Button>
         <Button onClick={() => setMobileNav({ section1: false, section2: false, section3: true })}>
           <HistoryIcon />

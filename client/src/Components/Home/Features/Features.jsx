@@ -16,19 +16,19 @@ export default function Features() {
           <Column size='md-4'>
             <div className={styles.item}>
               <img className={styles.image} src={HistoryFeature} alt='icon' />
-              <h5 className={styles.info}>History Record of Answered Questions</h5>
+              <h5 className={styles.info}>History record of answered questions</h5>
             </div>
           </Column>
           <Column size='md-4'>
             <div className={styles.item}>
               <img className={styles.image} src={voiceText} alt='icon' />
-              <h5 className={styles.info}>Voice to Text Conversion of Answers</h5>
+              <h5 className={styles.info}>Voice to text conversion of answers</h5>
             </div>
           </Column>
           <Column size='md-4'>
             <div className={styles.item}>
               <img className={styles.image} src={timeQueue} alt='icon' />
-              <h5 className={styles.info}>Timestamp Based Questions Queue</h5>
+              <h5 className={styles.info}>Timestamp based questions queue</h5>
             </div>
           </Column>
         </Row>
@@ -36,13 +36,13 @@ export default function Features() {
           <Column size='md-6'>
             <div className={styles.item}>
               <img className={styles.image} src={timerDoubt} alt='icon' />
-              <h5 className={styles.info}>Set Timer for Doubt Clearance Session</h5>
+              <h5 className={styles.info}>Set timer for doubt clearance session</h5>
             </div>
           </Column>
           <Column size='md-6'>
             <div className={styles.item}>
               <img className={styles.image} src={oneClick} alt='icon' />
-              <h5 className={styles.info}>One Click Session Commencement</h5>
+              <h5 className={styles.info}>One click session commencement</h5>
             </div>
           </Column>
         </Row>

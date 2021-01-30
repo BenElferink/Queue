@@ -43,6 +43,18 @@
   }
 }
 
+@media (max-height: 600px) {
+  .component > svg {
+    bottom: 2vh !important;
+  }
+}
+
+@media (max-height: 575px) {
+  .component > svg {
+    bottom: 0 !important;
+  }
+}
+
 @-webkit-keyframes bounce {
   0% {
     transform: translateY(50%);
@@ -68,5 +80,11 @@
 
   .text > p {
     padding: 0px 30px;
+  }
+}
+
+@media (max-width: 347px) {
+  .text > p > span {
+    font-size: 10px !important;
   }
 }
