@@ -3,6 +3,8 @@ import express from 'express'; // Backend App (server)
 import cors from 'cors'; // HTTP headers (enable requests)
 import morgan from 'morgan'; // Logs incoming requests
 import dotenv from 'dotenv'; // Secures variables
+import cron from 'node-cron'; // Scheduled tasks
+import { createRequire } from 'module'; // use require()
 import routesV2 from './api/routes/httpRoutes.js';
 import {
   createRoom,
@@ -11,7 +13,7 @@ import {
   answerQuestion,
   getRoom,
 } from './api/controllers/socketHandlers.js';
-import { createRequire } from 'module';
+import { cleanExpiredData } from './api/controllers/scheduledHandlers.js';
 
 // initialize app
 const app = express();
@@ -49,12 +51,17 @@ app.use('/api/v2', routesV2);
 const PORT = process.env.PORT || 4000;
 const server = app.listen(PORT, () => console.log(`✅ Server is listening on port: ${PORT}`));
 
+// scheduled task, every hour
+cron.schedule('0 * * * *', () => {
+  cleanExpiredData();
+});
+
 // web sockets
 const require = createRequire(import.meta.url);
 const io = require('socket.io')(server, {
   cors: {
     origin,
-    methods: ['GET', 'POST'],
+    // methods: ['GET', 'POST'],
   },
 });
 
