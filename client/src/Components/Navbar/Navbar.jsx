@@ -2,7 +2,6 @@ import { Fragment, useContext, useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutAction } from '../../app/actions';
 import { SocketContext } from './../../app/SocketContext';
-import { deleteRoom } from '../../api';
 import styles from './Navbar.module.css';
 import blackQueueLogo from './../../images/blackQueueLogo.svg';
 import Counter from './TimerModal/Counter';
@@ -59,13 +58,22 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
   const handleUserLogout = () => {
     socket.disconnect();
     dispatch(logoutAction());
+    alert("You've been logged out of the session.");
   };
-  const handleHostLogout = async () => {
-    const response = await deleteRoom(token);
-    if (response) {
-      handleUserLogout();
-    }
+
+  const handleHostLogout = () => {
+    socket.emit('delete-room', { token }, (error) => {
+      if (error) console.log(error);
+    });
   };
+
+  useEffect(() => {
+    socket.on('deleted-room', handleUserLogout);
+    return () => {
+      socket.off('deleted-room', handleUserLogout);
+    };
+    // eslint-disable-next-line
+  }, [socket]);
 
   return (
     <div

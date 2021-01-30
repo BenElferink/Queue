@@ -1,13 +1,13 @@
 import { Fragment, useContext, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { SocketContext } from '../../../app/SocketContext';
-import styles from './QueueItemHandler.module.css';
+import styles from './QuestItemHandler.module.css';
 import DashboardSection from '../DashboardSection/DashboardSection';
 import { Button, CircularProgress } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
 import MicIcon from '@material-ui/icons/Mic';
 
-export default function QueueItemHandler({
+export default function QuestItemHandler({
   text,
   setText,
   isHost,
@@ -24,25 +24,17 @@ export default function QueueItemHandler({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    (async () => {
+    (() => {
       setLoading(true);
       isHost
         ? socket.emit('answer', { token, questId: leveragedQuestId, answer: text }, (error) => {
-            if (error) {
-              console.log(error);
-              // alert('Your session has expired');
-              // window.location.reload();
-            }
+            if (error) console.log(error);
             setText('');
             setLoading(false);
             clearLeveragedQuest();
           })
         : socket.emit('ask', { token, question: text }, (error) => {
-            if (error) {
-              console.log(error);
-              // alert('Your session has expired');
-              // window.location.reload();
-            }
+            if (error) console.log(error);
             setText('');
             setLoading(false);
           });

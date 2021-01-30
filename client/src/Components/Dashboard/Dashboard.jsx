@@ -1,12 +1,12 @@
 import { useContext, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { answeredQuestion, askedQuestion } from '../../app/actions';
+import { answeredQuestion, askedQuestion, deleteQuestion } from '../../app/actions';
 import { SocketContext } from '../../app/SocketContext';
 import styles from './Dashboard.module.css';
 import FlipMove from 'react-flip-move';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import QuestItem from './QuestItem/QuestItem';
-import QueueItemHandler from './QueueItemHandler/QueueItemHandler';
+import QuestItemHandler from './QuestItemHandler/QuestItemHandler';
 import DashboardSection from './DashboardSection/DashboardSection';
 import MobileNavigation from './MobileNavigation/MobileNavigation';
 
@@ -37,11 +37,16 @@ export default function Dashboard({ isHost }) {
     const answered = (data) => {
       dispatch(answeredQuestion({ quest: data.quest }));
     };
+    const deletedQuest = (data) => {
+      dispatch(deleteQuestion({ questId: data.questId }));
+    };
     socket.on('asked', asked);
     socket.on('answered', answered);
+    socket.on('deleted-quest', deletedQuest);
     return () => {
       socket.off('asked', asked);
       socket.off('answered', answered);
+      socket.off('deleted-quest', deletedQuest);
     };
     // eslint-disable-next-line
   }, [isHost, socket]);
@@ -127,7 +132,7 @@ export default function Dashboard({ isHost }) {
 
         {/* ask or answer question (modified for use on both user && host dashboard) */}
         {mobileNav.section2 && (
-          <QueueItemHandler
+          <QuestItemHandler
             text={text}
             setText={setText}
             isHost={isHost}
@@ -147,7 +152,7 @@ export default function Dashboard({ isHost }) {
                 listening={listening}
               />
             )}
-          </QueueItemHandler>
+          </QuestItemHandler>
         )}
 
         {mobileNav.section3 && (
@@ -161,7 +166,7 @@ export default function Dashboard({ isHost }) {
           </DashboardSection>
         )}
       </div>
-      {isMobile && <MobileNavigation setMobileNav={setMobileNav} isHost={isHost}/>}
+      {isMobile && <MobileNavigation setMobileNav={setMobileNav} isHost={isHost} />}
     </div>
   );
 }

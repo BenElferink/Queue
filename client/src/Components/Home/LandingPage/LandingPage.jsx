@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { requestRoom } from '../../../api';
+import { requestRoom } from '../../../app/axios';
 import styles from './LandingPage.module.css';
 import NameForm from './NameForm/NameForm';
 import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded';

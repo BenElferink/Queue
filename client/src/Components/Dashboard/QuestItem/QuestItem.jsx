@@ -1,4 +1,5 @@
-import { forwardRef } from 'react';
+import { forwardRef, useContext } from 'react';
+import { SocketContext } from '../../../app/SocketContext';
 import { useSelector } from 'react-redux';
 import styles from './QuestItem.module.css';
 import { Avatar, CircularProgress, IconButton } from '@material-ui/core';
@@ -11,10 +12,14 @@ export default forwardRef(function QuestItem(
   { item, isHost, leveragedQuestId, leverageQuest, SpeechRecognition, handleSpeech, listening },
   ref,
 ) {
-  const { userId } = useSelector((state) => state.authReducer);
+  const { socket } = useContext(SocketContext);
+  const { userId, token } = useSelector((state) => state.authReducer);
 
   const deleteQuestion = () => {
-    window.alert('This Function should delete this messagess');
+    // window.alert('This Function should delete this messagess');
+    socket.emit('delete-quest', { token, questId: item._id }, (error) => {
+      if (error) console.log(error);
+    });
   };
 
   return (
@@ -22,12 +27,10 @@ export default forwardRef(function QuestItem(
       ref={ref}
       className={`${styles.component} ${item?.answered ? styles.answered : styles.notAnswered}`}>
       <div>
-        {(isHost || item?.from._id === userId) && !item?.answered && !item?.answer ? (
-          <IconButton onClick={() => deleteQuestion()}>
+        {(isHost || item?.from._id === userId) && !item?.answered && (
+          <IconButton onClick={deleteQuestion}>
             <CancelIcon />
           </IconButton>
-        ) : (
-          ''
         )}
         <span>{item?.from.username}</span>
 

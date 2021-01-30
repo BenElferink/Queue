@@ -26,11 +26,17 @@ export const roomReducer = (state = initialState, action) => {
 
     case 'ANSWER_QUEST':
       const copyOfQueue = [...state.queue];
-      const questId = action.payload.quest._id;
       return {
         ...state,
-        queue: copyOfQueue.filter((quest) => quest._id !== questId),
+        queue: copyOfQueue.filter((quest) => quest._id !== action.payload.quest._id),
         history: [...state.history, action.payload.quest],
+      };
+
+    case 'DELETE_QUEST':
+      return {
+        ...state,
+        queue: state.queue.filter((quest) => quest._id !== action.payload.questId),
+        history: [...state.history],
       };
 
     case 'LOGOUT':

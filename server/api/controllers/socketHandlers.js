@@ -288,8 +288,9 @@ export const deleteQuestion = async ({ token, questId }) => {
           // verify that the request is from the quest-creator,
           // or from the room-host (and question is from the hosts room)
           if (
-            tokenData.userId.equals(foundQuest.from) ||
-            (tokenData.userId.equals(foundRoom.host) && foundRoom.queue.includes(questId))
+            JSON.stringify(tokenData.userId) === JSON.stringify(foundQuest.from) ||
+            (JSON.stringify(tokenData.userId) === JSON.stringify(foundRoom.host) &&
+              foundRoom.queue.includes(questId))
           ) {
             await Quest.deleteOne({ _id: questId });
 
