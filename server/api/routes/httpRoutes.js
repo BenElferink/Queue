@@ -1,6 +1,5 @@
 import express from 'express';
-import { authenticateToken_v1 } from '../middleware/jsonWebToken.js';
-import { requestRoom, deleteRoom } from '../controllers/httpHandlers.js';
+import { requestRoom } from '../controllers/httpHandlers.js';
 
 // initialize router
 const router = express.Router();
@@ -13,6 +12,5 @@ const router = express.Router();
 */
 
 router.get('/room/:id', requestRoom);
-router.delete('/room', authenticateToken_v1, deleteRoom);
 
 export default router;

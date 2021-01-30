@@ -10,7 +10,7 @@ export const generateToken = (data) => {
   return jwt.sign(data, new Buffer.from(SECRET, 'base64'), { expiresIn: '12h' });
 };
 
-export const authenticateToken_v1 = (request, response, next) => {
+export const authenticateToken_http = (request, response, next) => {
   try {
     const token = request.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, new Buffer.from(SECRET, 'base64'));
@@ -24,7 +24,7 @@ export const authenticateToken_v1 = (request, response, next) => {
   }
 };
 
-export const authenticateToken_v2 = (token) => {
+export const authenticateToken_socket = (token) => {
   let tokenData = {},
     tokenError = false;
   try {

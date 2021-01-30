@@ -12,6 +12,8 @@ import {
   askQuestion,
   answerQuestion,
   getRoom,
+  deleteRoom,
+  deleteQuestion,
 } from './api/controllers/socketHandlers.js';
 import { cleanExpiredData } from './api/controllers/scheduledHandlers.js';
 
@@ -67,24 +69,10 @@ const io = require('socket.io')(server, {
 
 // socket connection
 io.on('connection', (socket) => {
-  const ID = socket.id;
-  console.log(`New connection! ${ID}`);
-
-  // refetch the room - { token }
-  socket.on('refetch', async (body, cb) => {
-    const { isError, data } = await getRoom(body);
-    if (isError) return cb(isError);
-
-    socket.join(JSON.stringify(data.roomId));
-    socket.emit('refetched', data);
-    cb();
-  });
-
   // create a room - { username }
   socket.on('create', async (body, cb) => {
     const { isError, data } = await createRoom(body);
     if (isError) return cb(isError);
-
     socket.join(JSON.stringify(data.roomId));
     socket.emit('created', data);
     cb();
@@ -94,17 +82,24 @@ io.on('connection', (socket) => {
   socket.on('join', async (body, callback) => {
     const { isError, data } = await joinRoom(body);
     if (isError) return cb(isError);
-
     socket.join(JSON.stringify(data.roomId));
     socket.emit('joined', data);
     callback();
+  });
+
+  // refetch the room - { token }
+  socket.on('refetch', async (body, cb) => {
+    const { isError, data } = await getRoom(body);
+    if (isError) return cb(isError);
+    socket.join(JSON.stringify(data.roomId));
+    socket.emit('refetched', data);
+    cb();
   });
 
   // ask a question - { token, question }
   socket.on('ask', async (body, callback) => {
     const { isError, data } = await askQuestion(body);
     if (isError) return cb(isError);
-
     io.to(JSON.stringify(data.roomId)).emit('asked', data);
     callback();
   });
@@ -113,17 +108,26 @@ io.on('connection', (socket) => {
   socket.on('answer', async (body, callback) => {
     const { isError, data } = await answerQuestion(body);
     if (isError) return cb(isError);
-
     io.to(JSON.stringify(data.roomId)).emit('answered', data);
     callback();
   });
 
-  socket.on('disconnecting', () => {
-    console.log(`Disconnecting... ${ID}`);
-    console.log('Rooms:', socket.rooms);
+  // delete the room - { token }
+  socket.on('delete-room', async (body, cb) => {
+    const { isError, data } = await deleteRoom(body);
+    if (isError) return cb(isError);
+    io.to(JSON.stringify(data.roomId)).emit('deleted-room', data);
+    cb();
   });
 
-  socket.on('disconnect', () => {
-    console.log(`User disconnected! ${ID}`);
+  // delete a question - { token, questId }
+  socket.on('delete-quest', async (body, cb) => {
+    const { isError, data } = await deleteQuestion(body);
+    if (isError) return cb(isError);
+    io.to(JSON.stringify(data.roomId)).emit('deleted-quest', data);
+    cb();
   });
+
+  socket.on('disconnecting', () => {});
+  socket.on('disconnect', () => {});
 });

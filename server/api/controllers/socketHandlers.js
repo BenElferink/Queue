@@ -1,8 +1,7 @@
 import Room from '../models/Room.js';
 import Person from '../models/Person.js';
 import Quest from '../models/Quest.js';
-import { generateToken, authenticateToken_v2 } from '../middleware/jsonWebToken.js';
-// more about response status codes   --->   https://restapitutorial.com/httpstatuscodes.html
+import { generateToken, authenticateToken_socket } from '../middleware/jsonWebToken.js';
 
 export const createRoom = async ({ username }) => {
   let response = {
@@ -35,8 +34,6 @@ export const createRoom = async ({ username }) => {
   } catch (error) {
     response.isError = { error };
   }
-
-  console.log(response);
   return response;
 };
 
@@ -50,7 +47,10 @@ export const joinRoom = async ({ roomId, username }) => {
     // find the room
     const foundRoom = await Room.findOne({ _id: roomId });
     if (!foundRoom) {
-      response.isError = { error: 'room not found', id: roomId };
+      response.isError = {
+        error: 'room not found',
+        id: roomId,
+      };
     } else {
       // create user, and save it
       const newGuest = new Person({ username });
@@ -84,8 +84,43 @@ export const joinRoom = async ({ roomId, username }) => {
   } catch (error) {
     response.isError = { error };
   }
+  return response;
+};
 
-  console.log(response);
+export const getRoom = async ({ token }) => {
+  let response = {
+    data: {},
+    isError: false,
+  };
+
+  try {
+    const { tokenError, tokenData } = authenticateToken_socket(token);
+    if (tokenError) {
+      response.isError = {
+        error: tokenError,
+      };
+    } else {
+      // find the session, filter data for public view
+      const foundRoom = await Room.findOne({ _id: tokenData.roomId }).populate({
+        path: 'queue',
+        populate: { path: 'from' },
+      });
+      if (!foundRoom) {
+        response.isError = {
+          error: 'room not found',
+          id: tokenData.roomId,
+        };
+      } else {
+        response.data = {
+          message: 'room fetched',
+          roomId: foundRoom._id,
+          queue: foundRoom.queue,
+        };
+      }
+    }
+  } catch (error) {
+    response.isError = { error };
+  }
   return response;
 };
 
@@ -96,15 +131,19 @@ export const askQuestion = async ({ token, question }) => {
   };
 
   try {
-    const { tokenError, tokenData } = authenticateToken_v2(token);
-
+    const { tokenError, tokenData } = authenticateToken_socket(token);
     if (tokenError) {
-      response.isError = { error: tokenError };
+      response.isError = {
+        error: tokenError,
+      };
     } else {
       // find session
       const foundRoom = await Room.findOne({ _id: tokenData.roomId });
       if (!foundRoom) {
-        response.isError = { error: 'room not found', id: tokenData.roomId };
+        response.isError = {
+          error: 'room not found',
+          id: tokenData.roomId,
+        };
       } else {
         // create new quest, and save it
         const newQuest = new Quest({
@@ -132,7 +171,6 @@ export const askQuestion = async ({ token, question }) => {
     response.isError = { error };
   }
 
-  console.log(response);
   return response;
 };
 
@@ -143,9 +181,11 @@ export const answerQuestion = async ({ token, questId, answer }) => {
   };
 
   try {
-    const { tokenError, tokenData } = authenticateToken_v2(token);
+    const { tokenError, tokenData } = authenticateToken_socket(token);
     if (tokenError) {
-      response.isError = { error: tokenError };
+      response.isError = {
+        error: tokenError,
+      };
     } else {
       // find question, answer it, and save
       const foundQuestion = await Quest.findOne({ _id: questId });
@@ -172,41 +212,102 @@ export const answerQuestion = async ({ token, questId, answer }) => {
   } catch (error) {
     response.isError = { error };
   }
-
-  console.log(response);
   return response;
 };
 
-export const getRoom = async ({ token }) => {
+export const deleteRoom = async ({ token }) => {
   let response = {
     data: {},
     isError: false,
   };
 
   try {
-    const { tokenError, tokenData } = authenticateToken_v2(token);
+    const { tokenError, tokenData } = authenticateToken_socket(token);
     if (tokenError) {
       response.isError = { error: tokenError };
     } else {
-      // find the session, filter data for public view
-      const foundRoom = await Room.findOne({ _id: tokenData.roomId }).populate({
-        path: 'queue',
-        populate: { path: 'from' },
-      });
-      if (!foundRoom) {
-        response.isError = { error: 'room not found', id: tokenData.roomId };
-      } else {
-        response.data = {
-          message: 'room fetched',
-          roomId: foundRoom._id,
-          queue: foundRoom.queue,
+      // verify that the request is from host
+      if (tokenData.role !== 'host') {
+        response.isError = {
+          error: 'unauthorized to delete session',
         };
+      } else {
+        // find session
+        const foundRoom = await Room.findOne({ _id: tokenData.roomId });
+        if (!foundRoom) {
+          response.isError = {
+            error: 'room not found',
+            id: roomId,
+          };
+        } else {
+          // then target all it's contents and delete them from DB
+          foundRoom.queue.map(async (questId) => await Quest.deleteOne({ _id: questId }));
+          foundRoom.guests.map(async (userId) => await Person.deleteOne({ _id: userId }));
+          await Person.deleteOne({ _id: foundRoom.host });
+          await Room.deleteOne({ _id: tokenData.roomId });
+
+          response.data = {
+            message: 'room deleted',
+            id: tokenData.roomId,
+          };
+        }
       }
     }
   } catch (error) {
     response.isError = { error };
   }
+  return response;
+};
 
-  console.log(response);
+export const deleteQuestion = async ({ token, questId }) => {
+  let response = {
+    data: {},
+    isError: false,
+  };
+
+  try {
+    const { tokenError, tokenData } = authenticateToken_socket(token);
+    if (tokenError) {
+      response.isError = { error: tokenError };
+    } else {
+      const foundRoom = await Room.findOne({ _id: tokenData.roomId });
+      if (!foundRoom) {
+        response.isError = {
+          error: 'room not found',
+          id: roomId,
+        };
+      } else {
+        // find the question
+        const foundQuest = await Quest.findOne({ _id: questId });
+        if (!foundQuest) {
+          response.isError = {
+            error: 'question not found',
+            id: questId,
+          };
+        } else {
+          // verify that the request is from the quest-creator,
+          // or from the room-host (and question is from the hosts room)
+          if (
+            tokenData.userId.equals(foundQuest.from) ||
+            (tokenData.userId.equals(foundRoom.host) && foundRoom.queue.includes(questId))
+          ) {
+            await Quest.deleteOne({ _id: questId });
+
+            response.data = {
+              message: 'question deleted',
+              id: questId,
+            };
+          } else {
+            response.isError = {
+              error: 'unauthorized to delete question',
+              id: questId,
+            };
+          }
+        }
+      }
+    }
+  } catch (error) {
+    response.isError = { error };
+  }
   return response;
 };
