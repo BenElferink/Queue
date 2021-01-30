@@ -20,9 +20,6 @@ import { cleanExpiredData } from './api/controllers/scheduledHandlers.js';
 // initialize app
 const app = express();
 const origin = '*';
-// const origin = 'https://queue-client.herokuapp.com/';
-// const origin = 'https://belferink1996.github.io/MERN-Queue';
-// const origin = 'http://localhost:3000';
 
 // middlewares
 dotenv.config();
@@ -60,12 +57,7 @@ cron.schedule('0 * * * *', () => {
 
 // web sockets
 const require = createRequire(import.meta.url);
-const io = require('socket.io')(server, {
-  cors: {
-    origin,
-    // methods: ['GET', 'POST'],
-  },
-});
+const io = require('socket.io')(server, { cors: { origin } });
 
 // socket connection
 io.on('connection', (socket) => {

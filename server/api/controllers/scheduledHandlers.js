@@ -9,7 +9,7 @@ export const cleanExpiredData = async () => {
 
     // then identify all rooms over 12h since creation
     allRooms.map(async (room) => {
-      if (Date.now() - room.createAt >= 4.32e7) {
+      if (Date.now() - new Date(room.createAt) >= 4.32e7) {
         // and target all it's contents to delete them from DB
         room.queue.map(async (questId) => await Quest.deleteOne({ _id: questId }));
         room.guests.map(async (userId) => await Person.deleteOne({ _id: userId }));
