@@ -51,9 +51,7 @@ const PORT = process.env.PORT || 4000;
 const server = app.listen(PORT, () => console.log(`✅ Server is listening on port: ${PORT}`));
 
 // scheduled task, every hour
-cron.schedule('0 * * * *', () => {
-  cleanExpiredData();
-});
+cron.schedule('0 * * * *', cleanExpiredData);
 
 // web sockets
 const require = createRequire(import.meta.url);
