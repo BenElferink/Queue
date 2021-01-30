@@ -49,7 +49,7 @@ export const joinRoom = async ({ roomId, username }) => {
     if (!foundRoom) {
       response.isError = {
         error: 'room not found',
-        id: roomId,
+        roomId,
       };
     } else {
       // create user, and save it
@@ -108,7 +108,7 @@ export const getRoom = async ({ token }) => {
       if (!foundRoom) {
         response.isError = {
           error: 'room not found',
-          id: tokenData.roomId,
+          roomId: tokenData.roomId,
         };
       } else {
         response.data = {
@@ -142,7 +142,7 @@ export const askQuestion = async ({ token, question }) => {
       if (!foundRoom) {
         response.isError = {
           error: 'room not found',
-          id: tokenData.roomId,
+          roomId: tokenData.roomId,
         };
       } else {
         // create new quest, and save it
@@ -192,7 +192,7 @@ export const answerQuestion = async ({ token, questId, answer }) => {
       if (!foundQuestion) {
         response.isError = {
           error: 'question not found',
-          id: questId,
+          questId,
         };
       } else {
         foundQuestion.answer = answer;
@@ -237,7 +237,7 @@ export const deleteRoom = async ({ token }) => {
         if (!foundRoom) {
           response.isError = {
             error: 'room not found',
-            id: roomId,
+            roomId: tokenData.roomId,
           };
         } else {
           // then target all it's contents and delete them from DB
@@ -248,7 +248,7 @@ export const deleteRoom = async ({ token }) => {
 
           response.data = {
             message: 'room deleted',
-            id: tokenData.roomId,
+            roomId: tokenData.roomId,
           };
         }
       }
@@ -274,7 +274,7 @@ export const deleteQuestion = async ({ token, questId }) => {
       if (!foundRoom) {
         response.isError = {
           error: 'room not found',
-          id: roomId,
+          roomId: tokenData.roomId,
         };
       } else {
         // find the question
@@ -282,7 +282,7 @@ export const deleteQuestion = async ({ token, questId }) => {
         if (!foundQuest) {
           response.isError = {
             error: 'question not found',
-            id: questId,
+            questId,
           };
         } else {
           // verify that the request is from the quest-creator,
@@ -295,11 +295,13 @@ export const deleteQuestion = async ({ token, questId }) => {
 
             response.data = {
               message: 'question deleted',
-              id: questId,
+              roomId: tokenData.roomId,
+              questId,
             };
           } else {
             response.isError = {
               error: 'unauthorized to delete question',
+              roomId: tokenData.roomId,
               id: questId,
             };
           }
