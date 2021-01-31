@@ -46,6 +46,7 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
   const logout = () => {
     socket.disconnect();
     dispatch(logoutAction());
+    alert('You have been logged out.');
   };
 
   const handleUserLogout = () => {

@@ -31,8 +31,7 @@ export default function App() {
         if (error) {
           console.log(error);
           dispatch(logoutAction());
-          alert("You've been logged out of the previous session.");
-          window.location.reload();
+          // window.location.reload();
         }
       });
       socket.on('refetched', refetched);
