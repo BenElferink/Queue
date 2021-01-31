@@ -5,8 +5,8 @@ import { useRef, useState } from 'react';
 export default function SessionUrl({ roomId, closeThis }) {
   const [isCopied, setIsCopied] = useState(false);
   const copyRef = useRef();
-  // const joinUrl = `http://www.my-queue.tech/join/${roomId}`;
-  const joinUrl = `https://queue-client.herokuapp.com/join/${roomId}`;
+  const joinUrl = `http://www.my-queue.tech/join/${roomId}`;
+  // const joinUrl = `https://queue-client.herokuapp.com/join/${roomId}`;
 
   const copyOutput = () => {
     if (!isCopied) {
