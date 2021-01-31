@@ -13,16 +13,14 @@ export default function TimerModal({
   setTimer,
   setShowTimerModal,
 }) {
-
   const clickConfirm = () => {
-    setTimer({ minutes: selectedMinutes, seconds: 0 });
-    if(window.Notification && Notification.permission === "granted"){
+    if (window.Notification && Notification.permission === 'granted') {
+      setTimer({ minutes: selectedMinutes, seconds: 0 });
       setShowTimerModal(false);
-    }else if(window.Notification && Notification.permission !== "denied"){
-       Notification.requestPermission()
+    } else if (window.Notification && Notification.permission !== 'denied') {
+      Notification.requestPermission();
     }
   };
-
 
   const clickCancel = () => {
     setShowTimerModal(false);
