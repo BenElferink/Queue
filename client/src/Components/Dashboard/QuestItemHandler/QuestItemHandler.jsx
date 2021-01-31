@@ -66,24 +66,6 @@ export default function QuestItemHandler({
               ''
             )}
 
-            <textarea
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder={
-                isHost && !leveragedQuestId
-                  ? 'Select a question from the Queue by clicking the microphone.'
-                  : isHost &&
-                    leveragedQuestId &&
-                    SpeechRecognition.browserSupportsSpeechRecognition()
-                  ? 'Speak or type your answer...'
-                  : isHost &&
-                    leveragedQuestId &&
-                    !SpeechRecognition.browserSupportsSpeechRecognition()
-                  ? 'Your browser does not support speech recognition, please type your answer (not required)...'
-                  : 'Ask your question here...'
-              }
-            />
-
             {isHost ? (
               // is host, notice the disabled
               <Button
@@ -106,6 +88,24 @@ export default function QuestItemHandler({
                 send question
               </Button>
             )}
+
+            <textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder={
+                isHost && !leveragedQuestId
+                  ? 'Select a question from the Queue by clicking the microphone.'
+                  : isHost &&
+                    leveragedQuestId &&
+                    SpeechRecognition.browserSupportsSpeechRecognition()
+                  ? 'Speak or type your answer...'
+                  : isHost &&
+                    leveragedQuestId &&
+                    !SpeechRecognition.browserSupportsSpeechRecognition()
+                  ? 'Your browser does not support speech recognition, please type your answer (not required)...'
+                  : 'Ask your question here...'
+              }
+            />
           </form>
         </Fragment>
       )}

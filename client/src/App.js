@@ -27,12 +27,14 @@ export default function App() {
 
     if (!isLogged && token) {
       setLoading(true);
-      socket.emit(
-        'refetch',
-        { token },
-        (error) =>
-          error && console.log(error) + dispatch(logoutAction()) + window.location.reload(),
-      );
+      socket.emit('refetch', { token }, (error) => {
+        if (error) {
+          console.log(error);
+          dispatch(logoutAction());
+          alert("You've been logged out of the previous session.");
+          window.location.reload();
+        }
+      });
       socket.on('refetched', refetched);
     }
 

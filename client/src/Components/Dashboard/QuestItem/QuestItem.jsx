@@ -16,10 +16,16 @@ export default forwardRef(function QuestItem(
   const { userId, token } = useSelector((state) => state.authReducer);
 
   const deleteQuestion = () => {
-    // window.alert('This Function should delete this messagess');
-    socket.emit('delete-quest', { token, questId: item._id }, (error) => {
-      if (error) console.log(error);
-    });
+    if (
+      window.confirm(
+        'Are you sure you want to delete this question? This will be deleted for everyone.',
+      )
+    )
+      socket.emit(
+        'delete-quest',
+        { token, questId: item._id },
+        (error) => error && console.log(error),
+      );
   };
 
   return (
