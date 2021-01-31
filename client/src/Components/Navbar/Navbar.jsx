@@ -2,6 +2,7 @@ import { Fragment, useContext, useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutAction } from '../../app/actions';
 import { SocketContext } from './../../app/SocketContext';
+import { jsPDF } from 'jspdf';
 import styles from './Navbar.module.css';
 import blackQueueLogo from './../../images/blackQueueLogo.svg';
 import Counter from './TimerModal/Counter';
@@ -23,8 +24,9 @@ const Emoji = () => <div className={styles.welcomeIcon}>🔑</div>;
 
 export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
   const dispatch = useDispatch();
-  const { role, username, token } = useSelector((state) => state.authReducer);
   const { socket } = useContext(SocketContext);
+  const { history } = useSelector((state) => state.roomReducer);
+  const { role, username, token } = useSelector((state) => state.authReducer);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showTimerModal, setShowTimerModal] = useState(false);
   const [selectedMinutes, setSelectedMinutes] = useState(10);
@@ -32,19 +34,68 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
   const onMountRef = useRef(true);
 
   useEffect(() => {
-    const addNavShadow = () => {
-      // if scrolling passed 80px from the top
-      if (window.scrollY >= 80) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
+    // if scrolling passed 80px from the top
+    const addNavShadow = () => (window.scrollY >= 80 ? setIsScrolled(true) : setIsScrolled(false));
     window.addEventListener('scroll', addNavShadow);
     return () => {
       window.removeEventListener('scroll', addNavShadow);
     };
   }, []);
+
+  const logout = () => {
+    socket.disconnect();
+    dispatch(logoutAction());
+  };
+
+  const handleUserLogout = () => {
+    if (window.confirm('Are you sure you want to leave this session?')) logout();
+  };
+
+  const handleHostLogout = () => {
+    if (window.confirm('Are you sure you want to end this session? All users will be logged out.'))
+      socket.emit('delete-room', { token }, (error) => error && console.log(error));
+  };
+
+  useEffect(() => {
+    socket.on('deleted-room', logout);
+    return () => socket.off('deleted-room', logout);
+    // eslint-disable-next-line
+  }, [socket]);
+
+  const downloadPDF = () => {
+    // Default export is a4 paper, portrait, using millimeters for units
+    const doc = new jsPDF();
+
+    let historyData = [];
+    for (let i = 0; i < history.length; i++) {
+      historyData.unshift('');
+      historyData.unshift(` At: ${new Date(history[i].updatedAt).toTimeString()}`);
+      // historyData.unshift('At:');
+      historyData.unshift(` Answer: ${history[i].answer}`);
+      // historyData.unshift('Answer:');
+      historyData.unshift(` Question: ${history[i].question}`);
+      // historyData.unshift('Question:');
+    }
+
+    const printData = doc.splitTextToSize(historyData, 120);
+    doc.setFontSize(12);
+    // doc.advancedAPI((doc) => {
+    //   doc.setFont('Rubik.ttf', 'Rubik-VariableFont_wght', 'normal');
+    // });
+
+    let y = 15;
+    for (let i = 0; i < printData.length; i++) {
+      if (y > 280) {
+        y = 10;
+        doc.addPage();
+      }
+      doc.text(15, y, printData[i]);
+      y = y + 7;
+    }
+
+    // doc.text(printData, 10, 20);
+    doc.save(`Queue ${new Date()}.pdf`);
+  };
 
   useEffect(() => {
     if (!onMountRef.current && timer.minutes === 0 && timer.seconds === 0) {
@@ -54,26 +105,6 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
     if (onMountRef) onMountRef.current = false;
     // eslint-disable-next-line
   }, [timer.minutes, timer.seconds]);
-
-  const handleUserLogout = () => {
-    socket.disconnect();
-    dispatch(logoutAction());
-    alert("You've been logged out of the session.");
-  };
-
-  const handleHostLogout = () => {
-    socket.emit('delete-room', { token }, (error) => {
-      if (error) console.log(error);
-    });
-  };
-
-  useEffect(() => {
-    socket.on('deleted-room', handleUserLogout);
-    return () => {
-      socket.off('deleted-room', handleUserLogout);
-    };
-    // eslint-disable-next-line
-  }, [socket]);
 
   return (
     <div
@@ -96,7 +127,7 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
       {role === 'user' && (
         <IconWrapper glassMorph={true}>
           <Chip icon={<Emoji />} className={styles.welcomeChip} label={username} color='primary' />
-          <Icon icon={<GetAppIcon />} title='Download History' />
+          <Icon onClick={downloadPDF} icon={<GetAppIcon />} title='Download History' />
           <Icon onClick={handleUserLogout} title='Leave session' icon={<ExitToAppIcon />} />
         </IconWrapper>
       )}
