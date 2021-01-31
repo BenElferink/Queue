@@ -11,7 +11,7 @@ export default function Home({ isHost }) {
       <LandingPage isHost={isHost} />
       <About />
       <Features />
-      <Donate />
+      {/* <Donate /> */}
       <ContactUs />
     </Fragment>
   );

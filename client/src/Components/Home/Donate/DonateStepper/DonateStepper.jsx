@@ -87,7 +87,14 @@ export default function CustomizedSteppers() {
             Donate Now
           </Button>
         ) : activeStep === 2 ? (
-          <PayPalButton amount={donationAmount} />
+          <PayPalButton
+            amount={donationAmount}
+            options={{
+              merchantId: '',
+              clientId: 'sb',
+              currency: 'USD',
+            }}
+          />
         ) : (
           <TextField
             type='number'
@@ -113,17 +120,4 @@ export default function CustomizedSteppers() {
       </Stepper>
     </div>
   );
-}
-
-{
-  /*Client: AQ3UB_FyjUU0FBb-GLHMszxRbpKf1qB7aGa4X-mbUZqR0Qd70NOF9WVcud4AolhWyqr36x9ISHWckZjW*/
-}
-{
-  /*Secret Key: EEi8U5sRAmLWCxGXLkxglMBRe-Y1JhAASqDYjAK4-rAzi-REzBVoNDwIfe2A1sUJYqTvl9VHoSXfBK7J*/
-}
-{
-  /*Sandbox ID: sb-je1oe4953548@business.example.com*/
-}
-{
-  /*accessToken: access_token$sandbox$nxhdpxqhzn38xfdp */
 }
