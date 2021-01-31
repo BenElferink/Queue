@@ -17,10 +17,7 @@ export default function Donate() {
         Hey there User! Thanks for using Queue. <br />
         We are sure that you loved the application. <br />
         Help us grow larger and better,
-        <br /> Click the button below to donate now! <br />
-        <span>
-          ( For long-term funding, mail to any one of the email-Ids in the contact section below. )
-        </span>
+        <br />
       </p>
       <DonateStepper />
     </div>

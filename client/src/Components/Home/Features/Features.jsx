@@ -15,25 +15,25 @@ export default function Features() {
 
       <Container>
         <Row>
-          <Column size='md-3'>
+          <Column size_md='md-3'>
             <div className={styles.item}>
               <img className={styles.image} src={PdfFeature} alt='icon' />
               <h5 className={styles.info}>Download PDF of answered questions</h5>
             </div>
           </Column>
-          <Column size='md-3'>
+          <Column size_md='md-3'>
             <div className={styles.item}>
               <img className={styles.image} src={voiceText} alt='icon' />
               <h5 className={styles.info}>Voice to text conversion of answers</h5>
             </div>
           </Column>
-          <Column size='md-3'>
+          <Column size_md='md-3'>
             <div className={styles.item}>
               <img className={styles.image} src={timeQueue} alt='icon' />
               <h5 className={styles.info}>Timestamp based questions queue</h5>
             </div>
           </Column>
-          <Column size='md-3'>
+          <Column size_md='md-3'>
             <div className={styles.item}>
               <img className={styles.image} src={timerDoubt} alt='icon' />
               <h5 className={styles.info}>Set timer for doubt clearance session</h5>
@@ -41,19 +41,19 @@ export default function Features() {
           </Column>
         </Row>
         <Row>
-          <Column size='md-4'>
+          <Column size_md='md-4'>
             <div className={styles.item}>
               <img className={styles.image} src={privacy} alt='icon' />
               <h5 className={styles.info}>Privacy and Security</h5>
             </div>
           </Column>
-          <Column size='md-4'>
+          <Column size_md='md-4'>
             <div className={styles.item}>
               <img className={styles.image} src={oneClick} alt='icon' />
               <h5 className={styles.info}>One click session commencement</h5>
             </div>
           </Column>
-          <Column size='md-4'>
+          <Column size_md='md-4' size_flex={true}>
             <div className={styles.item}>
               <img className={styles.image} src={realtime} alt='icon' />
               <h5 className={styles.info}>Realtime Dashboard Updates</h5>

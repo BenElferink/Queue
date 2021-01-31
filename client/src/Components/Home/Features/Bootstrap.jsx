@@ -8,6 +8,10 @@ export function Row({ children }) {
   return <div className='row'>{children}</div>;
 }
 
-export function Column({ size, children }) {
-  return <div className={`col-${size}`}>{children}</div>;
+export function Column({ size_md, size_flex, children }) {
+  return (
+    <div className={`col-${size_md} ${size_md && 'col-6'} ${size_flex && 'col-12'}`}>
+      {children}
+    </div>
+  );
 }

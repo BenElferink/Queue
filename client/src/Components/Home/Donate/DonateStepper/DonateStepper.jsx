@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
+import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Check from '@material-ui/icons/Check';
 import StepConnector from '@material-ui/core/StepConnector';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import { PayPalButton } from 'react-paypal-button-v2';
 import styles from './DonateStepper.module.css';
 import TextField from '@material-ui/core/TextField';
@@ -21,12 +19,12 @@ const QontoConnector = withStyles({
   },
   active: {
     '& $line': {
-      borderColor: '#784af4',
+      borderColor: '#14322f',
     },
   },
   completed: {
     '& $line': {
-      borderColor: '#784af4',
+      borderColor: '#14322f',
     },
   },
   line: {
@@ -36,62 +34,24 @@ const QontoConnector = withStyles({
   },
 })(StepConnector);
 
-const useQontoStepIconStyles = makeStyles({
-  root: {
-    color: '#eaeaf0',
-    display: 'flex',
-    height: 22,
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-  },
-  active: {
-    color: '#784af4',
-  },
-  circle: {
-    width: 8,
-    height: 8,
-    borderRadius: '50%',
-    backgroundColor: 'currentColor',
-  },
-  completed: {
-    color: '#784af4',
-    zIndex: 1,
-    fontSize: 18,
-  },
-});
-
 function QontoStepIcon(props) {
-  const classes = useQontoStepIconStyles();
   const { active, completed } = props;
 
   return (
-    <div
-      className={clsx(classes.root, {
-        [classes.active]: active,
-      })}>
-      {completed ? <Check className={classes.completed} /> : <div className={classes.circle} />}
+    <div className={`${styles.dots} ${active && styles.active}`}>
+      {completed ? <Check className={styles.completed} /> : <div className={styles.circle} />}
     </div>
   );
 }
 
 QontoStepIcon.propTypes = {
-  /**
-   * Whether this step is active.
-   */
   active: PropTypes.bool,
-  /**
-   * Mark the step as completed. Is passed to child components.
-   */
   completed: PropTypes.bool,
 };
 
-function getSteps() {
-  return ['Proceed to donate', 'Enter a donation amount', 'Check out'];
-}
-
 export default function CustomizedSteppers() {
   const [activeStep, setActiveStep] = React.useState(0);
-  const steps = getSteps();
+  const steps = ['Proceed to donate', 'Donation amount', 'Check out'];
   const [donationAmount, setDonationAmount] = React.useState();
 
   const handleBack = () => {
@@ -99,14 +59,34 @@ export default function CustomizedSteppers() {
   };
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (activeStep === 1 && (donationAmount <= 0 || donationAmount == null)) {
+      window.alert('Please enter a valid donation');
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
   };
+
   return (
-    <div className={styles.root}>
-      <div>
+    <div className={styles.component}>
+      <div className={styles.button}>
+        <Button disabled={activeStep === 0} onClick={handleBack}>
+          Back
+        </Button>
+        <Button
+          variant='contained'
+          onClick={handleNext}
+          className={activeStep !== 0 ? styles.blackButton : ''}
+          disabled={activeStep === 2 || activeStep === 0}>
+          Next
+        </Button>
+      </div>
+
+      <div className={styles.stepperContent}>
         {activeStep === 0 ? (
-          ''
-        ) : activeStep === steps.length - 1 ? (
+          <Button variant='outlined' className={styles.donateNow} onClick={handleNext}>
+            Donate Now
+          </Button>
+        ) : activeStep === 2 ? (
           <PayPalButton amount={donationAmount} />
         ) : (
           <TextField
@@ -115,32 +95,35 @@ export default function CustomizedSteppers() {
             onChange={(e) => setDonationAmount(e.target.value)}
             placeholder='Donation Amount'
             variant='outlined'
-            defaultValue={4}
             label='$USD'
           />
         )}
-        <div>
-          <Button disabled={activeStep === 0} onClick={handleBack} className={styles.button}>
-            Back
-          </Button>
-          <Button
-            variant='contained'
-            color='primary'
-            onClick={handleNext}
-            disabled={activeStep === steps.length - 1}
-            className={styles.button}>
-            {activeStep === 0 ? 'Donate Now' : 'Next'}
-          </Button>
-        </div>
-
-        <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
       </div>
+
+      <Stepper
+        alternativeLabel
+        activeStep={activeStep}
+        connector={<QontoConnector />}
+        className={styles.stepperBG}>
+        {steps.map((label) => (
+          <Step key={label}>
+            <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
     </div>
   );
+}
+
+{
+  /*Client: AQ3UB_FyjUU0FBb-GLHMszxRbpKf1qB7aGa4X-mbUZqR0Qd70NOF9WVcud4AolhWyqr36x9ISHWckZjW*/
+}
+{
+  /*Secret Key: EEi8U5sRAmLWCxGXLkxglMBRe-Y1JhAASqDYjAK4-rAzi-REzBVoNDwIfe2A1sUJYqTvl9VHoSXfBK7J*/
+}
+{
+  /*Sandbox ID: sb-je1oe4953548@business.example.com*/
+}
+{
+  /*accessToken: access_token$sandbox$nxhdpxqhzn38xfdp */
 }
