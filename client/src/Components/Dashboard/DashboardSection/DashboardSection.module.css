@@ -27,9 +27,8 @@
   text-align: center;
 }
 
-@media only screen and(max-width: 868px) {
+@media (max-width: 868px) {
   .component {
-    height: 85vh;
-    margin: 0;
+    padding-bottom: 50px !important;
   }
 }

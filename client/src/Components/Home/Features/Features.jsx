@@ -1,12 +1,12 @@
 import styles from './Features.module.css';
 import { Container, Row, Column } from './Bootstrap';
-import PdfFeature from './../../../images/PdfFeature.svg';
-import voiceText from './../../../images/voiceText.svg';
-import timeQueue from './../../../images/timeQueue.svg';
-import timerDoubt from './../../../images/timerDoubt.svg';
-import oneClick from './../../../images/oneClick.svg';
-import privacy from './../../../images/privacy.svg';
-import realtime from './../../../images/realtime.svg';
+import PdfFeature from './images/PdfFeature.svg';
+import voiceText from './images/voiceText.svg';
+import timeQueue from './images/timeQueue.svg';
+import timerDoubt from './images/timerDoubt.svg';
+import oneClick from './images/oneClick.svg';
+import privacy from './images/privacy.svg';
+import realtime from './images/realtime.svg';
 
 export default function Features() {
   return (

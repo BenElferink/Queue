@@ -2,13 +2,11 @@ import { Fragment, useContext, useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutAction } from '../../app/actions';
 import { SocketContext } from './../../app/SocketContext';
-import { jsPDF } from 'jspdf';
-import { Rubik } from './../../fonts/Rubik';
 import styles from './Navbar.module.css';
-import blackQueueLogo from './../../images/blackQueueLogo.svg';
+import blackQueueLogo from './images/blackQueueLogo.svg';
 import Counter from './TimerModal/Counter';
 import TimerModal from './TimerModal/TimerModal';
-import { IconWrapper, Icon } from './NavbarIcon';
+import { IconWrapper, Icon, DownloadIcon } from './NavItems';
 import { Chip } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
@@ -19,14 +17,12 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
-import GetAppIcon from '@material-ui/icons/GetApp';
 
 const Emoji = () => <div className={styles.welcomeIcon}>🔑</div>;
 
 export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
   const dispatch = useDispatch();
   const { socket } = useContext(SocketContext);
-  const { history } = useSelector((state) => state.roomReducer);
   const { role, username, token } = useSelector((state) => state.authReducer);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showTimerModal, setShowTimerModal] = useState(false);
@@ -46,7 +42,7 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
   const logout = () => {
     socket.disconnect();
     dispatch(logoutAction());
-    alert('You have been logged out.');
+    // alert('You have been logged out.');
   };
 
   const handleUserLogout = () => {
@@ -63,40 +59,6 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
     return () => socket.off('deleted-room', logout);
     // eslint-disable-next-line
   }, [socket]);
-
-  const downloadPDF = () => {
-    // Default export is a4 paper, portrait, using millimeters for units
-    const doc = new jsPDF();
-
-    // break-down history data to printable array indexes
-    let historyData = [];
-    for (let i = 0; i < history.length; i++) {
-      historyData.unshift('');
-      historyData.unshift(`At: ${new Date(history[i].updatedAt).toTimeString()}`);
-      historyData.unshift(`Answer: ${history[i].answer}`);
-      historyData.unshift(`Question: ${history[i].question}`);
-    }
-
-    // define PDF rules
-    const printData = doc.splitTextToSize(historyData, 250);
-    doc.addFileToVFS('Rubik.ttf', Rubik);
-    doc.addFont('Rubik.ttf', 'Rubik', 'normal');
-    doc.setFont('Rubik');
-    doc.setFontSize(12);
-
-    // loop through printable-data and add new pages when required
-    for (let index = 0, yAxis = 15, xAxis = 10; index < printData.length; index++) {
-      if (yAxis > 280) {
-        yAxis = 10;
-        doc.addPage();
-      }
-      doc.text(printData[index], xAxis, yAxis);
-      yAxis += 7;
-    }
-
-    // download the file
-    doc.save(`Queue ${new Date()}.pdf`);
-  };
 
   useEffect(() => {
     if (!onMountRef.current && timer.minutes === 0 && timer.seconds === 0) {
@@ -128,7 +90,7 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
       {role === 'user' && (
         <IconWrapper glassMorph={true}>
           <Chip icon={<Emoji />} className={styles.welcomeChip} label={username} color='primary' />
-          <Icon onClick={downloadPDF} icon={<GetAppIcon />} title='Download History' />
+          <DownloadIcon />
           <Icon onClick={handleUserLogout} title='Leave session' icon={<ExitToAppIcon />} />
         </IconWrapper>
       )}
@@ -146,15 +108,16 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
 
           <IconWrapper glassMorph={true}>
             <Icon
-              title='Set Q&A Timer'
-              icon={<TimerIcon />}
-              onClick={() => setShowTimerModal(true)}
-            />
-            <Icon
               title='Invite to session'
               icon={<PersonAddIcon />}
               onClick={toggleShowSessionUrl}
             />
+            <Icon
+              title='Set Q&A Timer'
+              icon={<TimerIcon />}
+              onClick={() => setShowTimerModal(true)}
+            />
+            <DownloadIcon />
             <Icon onClick={handleHostLogout} title='Delete session' icon={<ExitToAppIcon />} />
           </IconWrapper>
         </Fragment>

@@ -5,7 +5,7 @@
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   box-shadow: 0px -8px 15px -10px rgba(0, 0, 0, 0.4);
 }
