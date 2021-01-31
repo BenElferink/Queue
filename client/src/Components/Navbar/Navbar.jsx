@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logoutAction } from '../../app/actions';
 import { SocketContext } from './../../app/SocketContext';
 import { jsPDF } from 'jspdf';
+import { Rubik } from './../../fonts/Rubik';
 import styles from './Navbar.module.css';
 import blackQueueLogo from './../../images/blackQueueLogo.svg';
 import Counter from './TimerModal/Counter';
@@ -66,34 +67,33 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
     // Default export is a4 paper, portrait, using millimeters for units
     const doc = new jsPDF();
 
+    // break-down history data to printable array indexes
     let historyData = [];
     for (let i = 0; i < history.length; i++) {
       historyData.unshift('');
-      historyData.unshift(` At: ${new Date(history[i].updatedAt).toTimeString()}`);
-      // historyData.unshift('At:');
-      historyData.unshift(` Answer: ${history[i].answer}`);
-      // historyData.unshift('Answer:');
-      historyData.unshift(` Question: ${history[i].question}`);
-      // historyData.unshift('Question:');
+      historyData.unshift(`At: ${new Date(history[i].updatedAt).toTimeString()}`);
+      historyData.unshift(`Answer: ${history[i].answer}`);
+      historyData.unshift(`Question: ${history[i].question}`);
     }
 
-    const printData = doc.splitTextToSize(historyData, 120);
+    // define PDF rules
+    const printData = doc.splitTextToSize(historyData, 250);
+    doc.addFileToVFS('Rubik.ttf', Rubik);
+    doc.addFont('Rubik.ttf', 'Rubik', 'normal');
+    doc.setFont('Rubik');
     doc.setFontSize(12);
-    // doc.advancedAPI((doc) => {
-    //   doc.setFont('Rubik.ttf', 'Rubik-VariableFont_wght', 'normal');
-    // });
 
-    let y = 15;
-    for (let i = 0; i < printData.length; i++) {
-      if (y > 280) {
-        y = 10;
+    // loop through printable-data and add new pages when required
+    for (let index = 0, yAxis = 15, xAxis = 10; index < printData.length; index++) {
+      if (yAxis > 280) {
+        yAxis = 10;
         doc.addPage();
       }
-      doc.text(15, y, printData[i]);
-      y = y + 7;
+      doc.text(printData[index], xAxis, yAxis);
+      yAxis += 7;
     }
 
-    // doc.text(printData, 10, 20);
+    // download the file
     doc.save(`Queue ${new Date()}.pdf`);
   };
 

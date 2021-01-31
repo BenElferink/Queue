@@ -63,11 +63,6 @@ export default function Dashboard({ isHost }) {
     setAnswered(answeredQuests);
   }, [history, queue]);
 
-  // this side effect keeps the spoken transcript in a state (can be presented in UI)
-  useEffect(() => {
-    if (transcript && listening) setText(transcript);
-  }, [transcript, listening]);
-
   // this function enables and disables the microphone
   const handleSpeech = async () => {
     if (listening) {
@@ -79,6 +74,11 @@ export default function Dashboard({ isHost }) {
       setListening(true);
     }
   };
+
+  // this side effect keeps the spoken transcript in a state (can be presented in UI)
+  useEffect(() => {
+    if (transcript && listening) setText(transcript);
+  }, [transcript, listening]);
 
   useEffect(() => {
     const configMobile = () => {
