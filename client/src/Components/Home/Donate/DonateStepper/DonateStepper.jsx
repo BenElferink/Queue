@@ -90,7 +90,6 @@ export default function CustomizedSteppers() {
           <PayPalButton
             amount={donationAmount}
             options={{
-              merchantId: '',
               clientId: 'sb',
               currency: 'USD',
             }}
