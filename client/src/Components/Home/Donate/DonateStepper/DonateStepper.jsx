@@ -66,6 +66,12 @@ export default function CustomizedSteppers() {
     }
   };
 
+  const underConstruction = () => {
+    window.alert(
+      'We are grateful that you tried to donate but this feature is being upgraded. Sorry for the inconvenience caused.',
+    );
+  };
+
   return (
     <div className={styles.component}>
       <div className={styles.button}>
@@ -83,7 +89,10 @@ export default function CustomizedSteppers() {
 
       <div className={styles.stepperContent}>
         {activeStep === 0 ? (
-          <Button variant='outlined' className={styles.donateNow} onClick={handleNext}>
+          <Button
+            variant='outlined'
+            className={styles.donateNow}
+            onClick={() => underConstruction()}>
             Donate Now
           </Button>
         ) : activeStep === 2 ? (

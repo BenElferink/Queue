@@ -81,7 +81,7 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
         <IconWrapper glassMorph={false}>
           <Icon link={'/#home'} title='Home' icon={<HomeIcon />} />
           <Icon link={'#aboutQueue'} title='About us' icon={<InfoIcon />} />
-          {/* <Icon link={'#Support_the_Application'} title='Donate' icon={<MonetizationOnIcon />} /> */}
+          <Icon link={'#Support_the_Application'} title='Donate' icon={<MonetizationOnIcon />} />
           <Icon link={'#ContactInfo'} title='Report a bug' icon={<BugReportIcon />} />
         </IconWrapper>
       )}
