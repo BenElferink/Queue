@@ -8,9 +8,9 @@
 
 .form > textarea {
   width: 90%;
-  height: 25vh !important;
+  min-height: 20vh;
   padding: 10px;
-  background-color: rgba(252, 214, 57, 0.7) !important;
+  background-color: rgba(252, 214, 57, 0.7);
   border: 1px #fff solid;
   border-radius: 5px;
   caret-color: #808080;
@@ -28,7 +28,7 @@
 
 .form > button {
   height: 40px;
-  width: 90% !important;
+  width: 90%;
   margin: 10px 0;
   background-color: rgba(18, 16, 19, 0.8) !important;
   color: #f5f5f5 !important;
