@@ -1,7 +1,7 @@
 .component {
   max-width: 750px;
   margin: 0 auto;
-  padding: 30px;
+  padding: 50px 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,6 +20,7 @@
   border-bottom: 2px solid #f5f5f5;
   color: #fff;
   font-size: 35px;
+  margin-bottom: 20px;
 }
 .component > h1 > span {
   color: #121013;
