@@ -1,5 +1,6 @@
 import styles from './Donate.module.css';
-import { Button } from '@material-ui/core';
+import DonateStepper from './DonateStepper/DonateStepper.jsx';
+// https://www.npmjs.com/package/react-paypal-button-v2
 
 export default function Donate() {
   return (
@@ -21,9 +22,7 @@ export default function Donate() {
           ( For long-term funding, mail to any one of the email-Ids in the contact section below. )
         </span>
       </p>
-      <Button size='large' variant='outlined'>
-        Donate Now
-      </Button>
+      <DonateStepper />
     </div>
   );
 }
