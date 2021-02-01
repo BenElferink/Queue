@@ -3,20 +3,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logoutAction } from '../../app/actions';
 import { SocketContext } from './../../app/SocketContext';
 import styles from './Navbar.module.css';
-import blackQueueLogo from './images/blackQueueLogo.svg';
-import Counter from './TimerModal/Counter';
-import TimerModal from './TimerModal/TimerModal';
+import queueLogoBlack from './images/queue-logo-black.svg';
+import TimerChip from '../Timer/TimerChip';
+import TimerModal from '../Timer/TimerModal';
 import { IconWrapper, Icon, DownloadIcon } from './NavItems';
 import { Chip } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
 import TimerIcon from '@material-ui/icons/Timer';
-import RestoreRoundedIcon from '@material-ui/icons/RestoreRounded';
 import BugReportIcon from '@material-ui/icons/BugReport';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 
 const Emoji = () => <div className={styles.welcomeIcon}>🔑</div>;
 
@@ -74,7 +72,7 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
       className={`${styles.component} ${isScrolled && styles.navColor} ${
         role !== null && styles.glassMorph
       }`}>
-      <img src={blackQueueLogo} className={styles.logo} alt='Queue' />
+      <img src={queueLogoBlack} className={styles.logo} alt='Queue' />
 
       {/* Nav-icons for the homepage */}
       {role === null && (
@@ -98,13 +96,7 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
       {/* Nav-icons for the host dashboard */}
       {role === 'host' && (
         <Fragment>
-          <Chip
-            className={styles.timerChip}
-            avatar={<AccessAlarmIcon />}
-            label={<Counter timer={timer} setTimer={setTimer} />}
-            onDelete={() => setTimer({ minutes: selectedMinutes, seconds: 0 })}
-            deleteIcon={<RestoreRoundedIcon />}
-          />
+          <TimerChip timer={timer} setTimer={setTimer} selectedMinutes={selectedMinutes} />
 
           <IconWrapper glassMorph={true}>
             <Icon
@@ -124,10 +116,10 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
       )}
       {showTimerModal && (
         <TimerModal
+          setTimer={setTimer}
+          setTimerModal={setShowTimerModal}
           selectedMinutes={selectedMinutes}
           setSelectedMinutes={setSelectedMinutes}
-          setTimer={setTimer}
-          setShowTimerModal={setShowTimerModal}
         />
       )}
     </div>

@@ -8,7 +8,7 @@ import Home from './Components/Home/Home';
 import Dashboard from './Components/Dashboard/Dashboard';
 import LoadingApp from './Components/LoadingApp/LoadingApp';
 import SessionUrl from './Components/SessionUrl/SessionUrl';
-import TimerAlert from './Components/TimerAlert/TimerAlert';
+import TimerAlert from './Components/Timer/TimerAlert';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -70,12 +70,7 @@ export default function App() {
           {showSessionUrl && (
             <SessionUrl roomId={roomId} closeThis={() => setShowSessionUrl(false)} />
           )}
-          {showTimerAlert && (
-            <TimerAlert
-              showTimerAlert={showTimerAlert}
-              closeThis={() => setShowTimerAlert(false)}
-            />
-          )}
+          {showTimerAlert && <TimerAlert closeThis={() => setShowTimerAlert(false)} />}
 
           <Switch>
             <Route exact path='/'>

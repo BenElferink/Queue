@@ -1,6 +1,10 @@
-import { Fragment, useEffect } from 'react';
+import { useEffect } from 'react';
+import styles from './styles/Timer.module.css';
+import { Chip } from '@material-ui/core';
+import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
+import RestoreRoundedIcon from '@material-ui/icons/RestoreRounded';
 
-function Counter({ timer, setTimer }) {
+export default function TimerChip({ timer, setTimer, selectedMinutes }) {
   useEffect(() => {
     let seconds = Number(timer.seconds);
     let minutes = Number(timer.minutes);
@@ -26,7 +30,13 @@ function Counter({ timer, setTimer }) {
     return `${minutes}:${seconds}`;
   };
 
-  return <Fragment>{timeToString(timer)}</Fragment>;
+  return (
+    <Chip
+      className={styles.chip}
+      avatar={<AccessAlarmIcon />}
+      label={timeToString(timer)}
+      onDelete={() => setTimer({ minutes: selectedMinutes, seconds: 0 })}
+      deleteIcon={<RestoreRoundedIcon />}
+    />
+  );
 }
-
-export default Counter;
