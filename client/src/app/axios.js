@@ -1,8 +1,6 @@
 import axios from 'axios';
 
 const url = 'https://queue-and-a.herokuapp.com/api/v2';
-// const url = 'http://localhost:4000/api/v2';
-
 // const headers = (token) => {
 //   return {
 //     headers: {
