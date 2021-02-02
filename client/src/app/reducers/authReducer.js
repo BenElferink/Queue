@@ -1,9 +1,9 @@
 const initialState = {
   token: localStorage.getItem('token') || '',
-  isLogged: false,
-  userId: null,
   username: null,
+  userId: null,
   role: null,
+  isLogged: false,
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -11,14 +11,13 @@ export const authReducer = (state = initialState, action) => {
     case 'CREATE_ROOM':
     case 'JOIN_ROOM':
       const token = action.payload.token;
-      // this extracts the data from inside the token
       const parsedData = JSON.parse(window.atob(token.split('.')[1]));
       localStorage.setItem('token', token);
       return {
         token,
+        username: parsedData.username,
         userId: parsedData.userId,
         role: parsedData.role,
-        username: parsedData.username,
         isLogged: true,
       };
 
@@ -28,9 +27,9 @@ export const authReducer = (state = initialState, action) => {
       localStorage.setItem('token', copiedToken);
       return {
         token: copiedToken,
+        username: fromToken.username,
         userId: fromToken.userId,
         role: fromToken.role,
-        username: fromToken.username,
         isLogged: true,
       };
 
@@ -38,10 +37,10 @@ export const authReducer = (state = initialState, action) => {
       localStorage.removeItem('token');
       return {
         token: '',
-        isLogged: false,
-        userId: null,
         username: null,
+        userId: null,
         role: null,
+        isLogged: false,
       };
 
     default:

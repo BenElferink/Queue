@@ -43,6 +43,7 @@ export const roomReducer = (state = initialState, action) => {
       return {
         roomId: null,
         queue: [],
+        history: [],
       };
 
     default:
