@@ -7,12 +7,12 @@ import Navbar from './Components/Navbar/Navbar';
 import Home from './Components/Home/Home';
 import Dashboard from './Components/Dashboard/Dashboard';
 import LoadingApp from './Components/LoadingApp/LoadingApp';
-import SessionUrl from './Components/SessionUrl/SessionUrl';
+import InviteUrl from './Components/InviteUrl/InviteUrl';
 import TimerAlert from './Components/Timer/TimerAlert';
 
 export default function App() {
   const dispatch = useDispatch();
-  const { roomId } = useSelector((state) => state.roomReducer);
+
   const { socket } = useContext(SocketContext);
   const { isLogged, token, role } = useSelector((state) => state.authReducer);
   const [loading, setLoading] = useState(false);
@@ -31,7 +31,6 @@ export default function App() {
         if (error) {
           console.log(error);
           dispatch(logoutAction());
-          // window.location.reload();
         }
       });
       socket.on('refetched', refetched);
@@ -54,7 +53,7 @@ export default function App() {
     }
   };
 
-  const [showSessionUrl, setShowSessionUrl] = useState(false);
+  const [showInviteUrl, setShowInviteUrl] = useState(false);
   const [showTimerAlert, setShowTimerAlert] = useState(false);
 
   return (
@@ -64,12 +63,10 @@ export default function App() {
       ) : (
         <Router>
           <Navbar
-            toggleShowSessionUrl={() => setShowSessionUrl(!showSessionUrl)}
+            toggleShowSessionUrl={() => setShowInviteUrl(!showInviteUrl)}
             triggerAlert={() => setShowTimerAlert(true)}
           />
-          {showSessionUrl && (
-            <SessionUrl roomId={roomId} closeThis={() => setShowSessionUrl(false)} />
-          )}
+          {showInviteUrl && <InviteUrl closeThis={() => setShowInviteUrl(false)} />}
           {showTimerAlert && <TimerAlert closeThis={() => setShowTimerAlert(false)} />}
 
           <Switch>

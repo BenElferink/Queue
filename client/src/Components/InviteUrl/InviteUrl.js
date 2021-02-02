@@ -1,8 +1,10 @@
-import styles from './SessionUrl.module.css';
-import CopyIcon from './icon/CopyIcon';
 import { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import styles from './styles/InviteUrl.module.css';
+import CopyIcon from './icon/CopyIcon';
 
-export default function SessionUrl({ roomId, closeThis }) {
+export default function InviteUrl({ closeThis }) {
+  const { roomId } = useSelector((state) => state.roomReducer);
   const [isCopied, setIsCopied] = useState(false);
   const copyRef = useRef();
   const joinUrl = `https://queue-client.herokuapp.com/join/${roomId}`;
@@ -20,9 +22,9 @@ export default function SessionUrl({ roomId, closeThis }) {
   };
 
   return (
-    <div className={styles.sessionUrl}>
-      <CopyIcon onClick={copyOutput} />
+    <div className={styles.component}>
       <input ref={copyRef} value={isCopied ? 'copied 👍' : joinUrl} readOnly />
+      <CopyIcon onClick={copyOutput} />
     </div>
   );
 }
