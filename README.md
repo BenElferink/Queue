@@ -1,34 +1,21 @@
-# Queue: [click to open app](https://queue-client.herokuapp.com)
+# Queue
 
-###### • Home page
+## [https://queue-client.herokuapp.com](https://queue-client.herokuapp.com)
 
-<img src='./_README-images/host-landing.png' width='700' />
+<img src='./_README_img/home.png' width='700' />
+<img src='./_README_img/dashboard.png' width='700' />
 
-###### • Session dashboard
+- Voice to text conversion! (supported on Chrome)
+- Download PDF of answered history!
+- Real-time data!
+- Complete privacy! (all data is cleared after 12h)
+- Notifications with a timer!
+- Easy invite! 👇🏼
 
-<img src='./_README-images/host-dashboard.png' width='700' />
+<img src='./_README_img/invite.gif' width='300' />
 
-###### • Download a PDF of the session history
+- And more..! [Click here](https://queue-client.herokuapp.com) to get started, it's FREE!
 
-<img src='./_README-images/PDF-download.png' width='700' />
-
-###### • Easy invite
-
-<img src='./_README-images/invite.gif' width='400' />
-
-###### • Optional timed notifications
-
-<img src='./_README-images/alert.png' width='400' />
-<img src='./_README-images/notification.png' width='400' />
-
-###### • Mobile friendly
-
-<img src='./_README-images/mobile-friendly.png' width='300' />
-
-<br />
-<br />
-<br />
-<br />
 <br />
 
 ## Technologies used:
