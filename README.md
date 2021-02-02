@@ -2,28 +2,28 @@
 
 ###### • Home page
 
-<img src='./_README-images/host-landing.png' width='600' />
+<img src='./_README-images/host-landing.png' width='700' />
 
 ###### • Session dashboard
 
-<img src='./_README-images/host-dashboard.png' width='600' />
+<img src='./_README-images/host-dashboard.png' width='700' />
 
 ###### • Download a PDF of the session history
 
-<img src='./_README-images/PDF-download.png' width='600' />
+<img src='./_README-images/PDF-download.png' width='700' />
 
 ###### • Easy invite
 
-<img src='./_README-images/invite.gif' width='400' style='margin-left: 42px;' />
+<img src='./_README-images/invite.gif' width='400' />
 
 ###### • Optional timed notifications
 
-<img src='./_README-images/alert.png' width='400' style='margin-left: 42px;' />
-<img src='./_README-images/notification.png' width='400' style='margin-left: 42px;' />
+<img src='./_README-images/alert.png' width='400' />
+<img src='./_README-images/notification.png' width='400' />
 
 ###### • Mobile friendly
 
-<img src='./_README-images/mobile-friendly.png' width='300' style='margin-left: 42px;' />
+<img src='./_README-images/mobile-friendly.png' width='300' />
 
 <br />
 <br />
