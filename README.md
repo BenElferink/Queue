@@ -2,8 +2,8 @@
 
 ## [https://queue-client.herokuapp.com](https://queue-client.herokuapp.com)
 
-<img src='./_README_img/home.png' width='700' />
-<img src='./_README_img/dashboard.png' width='700' />
+<img src='./_README_img/home.png' />
+<img src='./_README_img/dashboard.png' />
 
 - Voice to text conversion! (supported on Chrome)
 - Download PDF of answered history!
