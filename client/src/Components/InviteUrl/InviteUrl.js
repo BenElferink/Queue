@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './styles/InviteUrl.module.css';
-import CopyIcon from './icon/CopyIcon';
+import CopyIcon from './icons/CopyIcon';
 
 export default function InviteUrl({ closeThis }) {
   const { roomId } = useSelector((state) => state.roomReducer);
