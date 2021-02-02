@@ -1,4 +1,4 @@
-import styles from './Navbar.module.css';
+import styles from './styles/Navbar.module.css';
 import { NavHashLink } from 'react-router-hash-link';
 import { Slide, IconButton, Tooltip } from '@material-ui/core';
 

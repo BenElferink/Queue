@@ -2,7 +2,7 @@ import { Fragment, useContext, useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutAction } from '../../app/actions';
 import { SocketContext } from './../../app/SocketContext';
-import styles from './Navbar.module.css';
+import styles from './styles/Navbar.module.css';
 import queueLogoBlack from './images/queue-logo-black.svg';
 import TimerChip from '../Timer/TimerChip';
 import TimerModal from '../Timer/TimerModal';
