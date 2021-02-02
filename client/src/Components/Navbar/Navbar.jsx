@@ -6,7 +6,8 @@ import styles from './Navbar.module.css';
 import queueLogoBlack from './images/queue-logo-black.svg';
 import TimerChip from '../Timer/TimerChip';
 import TimerModal from '../Timer/TimerModal';
-import { IconWrapper, Icon, DownloadIcon } from './NavItems';
+import DownloadPDF from '../DownloadPDF/DownloadPDF';
+import { IconWrapper, Icon } from './NavItems';
 import { Chip } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
@@ -88,7 +89,7 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
       {role === 'user' && (
         <IconWrapper glassMorph={true}>
           <Chip icon={<Emoji />} className={styles.welcomeChip} label={username} color='primary' />
-          <DownloadIcon />
+          <DownloadPDF />
           <Icon onClick={handleUserLogout} title='Leave session' icon={<ExitToAppIcon />} />
         </IconWrapper>
       )}
@@ -109,7 +110,7 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
               icon={<TimerIcon />}
               onClick={() => setShowTimerModal(true)}
             />
-            <DownloadIcon />
+            <DownloadPDF />
             <Icon onClick={handleHostLogout} title='Delete session' icon={<ExitToAppIcon />} />
           </IconWrapper>
         </Fragment>
