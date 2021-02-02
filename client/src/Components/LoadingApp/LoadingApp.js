@@ -1,5 +1,5 @@
-import styles from './LoadingApp.module.css';
-import newQueue from './newQueue.svg';
+import styles from './styles/LoadingApp.module.css';
+import newQueue from './images/newQueue.svg';
 
 export default function LoadingApp() {
   return (
