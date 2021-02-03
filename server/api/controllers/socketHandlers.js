@@ -203,54 +203,10 @@ export const answerQuestion = async ({ token, questId, answer }) => {
         await Quest.populate(foundQuestion, 'from');
 
         response.data = {
-          message: 'question asnwered',
+          message: 'question answered',
           roomId: tokenData.roomId,
           quest: foundQuestion,
         };
-      }
-    }
-  } catch (error) {
-    response.isError = { error };
-  }
-  return response;
-};
-
-export const deleteRoom = async ({ token }) => {
-  let response = {
-    data: {},
-    isError: false,
-  };
-
-  try {
-    const { tokenError, tokenData } = authenticateToken_socket(token);
-    if (tokenError) {
-      response.isError = { error: tokenError };
-    } else {
-      // verify that the request is from host
-      if (tokenData.role !== 'host') {
-        response.isError = {
-          error: 'unauthorized to delete session',
-        };
-      } else {
-        // find session
-        const foundRoom = await Room.findOne({ _id: tokenData.roomId });
-        if (!foundRoom) {
-          response.isError = {
-            error: 'room not found',
-            roomId: tokenData.roomId,
-          };
-        } else {
-          // then target all it's contents and delete them from DB
-          foundRoom.queue.map(async (questId) => await Quest.deleteOne({ _id: questId }));
-          foundRoom.guests.map(async (userId) => await Person.deleteOne({ _id: userId }));
-          await Person.deleteOne({ _id: foundRoom.host });
-          await Room.deleteOne({ _id: tokenData.roomId });
-
-          response.data = {
-            message: 'room deleted',
-            roomId: tokenData.roomId,
-          };
-        }
       }
     }
   } catch (error) {
@@ -306,6 +262,50 @@ export const deleteQuestion = async ({ token, questId }) => {
               id: questId,
             };
           }
+        }
+      }
+    }
+  } catch (error) {
+    response.isError = { error };
+  }
+  return response;
+};
+
+export const deleteRoom = async ({ token }) => {
+  let response = {
+    data: {},
+    isError: false,
+  };
+
+  try {
+    const { tokenError, tokenData } = authenticateToken_socket(token);
+    if (tokenError) {
+      response.isError = { error: tokenError };
+    } else {
+      // verify that the request is from host
+      if (tokenData.role !== 'host') {
+        response.isError = {
+          error: 'unauthorized to delete session',
+        };
+      } else {
+        // find session
+        const foundRoom = await Room.findOne({ _id: tokenData.roomId });
+        if (!foundRoom) {
+          response.isError = {
+            error: 'room not found',
+            roomId: tokenData.roomId,
+          };
+        } else {
+          // then target all it's contents and delete them from DB
+          foundRoom.queue.map(async (questId) => await Quest.deleteOne({ _id: questId }));
+          foundRoom.guests.map(async (userId) => await Person.deleteOne({ _id: userId }));
+          await Person.deleteOne({ _id: foundRoom.host });
+          await Room.deleteOne({ _id: tokenData.roomId });
+
+          response.data = {
+            message: 'room deleted',
+            roomId: tokenData.roomId,
+          };
         }
       }
     }
