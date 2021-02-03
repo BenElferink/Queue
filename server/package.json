@@ -16,6 +16,7 @@
     "mongoose": "^5.11.14",
     "morgan": "^1.10.0",
     "node-cron": "^2.0.3",
-    "socket.io": "^3.1.0"
+    "socket.io": "^3.1.0",
+    "woke-dyno": "0.0.4"
   }
 }
