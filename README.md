@@ -64,7 +64,7 @@
 > {<br />
 &nbsp;&nbsp; message: "created room",<br />
 &nbsp;&nbsp; roomId: mongoose.Schema.Types.ObjectId,<br />
-&nbsp;&nbsp; token: ~jsonwebtoken~,<br />
+&nbsp;&nbsp; token: *jsonwebtoken*,<br />
 }
 
 #### on `join` (no-auth)
@@ -84,7 +84,7 @@
 &nbsp;&nbsp; queue: [<br />
 &nbsp;&nbsp;&nbsp;&nbsp; { type: mongoose.Schema.Types.ObjectId, ref: 'Quest' }<br />
 &nbsp;&nbsp; ],<br />
-&nbsp;&nbsp; token: ~jsonwebtoken~,<br />
+&nbsp;&nbsp; token: *jsonwebtoken*,<br />
 }
 
 #### on `refetch` (auth-TOKEN)
@@ -92,7 +92,7 @@
 ###### body:
 
 > {<br />
-&nbsp;&nbsp; token: ~jsonwebtoken~,<br />
+&nbsp;&nbsp; token: *jsonwebtoken*,<br />
 }
  
 ###### response: emit `refetched` + join(roomId)
@@ -119,7 +119,7 @@
 ###### body:
 
 > {<br />
-&nbsp;&nbsp; token: ~jsonwebtoken~,<br />
+&nbsp;&nbsp; token: *jsonwebtoken*,<br />
 &nbsp;&nbsp; question: String,<br />
 }
  
@@ -144,7 +144,7 @@
 ###### body:
 
 > {<br />
-&nbsp;&nbsp; token: ~jsonwebtoken~,<br />
+&nbsp;&nbsp; token: *jsonwebtoken*,<br />
 &nbsp;&nbsp; questId: mongoose.Schema.Types.ObjectId,<br />
 &nbsp;&nbsp; answer: String,<br />
 }
@@ -170,7 +170,7 @@
 ###### body:
 
 > {<br />
-&nbsp;&nbsp; token: ~jsonwebtoken~,<br />
+&nbsp;&nbsp; token: *jsonwebtoken*,<br />
 &nbsp;&nbsp; questId: mongoose.Schema.Types.ObjectId,<br />
 }
 
@@ -187,7 +187,7 @@
 ###### body:
 
 > {<br />
-&nbsp;&nbsp; token: ~jsonwebtoken~,<br />
+&nbsp;&nbsp; token: *jsonwebtoken*,<br />
 }
 
 ###### response: io.to.(roomId) --> emit `deleted-room`
