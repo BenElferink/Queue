@@ -6,15 +6,7 @@ import dotenv from 'dotenv'; // Secures variables
 import cron from 'node-cron'; // Scheduled tasks
 import { createRequire } from 'module'; // use require()
 import routesV2 from './api/routes/httpRoutes.js';
-import {
-  createRoom,
-  joinRoom,
-  askQuestion,
-  answerQuestion,
-  getRoom,
-  deleteQuestion,
-  deleteRoom,
-} from './api/controllers/socketHandlers.js';
+import sockets from './api/routes/sockets.js';
 import { cleanExpiredData } from './api/controllers/scheduledHandlers.js';
 
 // initialize app
@@ -50,72 +42,10 @@ app.use('/api/v2', routesV2);
 const PORT = process.env.PORT || 4000;
 const server = app.listen(PORT, () => console.log(`✅ Server is listening on port: ${PORT}`));
 
-// scheduled task, every hour
-cron.schedule('0 * * * *', cleanExpiredData);
-
 // web sockets
 const require = createRequire(import.meta.url);
-const io = require('socket.io')(server, { cors: { origin } });
-io.on('connection', (socket) => {
-  // create a room - { username }
-  socket.on('create', async (body, cb) => {
-    const { isError, data } = await createRoom(body);
-    if (isError) return cb(isError);
-    socket.join(JSON.stringify(data.roomId));
-    socket.emit('created', data);
-    cb();
-  });
+export const io = require('socket.io')(server, { cors: { origin } });
+io.on('connection', sockets);
 
-  // join a room - { roomId, username }
-  socket.on('join', async (body, callback) => {
-    const { isError, data } = await joinRoom(body);
-    if (isError) return cb(isError);
-    socket.join(JSON.stringify(data.roomId));
-    socket.emit('joined', data);
-    callback();
-  });
-
-  // refetch the room - { token }
-  socket.on('refetch', async (body, cb) => {
-    const { isError, data } = await getRoom(body);
-    if (isError) return cb(isError);
-    socket.join(JSON.stringify(data.roomId));
-    socket.emit('refetched', data);
-    cb();
-  });
-
-  // ask a question - { token, question }
-  socket.on('ask', async (body, callback) => {
-    const { isError, data } = await askQuestion(body);
-    if (isError) return cb(isError);
-    io.to(JSON.stringify(data.roomId)).emit('asked', data);
-    callback();
-  });
-
-  // answer a question - { token, questId, answer }
-  socket.on('answer', async (body, callback) => {
-    const { isError, data } = await answerQuestion(body);
-    if (isError) return cb(isError);
-    io.to(JSON.stringify(data.roomId)).emit('answered', data);
-    callback();
-  });
-
-  // delete a question - { token, questId }
-  socket.on('delete-quest', async (body, cb) => {
-    const { isError, data } = await deleteQuestion(body);
-    if (isError) return cb(isError);
-    io.to(JSON.stringify(data.roomId)).emit('deleted-quest', data);
-    cb();
-  });
-
-  // delete the room - { token }
-  socket.on('delete-room', async (body, cb) => {
-    const { isError, data } = await deleteRoom(body);
-    if (isError) return cb(isError);
-    io.to(JSON.stringify(data.roomId)).emit('deleted-room', data);
-    cb();
-  });
-
-  socket.on('disconnecting', () => {});
-  socket.on('disconnect', () => {});
-});
+// scheduled task, every hour
+cron.schedule('0 * * * *', cleanExpiredData);
