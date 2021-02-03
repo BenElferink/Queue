@@ -31,17 +31,18 @@ export default function Navbar({ toggleShowSessionUrl, triggerAlert }) {
 
   useEffect(() => {
     // if scrolling passed 80px from the top
-    const addNavShadow = () => (window.scrollY >= 80 ? setIsScrolled(true) : setIsScrolled(false));
-    window.addEventListener('scroll', addNavShadow);
+    const toggleScrolled = () =>
+      window.scrollY >= 80 ? setIsScrolled(true) : setIsScrolled(false);
+    window.addEventListener('scroll', toggleScrolled);
     return () => {
-      window.removeEventListener('scroll', addNavShadow);
+      window.removeEventListener('scroll', toggleScrolled);
     };
   }, []);
 
   const logout = () => {
     socket.disconnect();
     dispatch(logoutAction());
-    // alert('You have been logged out.');
+    role === 'user' && alert('You have been logged out.');
   };
 
   const handleUserLogout = () => {

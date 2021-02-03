@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { jsPDF } from 'jspdf';
-import { Rubik } from '../DownloadPDF/fonts/Rubik';
+import Rubik from '../DownloadPDF/fonts/Rubik';
 import { Icon } from '../Navbar/NavItems';
 import GetAppIcon from '@material-ui/icons/GetApp';
 
