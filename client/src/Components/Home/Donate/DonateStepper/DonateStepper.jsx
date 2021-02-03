@@ -9,8 +9,7 @@ import StepConnector from '@material-ui/core/StepConnector';
 import Button from '@material-ui/core/Button';
 import styles from './DonateStepper.module.css';
 import ScriptTagComponent from './ScriptTagComponent'
-import DonateForm from './DonateForm'
-import { CircularProgress, Zoom } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 
 const QontoConnector = withStyles({
   alternativeLabel: {
@@ -53,27 +52,20 @@ QontoStepIcon.propTypes = {
 export default function CustomizedSteppers() {
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = ['Proceed to donate', 'Donation portal', 'Check out'];
-  const [loading, setLoading] = React.useState(false);
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   const handleNext = () => {
-    // if (activeStep === 1 && (donationAmount <= 0 || donationAmount == null)) {
-    //   window.alert('Please enter a valid donation');
-    // } else {
-    //   setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    // }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1)
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  // const underConstruction = () => {
-  //   window.alert(
-  //     'We are grateful that you tried to donate but this feature is being upgraded. Sorry for the inconvenience caused.',
-  //   );
-  // };
+  const underConstruction = () => {
+    window.alert(
+      'We are grateful that you tried to donate but this feature is being upgraded. Sorry for the inconvenience caused.',
+    );
+  };
 
   return (
     <div className={styles.component}>
@@ -94,10 +86,10 @@ export default function CustomizedSteppers() {
       <div className={styles.stepperContent}>
         {activeStep === 0 ? (
           <Button
-            href="https://donorbox.org/queue"
+            // href="https://donorbox.org/queue"
             variant='outlined'
             className={styles.donateNow}
-            onClick={() => handleNext()}>
+            onClick={() => underConstruction()}>
             Donate Now
           </Button>
         ) : activeStep === 2 ? (
