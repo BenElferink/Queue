@@ -1,6 +1,4 @@
-# Queue
-
-## [https://queue-client.herokuapp.com](https://queue-client.herokuapp.com)
+# [Queue](https://queue-client.herokuapp.com) - FREE Q&A solution for online teaching!
 
 <img src='./_README_img/home.png' />
 <img src='./_README_img/dashboard.png' />
