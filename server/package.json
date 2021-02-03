@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon server.js || node server.js"
+    "start": "nodemon server.js || node index.js"
   },
   "license": "ISC",
   "dependencies": {
@@ -16,6 +16,7 @@
     "mongoose": "^5.11.14",
     "morgan": "^1.10.0",
     "node-cron": "^2.0.3",
-    "socket.io": "^3.1.0"
+    "socket.io": "^3.1.0",
+    "woke-dyno": "0.0.4"
   }
 }
