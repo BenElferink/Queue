@@ -7,9 +7,10 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Check from '@material-ui/icons/Check';
 import StepConnector from '@material-ui/core/StepConnector';
 import Button from '@material-ui/core/Button';
-import { PayPalButton } from 'react-paypal-button-v2';
 import styles from './DonateStepper.module.css';
-import TextField from '@material-ui/core/TextField';
+import ScriptTagComponent from './ScriptTagComponent'
+import DonateForm from './DonateForm'
+import { CircularProgress, Zoom } from '@material-ui/core';
 
 const QontoConnector = withStyles({
   alternativeLabel: {
@@ -51,29 +52,32 @@ QontoStepIcon.propTypes = {
 
 export default function CustomizedSteppers() {
   const [activeStep, setActiveStep] = React.useState(0);
-  const steps = ['Proceed to donate', 'Donation amount', 'Check out'];
-  const [donationAmount, setDonationAmount] = React.useState();
+  const steps = ['Proceed to donate', 'Donation portal', 'Check out'];
+  const [loading, setLoading] = React.useState(false);
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   const handleNext = () => {
-    if (activeStep === 1 && (donationAmount <= 0 || donationAmount == null)) {
-      window.alert('Please enter a valid donation');
-    } else {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    }
+    // if (activeStep === 1 && (donationAmount <= 0 || donationAmount == null)) {
+    //   window.alert('Please enter a valid donation');
+    // } else {
+    //   setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    // }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1)
   };
 
-  const underConstruction = () => {
-    window.alert(
-      'We are grateful that you tried to donate but this feature is being upgraded. Sorry for the inconvenience caused.',
-    );
-  };
+  // const underConstruction = () => {
+  //   window.alert(
+  //     'We are grateful that you tried to donate but this feature is being upgraded. Sorry for the inconvenience caused.',
+  //   );
+  // };
 
   return (
     <div className={styles.component}>
+      <ScriptTagComponent/>
       <div className={styles.button}>
         <Button disabled={activeStep === 0} onClick={handleBack}>
           Back
@@ -90,28 +94,16 @@ export default function CustomizedSteppers() {
       <div className={styles.stepperContent}>
         {activeStep === 0 ? (
           <Button
+            href="https://donorbox.org/queue"
             variant='outlined'
             className={styles.donateNow}
-            onClick={() => underConstruction()}>
+            onClick={() => handleNext()}>
             Donate Now
           </Button>
         ) : activeStep === 2 ? (
-          <PayPalButton
-            amount={donationAmount}
-            options={{
-              clientId: 'sb',
-              currency: 'USD',
-            }}
-          />
+          "Thank you for your generous donation"
         ) : (
-          <TextField
-            type='number'
-            value={donationAmount}
-            onChange={(e) => setDonationAmount(e.target.value)}
-            placeholder='Donation Amount'
-            variant='outlined'
-            label='$USD'
-          />
+          <CircularProgress />
         )}
       </div>
 
