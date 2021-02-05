@@ -8,7 +8,7 @@ import Check from '@material-ui/icons/Check';
 import StepConnector from '@material-ui/core/StepConnector';
 import Button from '@material-ui/core/Button';
 import styles from './DonateStepper.module.css';
-import ScriptTagComponent from './ScriptTagComponent'
+// import ScriptTagComponent from './ScriptTagComponent';
 import { CircularProgress } from '@material-ui/core';
 
 const QontoConnector = withStyles({
@@ -69,7 +69,7 @@ export default function CustomizedSteppers() {
 
   return (
     <div className={styles.component}>
-      <ScriptTagComponent/>
+      {/* <ScriptTagComponent/> */}
       <div className={styles.button}>
         <Button disabled={activeStep === 0} onClick={handleBack}>
           Back
@@ -93,7 +93,7 @@ export default function CustomizedSteppers() {
             Donate Now
           </Button>
         ) : activeStep === 2 ? (
-          "Thank you for your generous donation"
+          'Thank you for your generous donation'
         ) : (
           <CircularProgress />
         )}
