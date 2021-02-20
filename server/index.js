@@ -4,7 +4,7 @@ import cors from 'cors'; // HTTP headers (enable requests)
 import morgan from 'morgan'; // Logs incoming requests
 import dotenv from 'dotenv'; // Secures variables
 import cron from 'node-cron'; // Scheduled tasks
-import wakeDyno from 'woke-dyno'; // Keep Heroku dynos awake
+// import wakeDyno from 'woke-dyno'; // Keep Heroku dynos awake
 import { createRequire } from 'module'; // use require()
 import routesV2 from './api/routes/httpRoutes.js';
 import sockets from './api/routes/sockets.js';
@@ -43,8 +43,8 @@ app.use('/api/v2', routesV2);
 const PORT = process.env.PORT || 4000;
 const server = app.listen(PORT, () => {
   console.log(`✅ Server is listening on port: ${PORT}`);
-  wakeDyno('https://queue-client.herokuapp.com').start();
-  wakeDyno('https://queue-and-a.herokuapp.com').start();
+  // wakeDyno('https://queue-client.herokuapp.com').start();
+  // wakeDyno('https://queue-and-a.herokuapp.com').start();
 });
 
 // web sockets
