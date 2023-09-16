@@ -1,4 +1,4 @@
-# [Queue](https://queue-client.herokuapp.com) - FREE Q&A solution for online teaching!
+# Queue - FREE Q&A solution for online teaching!
 
 <img src='./_README_img/home.png' />
 <img src='./_README_img/dashboard.png' />
@@ -12,7 +12,7 @@
 
 <img src='./_README_img/invite.gif' width='300' />
 
-- And more..! [Click here](https://queue-client.herokuapp.com) to get started, it's FREE!
+- And more..!
 
 <br />
 
